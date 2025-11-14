@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Settings - Poetry Vault</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #0f0f1e;
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #e8e8e8;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 36px;
+            color: #d4af37;
+            margin-bottom: 10px;
+            font-weight: normal;
+            letter-spacing: 2px;
+        }
+        .header h1::before {
+            content: '⚙️ ';
+        }
+        .back-link {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .back-link a {
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .settings-section {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+        .section-title {
+            color: #d4af37;
+            font-size: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 10px;
+        }
+        .message {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .error {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            color: #ff6b6b;
+        }
+        .success {
+            background: rgba(81, 207, 102, 0.1);
+            border: 1px solid rgba(81, 207, 102, 0.3);
+            color: #51cf66;
+        }
+        label {
+            display: block;
+            color: #b8956a;
+            font-size: 13px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #e8e8e8;
+            font-size: 15px;
+            font-family: 'Georgia', serif;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: linear-gradient(135deg, #d4af37 0%, #b8956a 100%);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+        .current-info {
+            background: rgba(212, 175, 55, 0.05);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            color: #b8956a;
+            font-size: 14px;
+        }
+        .terms-link {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        .terms-link a {
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Settings</h1>
+        </div>
+        
+        <div class="back-link">
+            <a href="/home">← Return to Vault</a>
+        </div>
+
+        {% if message %}
+            <div class="message {{ message_type }}">{{ message }}</div>
+        {% endif %}
+
+        <!-- Profile Settings -->
+        <div class="settings-section">
+            <div class="section-title">Profile Settings</div>
+            <form method="POST" action="/settings/profile">
+                <div class="current-info">
+                    Current Username: <strong>{{ current_user.username }}</strong>
+                </div>
+                <label>New Username</label>
+                <input type="text" name="username" placeholder="Enter new username">
+                
+                <div class="current-info">
+                    Current Email: <strong>{{ current_user.email }}</strong>
+                </div>
+                <label>New Email</label>
+                <input type="email" name="email" placeholder="Enter new email">
+                
+                <div class="current-info">
+                    Current Muse: <strong>{{ current_user.favorite_poet }}</strong>
+                </div>
+                <label>Change Your Muse</label>
+                <select name="favorite_poet">
+                    <option value="">Keep current</option>
+                    <option value="Shakespeare">William Shakespeare</option>
+                    <option value="Rumi">Rumi</option>
+                    <option value="Emily Dickinson">Emily Dickinson</option>
+                    <option value="Edgar Allan Poe">Edgar Allan Poe</option>
+                    <option value="Walt Whitman">Walt Whitman</option>
+                    <option value="Lord Byron">Lord Byron</option>
+                    <option value="William Wordsworth">William Wordsworth</option>
+                    <option value="John Keats">John Keats</option>
+                    <option value="Percy Shelley">Percy Bysshe Shelley</option>
+                    <option value="Robert Burns">Robert Burns</option>
+                </select>
+                
+                <button type="submit">Update Profile</button>
+            </form>
+        </div>
+
+        <!-- Password Settings -->
+        <div class="settings-section">
+            <div class="section-title">Security</div>
+            <form method="POST" action="/settings/password">
+                <label>Current Password</label>
+                <input type="password" name="old_password" placeholder="Enter current password" required>
+                
+                <label>New Password</label>
+                <input type="password" name="new_password" placeholder="Enter new password" required>
+                
+                <label>Confirm New Password</label>
+                <input type="password" name="confirm_password" placeholder="Confirm new password" required>
+                
+                <button type="submit">Change Password</button>
+            </form>
+        </div>
+
+        <div class="terms-link">
+            <a href="/terms">Terms of Service</a> • 
+            <a href="/privacy">Privacy Policy</a>
+        </div>
+    </div>
+</body>
+</html>

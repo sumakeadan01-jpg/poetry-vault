@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Members - Poetry Vault</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #0f0f1e;
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #e8e8e8;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .header h1 {
+            font-size: 42px;
+            color: #d4af37;
+            margin-bottom: 15px;
+            font-weight: normal;
+            letter-spacing: 3px;
+        }
+        .header h1::before {
+            content: '👥 ';
+        }
+        .header p {
+            color: #b8956a;
+            font-size: 16px;
+            font-style: italic;
+        }
+        .back-link {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .back-link a {
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .back-link a:hover {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+        }
+        .user-card {
+            background: rgba(26, 26, 46, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s;
+        }
+        .user-card:hover {
+            border-color: #d4af37;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+            transform: translateX(10px);
+        }
+        .avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37 0%, #b8956a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1a1a2e;
+            font-weight: bold;
+            font-size: 28px;
+            border: 3px solid #d4af37;
+            flex-shrink: 0;
+        }
+        .user-info {
+            flex: 1;
+        }
+        .user-name {
+            font-size: 22px;
+            color: #d4af37;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .user-email {
+            color: #8e7a5a;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+        .user-meta {
+            color: #b8956a;
+            font-size: 13px;
+        }
+        .user-meta span {
+            margin-right: 15px;
+        }
+        .badge {
+            background: linear-gradient(135deg, #d4af37 0%, #b8956a 100%);
+            color: #1a1a2e;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Vault Members</h1>
+            <p>Our community of poets and dreamers</p>
+        </div>
+        
+        <div class="back-link">
+            <a href="/home">← Return to Vault</a>
+        </div>
+
+        {% for user in users %}
+        <div class="user-card">
+            <div class="avatar">{{ user.username[0].upper() }}</div>
+            <div class="user-info">
+                <div class="user-name">
+                    {{ user.username }}
+                    {% if user.is_admin %}
+                    <span class="badge">Curator</span>
+                    {% endif %}
+                </div>
+                <div class="user-email">{{ user.email }}</div>
+                <div class="user-meta">
+                    <span>📜 {{ user.poems|length }} poems</span>
+                    <span>🗓️ Joined {{ user.created_at.strftime('%B %d, %Y') }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

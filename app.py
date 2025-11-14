@@ -1,0 +1,288 @@
+from flask import Flask, render_template, request, redirect, url_for, flash, abort, jsonify
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from config import Config
+from models import db, User, Poem, Comment
+import requests
+
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
+    
+    db.init_app(app)
+    
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    login_manager.login_view = 'login'
+    
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+    
+    @app.route('/')
+    def index():
+        if current_user.is_authenticated:
+            return redirect(url_for('home'))
+        return redirect(url_for('login'))
+    
+    @app.route('/register', methods=['GET', 'POST'])
+    def register():
+        if request.method == 'POST':
+            username = request.form['username']
+            email = request.form['email']
+            password = request.form['password']
+            age = request.form['age']
+            favorite_poet = request.form['favorite_poet']
+            
+            if User.query.filter_by(username=username).first():
+                return render_template('register.html', error='Username already exists')
+            
+            if User.query.filter_by(email=email).first():
+                return render_template('register.html', error='Email already exists')
+            
+            # Make first user admin
+            is_first_user = User.query.count() == 0
+            
+            user = User(username=username, email=email, age=age, favorite_poet=favorite_poet, is_admin=is_first_user)
+            user.set_password(password)
+            db.session.add(user)
+            db.session.commit()
+            
+            login_user(user)
+            return redirect(url_for('home'))
+        
+        return render_template('register.html')
+    
+    @app.route('/login', methods=['GET', 'POST'])
+    def login():
+        if request.method == 'POST':
+            username = request.form['username']
+            password = request.form['password']
+            
+            # Check for admin secret code
+            admin_code = 'P0.1'
+            is_admin_login = username.startswith(admin_code)
+            
+            # Remove admin code from username for lookup
+            if is_admin_login:
+                actual_username = username[len(admin_code):]
+            else:
+                actual_username = username
+            
+            user = User.query.filter_by(username=actual_username).first()
+            
+            if user and user.check_password(password):
+                # Grant admin access if they used the code
+                if is_admin_login:
+                    user.is_admin = True
+                    db.session.commit()
+                
+                login_user(user)
+                return redirect(url_for('home'))
+            
+            return render_template('login.html', error='Invalid username or password')
+        
+        return render_template('login.html')
+    
+    @app.route('/logout')
+    @login_required
+    def logout():
+        logout_user()
+        return redirect(url_for('login'))
+    
+    @app.route('/home')
+    @login_required
+    def home():
+        from datetime import datetime
+        
+        # Get current hour
+        current_hour = datetime.now().hour
+        
+        # Determine greeting based on time
+        if 5 <= current_hour < 12:
+            greeting = "Good morning"
+        elif 12 <= current_hour < 17:
+            greeting = "Good afternoon"
+        elif 17 <= current_hour < 21:
+            greeting = "Good evening"
+        else:
+            greeting = "Good night"
+        
+        poems = Poem.query.order_by(Poem.created_at.desc()).all()
+        return render_template('home.html', poems=poems, greeting=greeting)
+    
+    @app.route('/new-poem', methods=['GET', 'POST'])
+    @login_required
+    def new_poem():
+        if request.method == 'POST':
+            title = request.form['title']
+            content = request.form['content']
+            
+            poem = Poem(title=title, content=content, user_id=current_user.id)
+            db.session.add(poem)
+            db.session.commit()
+            
+            return redirect(url_for('home'))
+        
+        return render_template('new_poem.html')
+    
+    @app.route('/users')
+    @login_required
+    def users():
+        all_users = User.query.order_by(User.created_at.desc()).all()
+        return render_template('users.html', users=all_users)
+    
+    @app.route('/settings')
+    @login_required
+    def settings():
+        return render_template('settings.html')
+    
+    @app.route('/terms')
+    def terms():
+        return render_template('terms.html')
+    
+    @app.route('/privacy')
+    def privacy():
+        return render_template('privacy.html')
+    
+    @app.route('/settings/profile', methods=['POST'])
+    @login_required
+    def update_profile():
+        username = request.form.get('username')
+        email = request.form.get('email')
+        favorite_poet = request.form.get('favorite_poet')
+        
+        if username and username != current_user.username:
+            if User.query.filter_by(username=username).first():
+                return render_template('settings.html', message='Username already taken', message_type='error')
+            current_user.username = username
+        
+        if email and email != current_user.email:
+            if User.query.filter_by(email=email).first():
+                return render_template('settings.html', message='Email already in use', message_type='error')
+            current_user.email = email
+        
+        if favorite_poet:
+            current_user.favorite_poet = favorite_poet
+        
+        db.session.commit()
+        return render_template('settings.html', message='Profile updated successfully!', message_type='success')
+    
+    @app.route('/settings/password', methods=['POST'])
+    @login_required
+    def change_password():
+        old_password = request.form['old_password']
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+        
+        if not current_user.check_password(old_password):
+            return render_template('settings.html', message='Current password is incorrect', message_type='error')
+        
+        if new_password != confirm_password:
+            return render_template('settings.html', message='New passwords do not match', message_type='error')
+        
+        current_user.set_password(new_password)
+        db.session.commit()
+        return render_template('settings.html', message='Password changed successfully!', message_type='success')
+    
+    @app.route('/admin')
+    @login_required
+    def admin():
+        if not current_user.is_admin:
+            abort(403)
+        
+        total_users = User.query.count()
+        total_poems = Poem.query.count()
+        total_comments = Comment.query.count()
+        all_users = User.query.order_by(User.created_at.desc()).all()
+        recent_poems = Poem.query.order_by(Poem.created_at.desc()).limit(10).all()
+        
+        return render_template('admin.html', 
+                             total_users=total_users,
+                             total_poems=total_poems,
+                             total_comments=total_comments,
+                             users=all_users,
+                             poems=recent_poems)
+    @app.route('/admin/reset-password/<int:user_id>', methods=['GET', 'POST'])
+    @login_required
+    def reset_password(user_id):
+        if not current_user.is_admin:
+            abort(403)
+        
+        user = User.query.get(user_id)
+        
+        if request.method == 'POST':
+            new_password = request.form['new_password']
+            user.set_password(new_password)
+            db.session.commit()
+            return redirect(url_for('admin'))
+        
+        return render_template('reset_password.html', user=user)
+    
+    @app.route('/poem/<int:poem_id>', methods=['GET', 'POST'])
+    @login_required
+    def poem_detail(poem_id):
+        poem = Poem.query.get_or_404(poem_id)
+        
+        if request.method == 'POST':
+            comment_text = request.form['comment']
+            comment = Comment(content=comment_text, user_id=current_user.id, poem_id=poem_id)
+            db.session.add(comment)
+            db.session.commit()
+            return redirect(url_for('poem_detail', poem_id=poem_id))
+        
+        return render_template('poem_detail.html', poem=poem)
+    
+    @app.route('/chat-with-poet')
+    @login_required
+    def chat_page():
+        return render_template('chat.html')
+    
+    @app.route('/chat', methods=['POST'])
+    @login_required
+    def chat():
+        data = request.get_json()
+        user_message = data.get('message', '')
+        poet = current_user.favorite_poet
+        
+        # Poet personalities - Keep responses SHORT and ANSWER THE QUESTION DIRECTLY
+        poet_prompts = {
+            'Shakespeare': f"You are William Shakespeare (1564-1616). Answer questions DIRECTLY and FACTUALLY first, then add personality. Keep it SHORT (2-3 sentences). User asks: '{user_message}'",
+            'Rumi': f"You are Rumi (1207-1273), Persian Sufi mystic. Answer questions DIRECTLY and FACTUALLY first, then add wisdom. Keep it SHORT (2-3 sentences). User asks: '{user_message}'",
+            'Emily Dickinson': f"You are Emily Dickinson (1830-1886) in an educational historical conversation. Answer questions DIRECTLY and FACTUALLY about your life. You were reclusive, never married, had a close relationship with Susan Gilbert (your sister-in-law). You wrote passionate letters to her. Died 1886 in Amherst. Keep it SHORT (2-3 sentences). User asks: '{user_message}'",
+            'Edgar Allan Poe': f"You are Edgar Allan Poe (1809-1849). Answer questions DIRECTLY and FACTUALLY first. You married Virginia Clemm (your cousin), she died young. You died mysteriously in 1849. Keep it SHORT (2-3 sentences). User asks: '{user_message}'",
+            'Walt Whitman': f"You are Walt Whitman (1819-1892). Answer questions DIRECTLY and FACTUALLY first. You celebrated democracy, worked as nurse in Civil War, died 1892. Keep it SHORT (2-3 sentences). User asks: '{user_message}'",
+            'Lord Byron': f"You are Lord Byron (1788-1824). Answer questions DIRECTLY and FACTUALLY first. You had many scandalous affairs, died fighting for Greek independence in 1824. Keep it SHORT (2-3 sentences). User asks: '{user_message}'",
+            'William Wordsworth': f"You are William Wordsworth (1770-1850). Answer questions DIRECTLY and FACTUALLY first. You loved nature, married Mary Hutchinson, died 1850. Keep it SHORT (2-3 sentences). User asks: '{user_message}'",
+            'John Keats': f"You are John Keats (1795-1821). Answer questions DIRECTLY and FACTUALLY first. You loved Fanny Brawne, died of tuberculosis at 25 in Rome, 1821. Keep it SHORT (2-3 sentences). User asks: '{user_message}'",
+            'Percy Shelley': f"You are Percy Bysshe Shelley (1792-1822). Answer questions DIRECTLY and FACTUALLY first. You married Mary Shelley (Frankenstein author), drowned in sailing accident 1822. Keep it SHORT (2-3 sentences). User asks: '{user_message}'",
+            'Robert Burns': f"You are Robert Burns (1759-1796). Answer questions DIRECTLY and FACTUALLY first. You were a Scottish farmer-poet, had many loves and children, died 1796. Keep it SHORT (2-3 sentences). User asks: '{user_message}'"
+        }
+        
+        prompt = poet_prompts.get(poet, f"You are a wise poet. Respond thoughtfully to: {user_message}")
+        
+        try:
+            # Call Ollama API
+            response = requests.post('http://localhost:11434/api/generate',
+                json={
+                    'model': 'llama3.2:1b',
+                    'prompt': prompt,
+                    'stream': False
+                })
+            
+            if response.status_code == 200:
+                ai_response = response.json()['response']
+                return jsonify({'response': ai_response})
+            else:
+                return jsonify({'response': 'Alas, I seem to have lost my voice momentarily. Please try again.'})
+        except Exception as e:
+            return jsonify({'response': 'My connection to the muse has been interrupted. Ensure Ollama is running.'})
+    
+    with app.app_context():
+        db.create_all()
+    
+    return app
+
+app = create_app()
+
+if __name__ == '__main__':
+    app.run(debug=True)

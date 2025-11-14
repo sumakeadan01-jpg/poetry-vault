@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Curator Panel - Poetry Vault</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #0f0f1e;
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #e8e8e8;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .admin-header {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2) 0%, rgba(201, 42, 42, 0.1) 100%);
+            border: 2px solid #ff6b6b;
+            padding: 40px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+        }
+        .admin-header::before {
+            font-size: 60px;
+            display: block;
+            margin-bottom: 15px;
+        }
+        .admin-header h1 {
+            font-size: 42px;
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            font-weight: normal;
+            letter-spacing: 3px;
+        }
+        .admin-header p {
+            color: #ffb3b3;
+            font-size: 16px;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        .back-link {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .back-link:hover {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.8);
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+        .stat-box {
+            background: rgba(26, 26, 46, 0.6);
+            border: 2px solid #d4af37;
+            padding: 35px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .stat-box:hover {
+            border-color: #ff6b6b;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            transform: translateY(-5px);
+        }
+        .stat-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+        .stat-label {
+            color: #b8956a;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .section {
+            background: rgba(26, 26, 46, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .section h2 {
+            color: #d4af37;
+            font-size: 28px;
+            margin-bottom: 25px;
+            font-weight: normal;
+            letter-spacing: 2px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        th {
+            background: rgba(212, 175, 55, 0.1);
+            color: #d4af37;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        td {
+            color: #e8e8e8;
+            font-size: 14px;
+        }
+        tr:hover {
+            background: rgba(212, 175, 55, 0.05);
+        }
+        .btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        .badge {
+            background: linear-gradient(135deg, #d4af37 0%, #b8956a 100%);
+            color: #1a1a2e;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        @media (max-width: 768px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            table {
+                font-size: 12px;
+            }
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="admin-header">
+            <h1>Curator Panel</h1>
+            <p>Welcome, {{ current_user.username }} - Guardian of the Vault</p>
+            <a href="/home" class="back-link">← Return to Vault</a>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number">{{ total_users }}</div>
+                <div class="stat-label">Vault Members</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">{{ total_poems }}</div>
+                <div class="stat-label">Total Poems</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">{{ total_comments }}</div>
+                <div class="stat-label">Total Comments</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 All Members</h2>
+            <table>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Joined</th>
+                    <th>Poems</th>
+                    <th>Actions</th>
+                </tr>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{% if user.is_admin %}<span class="badge">Curator</span>{% else %}Member{% endif %}</td>
+                    <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ user.poems|length }}</td>
+                    <td><a href="/admin/reset-password/{{ user.id }}" class="btn">Reset Password</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>📜 Recent Poems</h2>
+            <table>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Published</th>
+                </tr>
+                {% for poem in poems %}
+                <tr>
+                    <td>{{ poem.title }}</td>
+                    <td>{{ poem.author.username }}</td>
+                    <td>{{ poem.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</body>
+</html>
