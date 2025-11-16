@@ -10,205 +10,218 @@
         }
         body {
             font-family: 'Georgia', 'Times New Roman', serif;
-            background: #0f0f1e;
+            background: #1c2532;
             min-height: 100vh;
-            padding: 40px 20px;
             color: #e8e8e8;
+        }
+        .navbar {
+            background: rgba(28, 37, 50, 0.95);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            color: #d4af37;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+        .btn-back {
+            padding: 8px 16px;
+            background: transparent;
+            color: #d4af37;
+            border: 1px solid #d4af37;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .btn-back:hover {
+            background: rgba(212, 175, 55, 0.1);
         }
         .container {
             max-width: 700px;
-            margin: 0 auto;
+            margin: 40px auto;
+            padding: 0 20px;
         }
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
+        .settings-card {
+            background: rgba(28, 37, 50, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            padding: 40px;
+            margin-bottom: 20px;
         }
-        .header h1 {
-            font-size: 36px;
+        h1 {
             color: #d4af37;
+            font-size: 28px;
             margin-bottom: 10px;
             font-weight: normal;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
-        .header h1::before {
-            content: '⚙️ ';
-        }
-        .back-link {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .back-link a {
-            color: #d4af37;
-            text-decoration: none;
+        .subtitle {
+            color: #8e7a5a;
             font-size: 14px;
-        }
-        .settings-section {
-            background: rgba(26, 26, 46, 0.8);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 8px;
-            padding: 30px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
+            font-style: italic;
         }
         .section-title {
             color: #d4af37;
-            font-size: 20px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            font-size: 18px;
+            margin: 30px 0 20px 0;
             padding-bottom: 10px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            font-weight: normal;
         }
-        .message {
-            padding: 12px;
-            border-radius: 6px;
+        .section-title:first-of-type {
+            margin-top: 0;
+        }
+        .form-group {
             margin-bottom: 20px;
-            text-align: center;
-            font-size: 14px;
-        }
-        .error {
-            background: rgba(255, 107, 107, 0.1);
-            border: 1px solid rgba(255, 107, 107, 0.3);
-            color: #ff6b6b;
-        }
-        .success {
-            background: rgba(81, 207, 102, 0.1);
-            border: 1px solid rgba(81, 207, 102, 0.3);
-            color: #51cf66;
         }
         label {
             display: block;
-            color: #b8956a;
+            color: #d4af37;
             font-size: 13px;
             margin-bottom: 8px;
-            text-transform: uppercase;
             letter-spacing: 1px;
+            text-transform: uppercase;
         }
         input, select {
             width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(212, 175, 55, 0.3);
             border-radius: 6px;
-            background: rgba(0, 0, 0, 0.3);
             color: #e8e8e8;
-            font-size: 15px;
             font-family: 'Georgia', serif;
+            font-size: 15px;
         }
         input:focus, select:focus {
             outline: none;
             border-color: #d4af37;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+            background: rgba(0, 0, 0, 0.6);
+        }
+        select {
+            cursor: pointer;
+        }
+        select option {
+            background: #1c2532;
         }
         button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            background: linear-gradient(135deg, #d4af37 0%, #b8956a 100%);
-            color: #1a1a2e;
+            padding: 12px 30px;
+            background: #d4af37;
+            color: #1c2532;
             border: none;
             border-radius: 6px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            transition: all 0.2s;
+            font-family: 'Georgia', serif;
+            margin-top: 10px;
         }
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+            background: #b8956a;
         }
-        .current-info {
-            background: rgba(212, 175, 55, 0.05);
+        .message {
             padding: 12px;
             border-radius: 6px;
-            margin-bottom: 15px;
-            color: #b8956a;
+            margin-bottom: 20px;
             font-size: 14px;
-        }
-        .terms-link {
             text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(212, 175, 55, 0.3);
         }
-        .terms-link a {
-            color: #d4af37;
-            text-decoration: none;
-            font-size: 13px;
+        .message.success {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            color: #4caf50;
+        }
+        .message.error {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            color: #ff6b6b;
         }
     </style>
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/home" class="logo">Poetry Vault</a>
+            <a href="/home" class="btn-back">Back to Home</a>
+        </div>
+    </nav>
+
     <div class="container">
-        <div class="header">
-            <h1>Settings</h1>
-        </div>
-        
-        <div class="back-link">
-            <a href="/home">← Return to Vault</a>
-        </div>
+        <div class="settings-card">
+            <h1>Account Settings</h1>
+            <p class="subtitle">Manage your profile and preferences</p>
 
-        {% if message %}
-            <div class="message {{ message_type }}">{{ message }}</div>
-        {% endif %}
+            {% if message %}
+            <div class="message {{ message_type }}">
+                {{ message }}
+            </div>
+            {% endif %}
 
-        <!-- Profile Settings -->
-        <div class="settings-section">
-            <div class="section-title">Profile Settings</div>
+            <div class="section-title">Profile Information</div>
             <form method="POST" action="/settings/profile">
-                <div class="current-info">
-                    Current Username: <strong>{{ current_user.username }}</strong>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" value="{{ current_user.username }}">
                 </div>
-                <label>New Username</label>
-                <input type="text" name="username" placeholder="Enter new username">
-                
-                <div class="current-info">
-                    Current Email: <strong>{{ current_user.email }}</strong>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" value="{{ current_user.email }}">
                 </div>
-                <label>New Email</label>
-                <input type="email" name="email" placeholder="Enter new email">
-                
-                <div class="current-info">
-                    Current Muse: <strong>{{ current_user.favorite_poet }}</strong>
+
+                <div class="form-group">
+                    <label>Favorite Poet</label>
+                    <select name="favorite_poet">
+                        <option value="Shakespeare" {% if current_user.favorite_poet == 'Shakespeare' %}selected{% endif %}>William Shakespeare</option>
+                        <option value="Rumi" {% if current_user.favorite_poet == 'Rumi' %}selected{% endif %}>Rumi</option>
+                        <option value="Emily Dickinson" {% if current_user.favorite_poet == 'Emily Dickinson' %}selected{% endif %}>Emily Dickinson</option>
+                        <option value="Edgar Allan Poe" {% if current_user.favorite_poet == 'Edgar Allan Poe' %}selected{% endif %}>Edgar Allan Poe</option>
+                        <option value="Walt Whitman" {% if current_user.favorite_poet == 'Walt Whitman' %}selected{% endif %}>Walt Whitman</option>
+                        <option value="Lord Byron" {% if current_user.favorite_poet == 'Lord Byron' %}selected{% endif %}>Lord Byron</option>
+                        <option value="William Wordsworth" {% if current_user.favorite_poet == 'William Wordsworth' %}selected{% endif %}>William Wordsworth</option>
+                        <option value="John Keats" {% if current_user.favorite_poet == 'John Keats' %}selected{% endif %}>John Keats</option>
+                        <option value="Percy Shelley" {% if current_user.favorite_poet == 'Percy Shelley' %}selected{% endif %}>Percy Bysshe Shelley</option>
+                        <option value="Robert Burns" {% if current_user.favorite_poet == 'Robert Burns' %}selected{% endif %}>Robert Burns</option>
+                    </select>
                 </div>
-                <label>Change Your Muse</label>
-                <select name="favorite_poet">
-                    <option value="">Keep current</option>
-                    <option value="Shakespeare">William Shakespeare</option>
-                    <option value="Rumi">Rumi</option>
-                    <option value="Emily Dickinson">Emily Dickinson</option>
-                    <option value="Edgar Allan Poe">Edgar Allan Poe</option>
-                    <option value="Walt Whitman">Walt Whitman</option>
-                    <option value="Lord Byron">Lord Byron</option>
-                    <option value="William Wordsworth">William Wordsworth</option>
-                    <option value="John Keats">John Keats</option>
-                    <option value="Percy Shelley">Percy Bysshe Shelley</option>
-                    <option value="Robert Burns">Robert Burns</option>
-                </select>
-                
+
                 <button type="submit">Update Profile</button>
             </form>
-        </div>
 
-        <!-- Password Settings -->
-        <div class="settings-section">
-            <div class="section-title">Security</div>
+            <div class="section-title">Change Password</div>
             <form method="POST" action="/settings/password">
-                <label>Current Password</label>
-                <input type="password" name="old_password" placeholder="Enter current password" required>
-                
-                <label>New Password</label>
-                <input type="password" name="new_password" placeholder="Enter new password" required>
-                
-                <label>Confirm New Password</label>
-                <input type="password" name="confirm_password" placeholder="Confirm new password" required>
-                
+                <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" name="old_password" required>
+                </div>
+
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" name="new_password" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <input type="password" name="confirm_password" required>
+                </div>
+
                 <button type="submit">Change Password</button>
             </form>
-        </div>
-
-        <div class="terms-link">
-            <a href="/terms">Terms of Service</a> • 
-            <a href="/privacy">Privacy Policy</a>
         </div>
     </div>
 </body>

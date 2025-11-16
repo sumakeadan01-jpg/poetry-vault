@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notifications - Poetry Vault</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Georgia', serif; background: #1c2532; min-height: 100vh; color: #e8e8e8; }
+        .navbar { background: rgba(28, 37, 50, 0.95); border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding: 15px 0; }
+        .nav-container { max-width: 700px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; color: #d4af37; font-weight: 600; text-decoration: none; }
+        .btn-back { padding: 8px 16px; background: transparent; color: #d4af37; border: 1px solid #d4af37; border-radius: 6px; text-decoration: none; font-size: 12px; }
+        .container { max-width: 700px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #d4af37; font-size: 28px; margin-bottom: 30px; font-weight: normal; }
+        .notif-card { background: rgba(28, 37, 50, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 20px; margin-bottom: 15px; display: flex; gap: 15px; align-items: start; }
+        .notif-card:hover { border-color: rgba(212, 175, 55, 0.4); }
+        .notif-icon { width: 40px; height: 40px; border-radius: 50%; background: rgba(212, 175, 55, 0.2); display: flex; align-items: center; justify-content: center; color: #d4af37; font-size: 18px; flex-shrink: 0; }
+        .notif-content { flex: 1; }
+        .notif-message { color: #e8e8e8; font-size: 14px; margin-bottom: 5px; }
+        .notif-time { color: #8e7a5a; font-size: 11px; }
+        .notif-link { color: #d4af37; text-decoration: none; font-size: 13px; margin-top: 8px; display: inline-block; }
+        .no-notifs { text-align: center; padding: 60px 30px; color: #8e7a5a; font-style: italic; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/home" class="logo">Poetry Vault</a>
+            <a href="/home" class="btn-back">Back to Home</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Notifications</h1>
+        {% if notifications %}
+            {% for notif in notifications %}
+            <div class="notif-card">
+                <div class="notif-icon">{% if notif.type == 'like' %}♥{% else %}💬{% endif %}</div>
+                <div class="notif-content">
+                    <div class="notif-message">{{ notif.message }}</div>
+                    <div class="notif-time">{{ notif.created_at.strftime('%B %d, %Y at %I:%M %p') }}</div>
+                    {% if notif.poem_id %}<a href="/poem/{{ notif.poem_id }}" class="notif-link">View Poem →</a>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-notifs">No notifications yet.</div>
+        {% endif %}
+    </div>
+</body>
+</html>

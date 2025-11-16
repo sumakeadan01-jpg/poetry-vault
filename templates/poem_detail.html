@@ -10,13 +10,13 @@
         }
         body {
             font-family: 'Georgia', 'Times New Roman', serif;
-            background: #0f0f1e;
+            background: #1c2532;
             min-height: 100vh;
             color: #e8e8e8;
             padding: 40px 20px;
         }
         .container {
-            max-width: 800px;
+            max-width: 700px;
             margin: 0 auto;
         }
         .back-link {
@@ -27,32 +27,61 @@
             text-decoration: none;
             font-size: 14px;
         }
+        .back-link a:hover {
+            color: #b8956a;
+        }
         .poem-card {
-            background: rgba(26, 26, 46, 0.8);
-            border: 2px solid #d4af37;
+            background: rgba(28, 37, 50, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 8px;
             padding: 40px;
             margin-bottom: 40px;
         }
-        .poem-title {
-            font-size: 36px;
-            color: #d4af37;
-            text-align: center;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-        }
-        .poem-meta {
-            text-align: center;
-            color: #b8956a;
-            font-size: 14px;
+        .poem-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
             margin-bottom: 30px;
-            font-style: italic;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37 0%, #b8956a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1c2532;
+            font-weight: bold;
+            font-size: 22px;
+        }
+        .author-info {
+            flex: 1;
+        }
+        .author-info strong {
+            color: #e8e8e8;
+            font-size: 16px;
+            display: block;
+            font-weight: 600;
+        }
+        .author-info small {
+            color: #8e7a5a;
+            font-size: 12px;
+        }
+        .poem-title {
+            font-size: 32px;
+            color: #d4af37;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            font-weight: normal;
         }
         .poem-content {
             white-space: pre-wrap;
             line-height: 2;
             color: #e8e8e8;
-            font-size: 18px;
+            font-size: 17px;
             font-style: italic;
             padding: 30px;
             background: rgba(0, 0, 0, 0.3);
@@ -60,17 +89,18 @@
             border-left: 3px solid #d4af37;
         }
         .comments-section {
-            background: rgba(26, 26, 46, 0.6);
-            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(28, 37, 50, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 8px;
             padding: 30px;
         }
         .comments-header {
-            font-size: 24px;
+            font-size: 22px;
             color: #d4af37;
             margin-bottom: 25px;
-            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
             padding-bottom: 15px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            font-weight: normal;
         }
         .comment {
             background: rgba(0, 0, 0, 0.3);
@@ -86,7 +116,7 @@
         }
         .comment-date {
             color: #8e7a5a;
-            font-size: 12px;
+            font-size: 11px;
             margin-bottom: 12px;
         }
         .comment-text {
@@ -96,12 +126,13 @@
         .comment-form {
             margin-top: 30px;
             padding-top: 30px;
-            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
         }
         .comment-form h3 {
             color: #d4af37;
             margin-bottom: 15px;
             font-size: 18px;
+            font-weight: normal;
         }
         textarea {
             width: 100%;
@@ -114,27 +145,31 @@
             font-size: 15px;
             min-height: 100px;
             resize: vertical;
+            line-height: 1.6;
         }
         textarea:focus {
             outline: none;
             border-color: #d4af37;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+        textarea::placeholder {
+            color: rgba(184, 149, 106, 0.5);
+            font-style: italic;
         }
         button {
             margin-top: 15px;
             padding: 12px 30px;
-            background: linear-gradient(135deg, #d4af37 0%, #b8956a 100%);
-            color: #1a1a2e;
+            background: #d4af37;
+            color: #1c2532;
             border: none;
             border-radius: 6px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            font-family: 'Georgia', serif;
         }
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+            background: #b8956a;
         }
         .no-comments {
             text-align: center;
@@ -151,16 +186,20 @@
         </div>
 
         <div class="poem-card">
-            <div class="poem-title">{{ poem.title }}</div>
-            <div class="poem-meta">
-                By {{ poem.author.username }} • {{ poem.created_at.strftime('%B %d, %Y') }}
+            <div class="poem-header">
+                <div class="avatar">{{ poem.author.username[0].upper() }}</div>
+                <div class="author-info">
+                    <strong>{{ poem.author.username }}</strong>
+                    <small>{{ poem.created_at.strftime('%B %d, %Y') }}</small>
+                </div>
             </div>
+            <div class="poem-title">{{ poem.title }}</div>
             <div class="poem-content">{{ poem.content }}</div>
         </div>
 
         <div class="comments-section">
             <div class="comments-header">
-                💬 Comments ({{ poem.comments|length }})
+                Comments ({{ poem.comments|length }})
             </div>
 
             {% if poem.comments %}
@@ -173,7 +212,7 @@
                 {% endfor %}
             {% else %}
                 <div class="no-comments">
-                    No comments yet. Be the first to share your thoughts!
+                    No comments yet. Be the first to share your thoughts.
                 </div>
             {% endif %}
 

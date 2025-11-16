@@ -10,139 +10,145 @@
         }
         body {
             font-family: 'Georgia', 'Times New Roman', serif;
-            background: #0f0f1e;
+            background: #1c2532;
             min-height: 100vh;
-            padding: 40px 20px;
             color: #e8e8e8;
         }
-        .container {
-            max-width: 900px;
+        .navbar {
+            background: rgba(28, 37, 50, 0.95);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-container {
+            max-width: 700px;
             margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-        .header h1 {
-            font-size: 42px;
+        .logo {
+            font-size: 24px;
             color: #d4af37;
-            margin-bottom: 15px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+        .btn-back {
+            padding: 8px 16px;
+            background: transparent;
+            color: #d4af37;
+            border: 1px solid #d4af37;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .btn-back:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        h1 {
+            color: #d4af37;
+            font-size: 28px;
+            margin-bottom: 10px;
             font-weight: normal;
-            letter-spacing: 3px;
+            letter-spacing: 1px;
         }
-        .header h1::before {
-            content: '👥 ';
-        }
-        .header p {
-            color: #b8956a;
-            font-size: 16px;
+        .subtitle {
+            color: #8e7a5a;
+            font-size: 14px;
+            margin-bottom: 30px;
             font-style: italic;
         }
-        .back-link {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .back-link a {
-            color: #d4af37;
-            text-decoration: none;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-        .back-link a:hover {
-            color: #fff;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
-        }
         .user-card {
-            background: rgba(26, 26, 46, 0.6);
-            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(28, 37, 50, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: 20px;
-            transition: all 0.3s;
+            gap: 15px;
+            transition: border-color 0.2s;
         }
         .user-card:hover {
-            border-color: #d4af37;
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
-            transform: translateX(10px);
+            border-color: rgba(212, 175, 55, 0.4);
         }
         .avatar {
-            width: 70px;
-            height: 70px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: linear-gradient(135deg, #d4af37 0%, #b8956a 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #1a1a2e;
+            color: #1c2532;
             font-weight: bold;
-            font-size: 28px;
-            border: 3px solid #d4af37;
+            font-size: 22px;
             flex-shrink: 0;
         }
         .user-info {
             flex: 1;
         }
-        .user-name {
-            font-size: 22px;
+        .user-info strong {
+            color: #e8e8e8;
+            font-size: 16px;
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .user-info .poet {
             color: #d4af37;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-        .user-email {
-            color: #8e7a5a;
-            font-size: 14px;
-            margin-bottom: 8px;
-            font-style: italic;
-        }
-        .user-meta {
-            color: #b8956a;
             font-size: 13px;
+            margin-bottom: 3px;
         }
-        .user-meta span {
-            margin-right: 15px;
+        .user-info .joined {
+            color: #8e7a5a;
+            font-size: 11px;
         }
-        .badge {
-            background: linear-gradient(135deg, #d4af37 0%, #b8956a 100%);
-            color: #1a1a2e;
+        .admin-badge {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
             padding: 4px 12px;
-            border-radius: 12px;
+            border-radius: 4px;
             font-size: 11px;
             font-weight: 600;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
         }
     </style>
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/home" class="logo">Poetry Vault</a>
+            <a href="/home" class="btn-back">Back to Home</a>
+        </div>
+    </nav>
+
     <div class="container">
-        <div class="header">
-            <h1>Vault Members</h1>
-            <p>Our community of poets and dreamers</p>
-        </div>
-        
-        <div class="back-link">
-            <a href="/home">← Return to Vault</a>
-        </div>
+        <h1>Vault Members</h1>
+        <p class="subtitle">Our community of poets and writers</p>
 
         {% for user in users %}
         <div class="user-card">
             <div class="avatar">{{ user.username[0].upper() }}</div>
             <div class="user-info">
-                <div class="user-name">
-                    {{ user.username }}
-                    {% if user.is_admin %}
-                    <span class="badge">Curator</span>
-                    {% endif %}
-                </div>
-                <div class="user-email">{{ user.email }}</div>
-                <div class="user-meta">
-                    <span>📜 {{ user.poems|length }} poems</span>
-                    <span>🗓️ Joined {{ user.created_at.strftime('%B %d, %Y') }}</span>
-                </div>
+                <strong>{{ user.username }}</strong>
+                <div class="poet">Muse: {{ user.favorite_poet }}</div>
+                <div class="joined">Joined {{ user.created_at.strftime('%B %Y') }}</div>
             </div>
+            {% if user.is_admin %}
+            <div class="admin-badge">Admin</div>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Saved Poems - Poetry Vault</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #1c2532;
+            min-height: 100vh;
+            color: #e8e8e8;
+        }
+        .navbar {
+            background: rgba(28, 37, 50, 0.95);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        .nav-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            color: #d4af37;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+        .btn-back {
+            padding: 8px 16px;
+            background: transparent;
+            color: #d4af37;
+            border: 1px solid #d4af37;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .btn-back:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #d4af37;
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+        .header p {
+            color: #8e7a5a;
+            font-size: 14px;
+            font-style: italic;
+        }
+        .poem-card {
+            background: rgba(28, 37, 50, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .poem-card:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+        }
+        .poem-header {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37 0%, #b8956a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1c2532;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .poem-author {
+            flex: 1;
+        }
+        .poem-author strong {
+            color: #e8e8e8;
+            font-size: 14px;
+            display: block;
+            font-weight: 600;
+        }
+        .poem-author small {
+            color: #8e7a5a;
+            font-size: 11px;
+        }
+        .poem-body {
+            padding: 20px;
+        }
+        .poem-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #d4af37;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+        .poem-content {
+            white-space: pre-wrap;
+            line-height: 1.8;
+            color: #e8e8e8;
+            font-size: 15px;
+            font-style: italic;
+        }
+        .poem-footer {
+            padding: 12px 16px;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            color: #8e7a5a;
+            font-size: 12px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 30px;
+            background: rgba(28, 37, 50, 0.6);
+            border: 1px dashed rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+        }
+        .empty-state h3 {
+            color: #d4af37;
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: normal;
+        }
+        .empty-state p {
+            color: #b8956a;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/home" class="logo">Poetry Vault</a>
+            <a href="/home" class="btn-back">Back to Home</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>Saved Poems</h1>
+            <p>Your bookmarked collection</p>
+        </div>
+
+        {% if poems %}
+            {% for poem in poems %}
+            <a href="/poem/{{ poem.id }}" style="text-decoration: none; color: inherit;">
+                <div class="poem-card">
+                    <div class="poem-header">
+                        <div class="avatar">{{ poem.author.username[0].upper() }}</div>
+                        <div class="poem-author">
+                            <strong>{{ poem.author.username }}</strong>
+                            <small>{{ poem.created_at.strftime('%B %d, %Y') }}</small>
+                        </div>
+                    </div>
+                    <div class="poem-body">
+                        <div class="poem-title">{{ poem.title }}</div>
+                        <div class="poem-content">{{ poem.content }}</div>
+                    </div>
+                    <div class="poem-footer">
+                        {{ poem.comments|length }} comments
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <h3>No Saved Poems Yet</h3>
+                <p>Start saving poems you love to build your personal collection</p>
+                <a href="/home" class="btn-back" style="display: inline-block; margin-top: 10px;">Explore Poems</a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

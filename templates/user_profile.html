@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ user.username }} - Poetry Vault</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Georgia', serif; background: #1c2532; min-height: 100vh; color: #e8e8e8; }
+        .navbar { background: rgba(28, 37, 50, 0.95); border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding: 15px 0; }
+        .nav-container { max-width: 700px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; color: #d4af37; font-weight: 600; text-decoration: none; }
+        .btn-back { padding: 8px 16px; background: transparent; color: #d4af37; border: 1px solid #d4af37; border-radius: 6px; text-decoration: none; font-size: 12px; }
+        .container { max-width: 700px; margin: 40px auto; padding: 0 20px; }
+        .profile-header { background: rgba(28, 37, 50, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 40px; margin-bottom: 30px; text-align: center; }
+        .avatar-large { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #d4af37 0%, #b8956a 100%); display: flex; align-items: center; justify-content: center; color: #1c2532; font-weight: bold; font-size: 42px; margin: 0 auto 20px; }
+        .profile-header h1 { color: #d4af37; font-size: 32px; margin-bottom: 10px; font-weight: normal; }
+        .profile-header p { color: #8e7a5a; font-size: 14px; font-style: italic; }
+        .stats { display: flex; gap: 30px; justify-content: center; margin-top: 20px; }
+        .stat { text-align: center; }
+        .stat-number { color: #d4af37; font-size: 24px; font-weight: 600; }
+        .stat-label { color: #8e7a5a; font-size: 12px; }
+        .section-title { color: #d4af37; font-size: 22px; margin-bottom: 20px; font-weight: normal; }
+        .poem-card { background: rgba(28, 37, 50, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 25px; margin-bottom: 20px; }
+        .poem-title { color: #d4af37; font-size: 20px; margin-bottom: 15px; font-weight: 600; }
+        .poem-content { color: #e8e8e8; line-height: 1.8; font-style: italic; white-space: pre-wrap; }
+        .poem-meta { color: #8e7a5a; font-size: 12px; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(212, 175, 55, 0.1); }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/home" class="logo">Poetry Vault</a>
+            <a href="/home" class="btn-back">Back to Home</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="profile-header">
+            <div class="avatar-large">{{ user.username[0].upper() }}</div>
+            <h1>{{ user.username }}</h1>
+            <p>Muse: {{ user.favorite_poet }}</p>
+            <div class="stats">
+                <div class="stat"><div class="stat-number">{{ poems|length }}</div><div class="stat-label">Poems</div></div>
+                <div class="stat"><div class="stat-number">{{ user.created_at.strftime('%Y') }}</div><div class="stat-label">Joined</div></div>
+            </div>
+        </div>
+        <div class="section-title">Poems by {{ user.username }}</div>
+        {% for poem in poems %}
+        <a href="/poem/{{ poem.id }}" style="text-decoration: none; color: inherit;">
+            <div class="poem-card">
+                <div class="poem-title">{{ poem.title }}</div>
+                <div class="poem-content">{{ poem.content[:200] }}{% if poem.content|length > 200 %}...{% endif %}</div>
+                <div class="poem-meta">{{ poem.created_at.strftime('%B %d, %Y') }} • {{ poem.likes|length }} likes • {{ poem.comments|length }} comments</div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</body>
+</html>

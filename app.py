@@ -83,6 +83,8 @@ def create_app():
         
         return render_template('login.html')
     
+
+    
     @app.route('/logout')
     @login_required
     def logout():
@@ -107,7 +109,8 @@ def create_app():
         else:
             greeting = "Good night"
         
-        poems = Poem.query.order_by(Poem.created_at.desc()).all()
+        # Only show user-created poems (not classic poems) on home feed
+        poems = Poem.query.filter_by(is_classic=False).order_by(Poem.created_at.desc()).all()
         return render_template('home.html', poems=poems, greeting=greeting)
     
     @app.route('/new-poem', methods=['GET', 'POST'])
@@ -221,16 +224,152 @@ def create_app():
     @app.route('/poem/<int:poem_id>', methods=['GET', 'POST'])
     @login_required
     def poem_detail(poem_id):
+        from models import Notification
         poem = Poem.query.get_or_404(poem_id)
         
         if request.method == 'POST':
             comment_text = request.form['comment']
             comment = Comment(content=comment_text, user_id=current_user.id, poem_id=poem_id)
             db.session.add(comment)
+            
+            # Create notification for poem author
+            if poem.user_id != current_user.id:
+                notif = Notification(
+                    user_id=poem.user_id,
+                    type='comment',
+                    message=f'{current_user.username} commented on your poem "{poem.title}"',
+                    poem_id=poem_id
+                )
+                db.session.add(notif)
+            
             db.session.commit()
             return redirect(url_for('poem_detail', poem_id=poem_id))
         
         return render_template('poem_detail.html', poem=poem)
+    
+    @app.route('/poem/<int:poem_id>/edit', methods=['GET', 'POST'])
+    @login_required
+    def edit_poem(poem_id):
+        poem = Poem.query.get_or_404(poem_id)
+        
+        # Check permissions
+        if poem.user_id != current_user.id and not current_user.is_admin:
+            abort(403)
+        
+        if request.method == 'POST':
+            poem.title = request.form['title']
+            poem.content = request.form['content']
+            db.session.commit()
+            return redirect(url_for('poem_detail', poem_id=poem_id))
+        
+        return render_template('edit_poem.html', poem=poem)
+    
+    @app.route('/poem/<int:poem_id>/delete', methods=['POST'])
+    @login_required
+    def delete_poem(poem_id):
+        poem = Poem.query.get_or_404(poem_id)
+        
+        # Check permissions
+        if poem.user_id != current_user.id and not current_user.is_admin:
+            abort(403)
+        
+        db.session.delete(poem)
+        db.session.commit()
+        return redirect(url_for('home'))
+    
+    @app.route('/poem/<int:poem_id>/save', methods=['POST'])
+    @login_required
+    def toggle_save_poem(poem_id):
+        from models import SavedPoem
+        poem = Poem.query.get_or_404(poem_id)
+        saved = SavedPoem.query.filter_by(user_id=current_user.id, poem_id=poem_id).first()
+        
+        if saved:
+            db.session.delete(saved)
+            action = 'unsaved'
+        else:
+            new_save = SavedPoem(user_id=current_user.id, poem_id=poem_id)
+            db.session.add(new_save)
+            action = 'saved'
+        
+        db.session.commit()
+        return jsonify({'status': 'success', 'action': action})
+    
+    @app.route('/saved-poems')
+    @login_required
+    def saved_poems():
+        from models import SavedPoem
+        saved = SavedPoem.query.filter_by(user_id=current_user.id).order_by(SavedPoem.saved_at.desc()).all()
+        poems = [s.poem for s in saved]
+        return render_template('saved_poems.html', poems=poems)
+    @app.route('/poem/<int:poem_id>/like', methods=['POST'])
+    @login_required
+    def toggle_like_poem(poem_id):
+        from models import Like, Notification
+        poem = Poem.query.get_or_404(poem_id)
+        like = Like.query.filter_by(user_id=current_user.id, poem_id=poem_id).first()
+        
+        if like:
+            db.session.delete(like)
+            action = 'unliked'
+        else:
+            new_like = Like(user_id=current_user.id, poem_id=poem_id)
+            db.session.add(new_like)
+            action = 'liked'
+            
+            # Create notification for poem author
+            if poem.user_id != current_user.id:
+                notif = Notification(
+                    user_id=poem.user_id,
+                    type='like',
+                    message=f'{current_user.username} liked your poem "{poem.title}"',
+                    poem_id=poem_id
+                )
+                db.session.add(notif)
+        
+        db.session.commit()
+        like_count = Like.query.filter_by(poem_id=poem_id).count()
+        return jsonify({'status': 'success', 'action': action, 'count': like_count})
+    
+    @app.route('/user/<int:user_id>')
+    @login_required
+    def user_profile(user_id):
+        user = User.query.get_or_404(user_id)
+        poems = Poem.query.filter_by(user_id=user_id).order_by(Poem.created_at.desc()).all()
+        return render_template('user_profile.html', user=user, poems=poems)
+    
+    @app.route('/search', methods=['GET'])
+    @login_required
+    def search():
+        query = request.args.get('q', '').strip()
+        poems = []
+        if query:
+            # Search in both title and content
+            poems = Poem.query.filter(
+                db.or_(
+                    Poem.title.ilike(f'%{query}%'),
+                    Poem.content.ilike(f'%{query}%')
+                )
+            ).order_by(Poem.created_at.desc()).all()
+        return render_template('search.html', poems=poems, query=query)
+    
+    @app.route('/notifications')
+    @login_required
+    def notifications():
+        from models import Notification
+        notifs = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.created_at.desc()).all()
+        # Mark as read
+        for notif in notifs:
+            notif.is_read = True
+        db.session.commit()
+        return render_template('notifications.html', notifications=notifs)
+    
+    @app.route('/notifications/unread-count')
+    @login_required
+    def unread_notifications_count():
+        from models import Notification
+        count = Notification.query.filter_by(user_id=current_user.id, is_read=False).count()
+        return jsonify({'count': count})
     
     @app.route('/chat-with-poet')
     @login_required
