@@ -1,6 +1,21 @@
 # Database Backup Guide
 
-## Quick Backup Commands
+## 🤖 Automatic Backups (Recommended)
+
+### Run App with Auto-Backup
+```bash
+cd JJ_PoetryApp0.1
+source .venv/bin/activate
+python3 run_app.py
+```
+
+This will:
+- ✅ Start your Flask app on port 5001
+- ✅ Automatically backup every 6 hours
+- ✅ Keep the last 10 backups
+- ✅ Run in the background while app is running
+
+## 📝 Manual Backup Commands
 
 ### Create a Backup
 ```bash
