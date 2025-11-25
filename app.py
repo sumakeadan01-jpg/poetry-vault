@@ -131,8 +131,9 @@ def create_app():
         if request.method == 'POST':
             title = request.form['title']
             content = request.form['content']
+            is_anonymous = request.form.get('anonymous') == 'on'
             
-            poem = Poem(title=title, content=content, user_id=current_user.id)
+            poem = Poem(title=title, content=content, user_id=current_user.id, is_anonymous=is_anonymous)
             db.session.add(poem)
             db.session.commit()
             

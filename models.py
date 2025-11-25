@@ -44,6 +44,7 @@ class Poem(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     is_classic = db.Column(db.Boolean, default=False)  # Hide from home feed, show in search only
+    is_anonymous = db.Column(db.Boolean, default=False)  # Post anonymously
     
     comments = db.relationship('Comment', backref='poem', lazy=True, cascade='all, delete-orphan')
     saved_by = db.relationship('SavedPoem', backref='poem', lazy=True, cascade='all, delete-orphan')

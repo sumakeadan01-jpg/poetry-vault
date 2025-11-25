@@ -235,11 +235,19 @@
 
         <div class="poem-card">
             <div class="poem-header">
-                <div class="avatar">{{ poem.author.username[0].upper() }}</div>
-                <div class="author-info">
-                    <strong>{{ poem.author.username }}</strong>
-                    <small>{{ poem.created_at.strftime('%B %d, %Y') }}</small>
-                </div>
+                {% if poem.is_anonymous %}
+                    <div class="avatar">?</div>
+                    <div class="author-info">
+                        <strong>Anonymous</strong>
+                        <small>{{ poem.created_at.strftime('%B %d, %Y') }}</small>
+                    </div>
+                {% else %}
+                    <div class="avatar">{{ poem.author.username[0].upper() }}</div>
+                    <div class="author-info">
+                        <strong>{{ poem.author.username }}</strong>
+                        <small>{{ poem.created_at.strftime('%B %d, %Y') }}</small>
+                    </div>
+                {% endif %}
                 <button class="options-btn" onclick="toggleMenu(event, {{ poem.id }})">⋮</button>
                 <div class="options-menu" id="menu-{{ poem.id }}" style="display: none;">
                     {% if current_user.id == poem.user_id or current_user.is_admin %}
