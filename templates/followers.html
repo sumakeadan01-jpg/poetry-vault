@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Followers - Poetry Vault</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Georgia', serif; background: #1c2532; min-height: 100vh; color: #e8e8e8; }
+        .navbar { background: rgba(28, 37, 50, 0.95); border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding: 15px 0; }
+        .nav-container { max-width: 600px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; color: #d4af37; font-weight: 600; text-decoration: none; }
+        .btn-back { padding: 8px 16px; background: transparent; color: #d4af37; border: 1px solid #d4af37; border-radius: 6px; text-decoration: none; font-size: 12px; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { margin-bottom: 30px; }
+        .header h1 { color: #d4af37; font-size: 24px; margin-bottom: 5px; font-weight: normal; }
+        .header p { color: #8e7a5a; font-size: 14px; font-style: italic; }
+        .user-card { background: rgba(28, 37, 50, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 20px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #d4af37 0%, #b8956a 100%); display: flex; align-items: center; justify-content: center; color: #1c2532; font-weight: bold; font-size: 22px; }
+        .user-info { flex: 1; }
+        .user-info strong { color: #e8e8e8; font-size: 16px; display: block; margin-bottom: 3px; }
+        .user-info small { color: #8e7a5a; font-size: 12px; }
+        .follow-btn { padding: 8px 24px; background: #d4af37; color: #1c2532; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .follow-btn:hover { background: #b8956a; }
+        .follow-btn.following { background: transparent; color: #d4af37; border: 1px solid #d4af37; }
+        .empty-state { text-align: center; padding: 60px 30px; background: rgba(28, 37, 50, 0.6); border: 1px dashed rgba(212, 175, 55, 0.3); border-radius: 8px; }
+        .empty-state h3 { color: #d4af37; font-size: 20px; margin-bottom: 10px; font-weight: normal; }
+        .empty-state p { color: #b8956a; font-style: italic; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/home" class="logo">Poetry Vault</a>
+            <a href="/user/{{ user.id }}" class="btn-back">Back to Profile</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="header">
+            <h1>{{ user.username }}'s Followers</h1>
+            <p>{{ followers|length }} followers</p>
+        </div>
+        {% if followers %}
+            {% for follower in followers %}
+            <div class="user-card">
+                <a href="/user/{{ follower.id }}" style="display: flex; align-items: center; gap: 15px; flex: 1; text-decoration: none; color: inherit;">
+                    <div class="avatar">{{ follower.username[0].upper() }}</div>
+                    <div class="user-info">
+                        <strong>{{ follower.username }}</strong>
+                        <small>Muse: {{ follower.favorite_poet }}</small>
+                    </div>
+                </a>
+                {% if follower.id != current_user.id %}
+                    <button class="follow-btn {% if follower.id in current_user_following_ids %}following{% endif %}" 
+                            id="follow-btn-{{ follower.id }}" 
+                            onclick="toggleFollow({{ follower.id }})">
+                        {% if follower.id in current_user_following_ids %}Following{% else %}Follow{% endif %}
+                    </button>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <h3>No Followers Yet</h3>
+                <p>Be the first to follow {{ user.username }}!</p>
+            </div>
+        {% endif %}
+    </div>
+    <script>
+        function toggleFollow(userId) {
+            fetch('/user/' + userId + '/follow', {
+                method: 'POST',
+            }).then(response => response.json())
+            .then(data => {
+                const btn = document.getElementById('follow-btn-' + userId);
+                if (data.action === 'followed') {
+                    btn.textContent = 'Following';
+                    btn.classList.add('following');
+                } else {
+                    btn.textContent = 'Follow';
+                    btn.classList.remove('following');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

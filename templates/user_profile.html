@@ -15,7 +15,8 @@
         .profile-header h1 { color: #d4af37; font-size: 32px; margin-bottom: 10px; font-weight: normal; }
         .profile-header p { color: #8e7a5a; font-size: 14px; font-style: italic; }
         .stats { display: flex; gap: 30px; justify-content: center; margin-top: 20px; }
-        .stat { text-align: center; }
+        .stat { text-align: center; cursor: pointer; transition: transform 0.2s; }
+        .stat:hover { transform: scale(1.05); }
         .stat-number { color: #d4af37; font-size: 24px; font-weight: 600; }
         .stat-label { color: #8e7a5a; font-size: 12px; }
         .follow-btn { margin-top: 20px; padding: 12px 40px; background: #d4af37; color: #1c2532; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
@@ -46,8 +47,14 @@
             <p>Muse: {{ user.favorite_poet }}</p>
             <div class="stats">
                 <div class="stat"><div class="stat-number">{{ poems|length }}</div><div class="stat-label">Poems</div></div>
-                <div class="stat"><div class="stat-number" id="followers-count">{{ followers_count }}</div><div class="stat-label">Followers</div></div>
-                <div class="stat"><div class="stat-number">{{ following_count }}</div><div class="stat-label">Following</div></div>
+                <a href="/user/{{ user.id }}/followers" class="stat" style="text-decoration: none; color: inherit;">
+                    <div class="stat-number" id="followers-count">{{ followers_count }}</div>
+                    <div class="stat-label">Followers</div>
+                </a>
+                <a href="/user/{{ user.id }}/following" class="stat" style="text-decoration: none; color: inherit;">
+                    <div class="stat-number">{{ following_count }}</div>
+                    <div class="stat-label">Following</div>
+                </a>
             </div>
             {% if current_user.id != user.id %}
                 <button class="follow-btn {% if is_following %}following{% endif %}" id="follow-btn" onclick="toggleFollow({{ user.id }})">

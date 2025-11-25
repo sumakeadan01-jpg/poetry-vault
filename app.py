@@ -416,6 +416,38 @@ def create_app():
         followers_count = Follow.query.filter_by(followed_id=user_id).count()
         return jsonify({'status': 'success', 'action': action, 'followers_count': followers_count})
     
+    @app.route('/user/<int:user_id>/followers')
+    @login_required
+    def user_followers(user_id):
+        from models import Follow
+        user = User.query.get_or_404(user_id)
+        
+        # Get all followers
+        follower_relationships = Follow.query.filter_by(followed_id=user_id).all()
+        followers = [User.query.get(f.follower_id) for f in follower_relationships]
+        
+        # Check which ones current user follows
+        current_user_following_ids = [f.followed_id for f in Follow.query.filter_by(follower_id=current_user.id).all()]
+        
+        return render_template('followers.html', user=user, followers=followers, 
+                             current_user_following_ids=current_user_following_ids)
+    
+    @app.route('/user/<int:user_id>/following')
+    @login_required
+    def user_following(user_id):
+        from models import Follow
+        user = User.query.get_or_404(user_id)
+        
+        # Get all users this user follows
+        following_relationships = Follow.query.filter_by(follower_id=user_id).all()
+        following = [User.query.get(f.followed_id) for f in following_relationships]
+        
+        # Check which ones current user follows
+        current_user_following_ids = [f.followed_id for f in Follow.query.filter_by(follower_id=current_user.id).all()]
+        
+        return render_template('following.html', user=user, following=following, 
+                             current_user_following_ids=current_user_following_ids)
+    
     @app.route('/search', methods=['GET'])
     @login_required
     def search():
