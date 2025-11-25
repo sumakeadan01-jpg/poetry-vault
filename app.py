@@ -113,12 +113,12 @@ def create_app():
         # Get IDs of users current user follows
         following_ids = [f.followed_id for f in Follow.query.filter_by(follower_id=current_user.id).all()]
         
-        # Show poems from followed users only (personalized feed)
+        # Show poems from followed users, or all poems if not following anyone yet
         if following_ids:
             poems = Poem.query.filter(Poem.user_id.in_(following_ids), Poem.is_classic == False).order_by(Poem.created_at.desc()).all()
         else:
-            # If not following anyone, show empty feed
-            poems = []
+            # If not following anyone, show all user poems (not classic) to help discover
+            poems = Poem.query.filter_by(is_classic=False).order_by(Poem.created_at.desc()).all()
         
         # Get saved poem IDs for current user
         saved_poem_ids = [s.poem_id for s in SavedPoem.query.filter_by(user_id=current_user.id).all()]
