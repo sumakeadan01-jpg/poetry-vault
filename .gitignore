@@ -25,13 +25,16 @@ wheels/
 *.egg
 
 # Flask
-instance/
+instance/*.db
+instance/*.sqlite
+instance/*.sqlite3
 .webassets-cache
 
-# Database
+# Database (but keep backups)
 *.db
 *.sqlite
 *.sqlite3
+!instance/backups/*.db
 
 # Environment variables
 .env
