@@ -147,7 +147,8 @@ def create_app():
         # Only show real users, not classic poets
         classic_poet_names = ['Shakespeare', 'Rumi', 'Emily Dickinson', 'Edgar Allan Poe', 
                              'Walt Whitman', 'Lord Byron', 'William Wordsworth', 
-                             'John Keats', 'Percy Shelley', 'Robert Burns']
+                             'John Keats', 'Percy Shelley', 'Robert Burns',
+                             'Robert Frost', 'Maya Angelou', 'Langston Hughes']
         all_users = User.query.filter(~User.username.in_(classic_poet_names)).order_by(User.created_at.desc()).all()
         return render_template('users.html', users=all_users)
     
@@ -444,7 +445,8 @@ def create_app():
         # Get classic poet names to exclude
         classic_poet_names = ['Shakespeare', 'Rumi', 'Emily Dickinson', 'Edgar Allan Poe', 
                              'Walt Whitman', 'Lord Byron', 'William Wordsworth', 
-                             'John Keats', 'Percy Shelley', 'Robert Burns']
+                             'John Keats', 'Percy Shelley', 'Robert Burns',
+                             'Robert Frost', 'Maya Angelou', 'Langston Hughes']
         
         # Get suggested users (not following, not self, not classic poets)
         suggested_users = User.query.filter(
