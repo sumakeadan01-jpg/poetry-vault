@@ -26,11 +26,23 @@
         .highlight { width: 70px; text-align: center; cursor: pointer; }
         .highlight-circle { width: 70px; height: 70px; border-radius: 50%; border: 2px solid #d4af37; display: flex; align-items: center; justify-content: center; background: rgba(212, 175, 55, 0.1); margin-bottom: 5px; }
         .highlight-name { color: #8e7a5a; font-size: 11px; }
-        .section-title { color: #d4af37; font-size: 22px; margin-bottom: 20px; font-weight: normal; }
-        .poem-card { background: rgba(28, 37, 50, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 25px; margin-bottom: 20px; }
-        .poem-title { color: #d4af37; font-size: 20px; margin-bottom: 15px; font-weight: 600; }
-        .poem-content { color: #e8e8e8; line-height: 1.8; font-style: italic; white-space: pre-wrap; }
-        .poem-meta { color: #8e7a5a; font-size: 12px; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(212, 175, 55, 0.1); }
+        .tabs { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
+        .tab { padding: 15px 0; color: #8e7a5a; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .tab.active { color: #d4af37; border-bottom-color: #d4af37; }
+        .tab:hover { color: #d4af37; }
+        .poems-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+        .grid-item { aspect-ratio: 1; background: rgba(28, 37, 50, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); cursor: pointer; overflow: hidden; position: relative; transition: all 0.2s; }
+        .grid-item:hover { transform: scale(1.02); border-color: #d4af37; }
+        .grid-item-content { padding: 15px; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+        .grid-poem-title { color: #d4af37; font-size: 14px; font-weight: 600; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .grid-poem-preview { color: #e8e8e8; font-size: 11px; line-height: 1.4; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; line-clamp: 4; -webkit-box-orient: vertical; font-style: italic; }
+        .grid-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); display: flex; align-items: center; justify-content: center; gap: 20px; opacity: 0; transition: opacity 0.2s; }
+        .grid-item:hover .grid-overlay { opacity: 1; }
+        .grid-stat { color: #fff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #8e7a5a; font-style: italic; }
+        @media (max-width: 768px) {
+            .poems-grid { grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
 </head>
 <body>
@@ -72,16 +84,36 @@
             </div>
             {% endif %}
         </div>
-        <div class="section-title">Poems by {{ user.username }}</div>
-        {% for poem in poems %}
-        <a href="/poem/{{ poem.id }}" style="text-decoration: none; color: inherit;">
-            <div class="poem-card">
-                <div class="poem-title">{{ poem.title }}</div>
-                <div class="poem-content">{{ poem.content[:200] }}{% if poem.content|length > 200 %}...{% endif %}</div>
-                <div class="poem-meta">{{ poem.created_at.strftime('%B %d, %Y') }} • {{ poem.likes|length }} likes • {{ poem.comments|length }} comments</div>
-            </div>
-        </a>
-        {% endfor %}
+        <div class="tabs">
+            <div class="tab active">📝 Poems</div>
+        </div>
+        
+        {% if poems %}
+        <div class="poems-grid">
+            {% for poem in poems %}
+            <a href="/poem/{{ poem.id }}" style="text-decoration: none; color: inherit;">
+                <div class="grid-item">
+                    <div class="grid-item-content">
+                        <div class="grid-poem-title">{{ poem.title }}</div>
+                        <div class="grid-poem-preview">{{ poem.content }}</div>
+                    </div>
+                    <div class="grid-overlay">
+                        <div class="grid-stat">❤️ {{ poem.likes|length }}</div>
+                        <div class="grid-stat">💬 {{ poem.comments|length }}</div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            {% if current_user.id == user.id %}
+                No poems yet. Share your first verse with the world!
+            {% else %}
+                {{ user.username }} hasn't shared any poems yet.
+            {% endif %}
+        </div>
+        {% endif %}
     </div>
     <script>
         function toggleFollow(userId) {
