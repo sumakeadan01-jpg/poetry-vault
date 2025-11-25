@@ -44,6 +44,54 @@
             margin-bottom: 30px;
             padding-bottom: 20px;
             border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            position: relative;
+        }
+        .options-btn {
+            background: none;
+            border: none;
+            color: #d4af37;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px 10px;
+            line-height: 1;
+            position: relative;
+        }
+        .options-btn:hover {
+            color: #b8956a;
+        }
+        .options-menu {
+            position: absolute;
+            right: 0;
+            top: 60px;
+            background: rgba(20, 25, 35, 0.98);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            min-width: 160px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .menu-item {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            color: #e8e8e8;
+            text-align: left;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+            font-family: 'Georgia', serif;
+        }
+        .menu-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+        .menu-item:first-child {
+            border-radius: 8px 8px 0 0;
+        }
+        .menu-item:last-child {
+            border-radius: 0 0 8px 8px;
         }
         .avatar {
             width: 50px;
@@ -192,6 +240,17 @@
                     <strong>{{ poem.author.username }}</strong>
                     <small>{{ poem.created_at.strftime('%B %d, %Y') }}</small>
                 </div>
+                <button class="options-btn" onclick="toggleMenu(event, {{ poem.id }})">⋮</button>
+                <div class="options-menu" id="menu-{{ poem.id }}" style="display: none;">
+                    {% if current_user.id == poem.user_id or current_user.is_admin %}
+                        <a href="/poem/{{ poem.id }}/edit" class="menu-item">Edit</a>
+                        <button onclick="confirmDelete({{ poem.id }})" class="menu-item">Delete</button>
+                    {% endif %}
+                    <button onclick="toggleSave({{ poem.id }})" class="menu-item" id="save-btn-{{ poem.id }}">
+                        {% if is_saved %}Unsave{% else %}Save{% endif %}
+                    </button>
+                    <button onclick="sharePoem({{ poem.id }})" class="menu-item">Share</button>
+                </div>
             </div>
             <div class="poem-title">{{ poem.title }}</div>
             <div class="poem-content">{{ poem.content }}</div>
@@ -225,5 +284,89 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function toggleMenu(event, poemId) {
+            event.stopPropagation();
+            event.preventDefault();
+            
+            document.querySelectorAll('.options-menu').forEach(menu => {
+                if (menu.id !== 'menu-' + poemId) {
+                    menu.style.display = 'none';
+                }
+            });
+            
+            const menu = document.getElementById('menu-' + poemId);
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        document.addEventListener('click', function() {
+            document.querySelectorAll('.options-menu').forEach(menu => {
+                menu.style.display = 'none';
+            });
+        });
+
+        function confirmDelete(poemId) {
+            if (confirm('Are you sure you want to delete this poem? This action cannot be undone.')) {
+                fetch('/poem/' + poemId + '/delete', {
+                    method: 'POST',
+                }).then(() => {
+                    window.location.href = '/home';
+                });
+            }
+        }
+
+        function toggleSave(poemId) {
+            fetch('/poem/' + poemId + '/save', {
+                method: 'POST',
+            }).then(response => response.json())
+            .then(data => {
+                const btn = document.getElementById('save-btn-' + poemId);
+                if (data.action === 'saved') {
+                    btn.textContent = 'Unsave';
+                    showToast('Poem saved!');
+                } else {
+                    btn.textContent = 'Save';
+                    showToast('Poem unsaved');
+                }
+            });
+        }
+
+        function sharePoem(poemId) {
+            const url = window.location.origin + '/poem/' + poemId;
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('Link copied to clipboard!');
+            }).catch(() => {
+                showToast('Failed to copy link');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(212, 175, 55, 0.95);
+                color: #1c2532;
+                padding: 12px 24px;
+                border-radius: 6px;
+                font-size: 14px;
+                font-weight: 600;
+                z-index: 10000;
+                animation: fadeInOut 2s ease-in-out;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+    </script>
+    <style>
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+    </style>
 </body>
 </html>

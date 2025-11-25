@@ -95,6 +95,7 @@ def create_app():
     @login_required
     def home():
         from datetime import datetime
+        from models import SavedPoem
         
         # Get current hour
         current_hour = datetime.now().hour
@@ -111,7 +112,11 @@ def create_app():
         
         # Only show user-created poems (not classic poems) on home feed
         poems = Poem.query.filter_by(is_classic=False).order_by(Poem.created_at.desc()).all()
-        return render_template('home.html', poems=poems, greeting=greeting)
+        
+        # Get saved poem IDs for current user
+        saved_poem_ids = [s.poem_id for s in SavedPoem.query.filter_by(user_id=current_user.id).all()]
+        
+        return render_template('home.html', poems=poems, greeting=greeting, saved_poem_ids=saved_poem_ids)
     
     @app.route('/new-poem', methods=['GET', 'POST'])
     @login_required
@@ -224,7 +229,7 @@ def create_app():
     @app.route('/poem/<int:poem_id>', methods=['GET', 'POST'])
     @login_required
     def poem_detail(poem_id):
-        from models import Notification
+        from models import Notification, SavedPoem
         poem = Poem.query.get_or_404(poem_id)
         
         if request.method == 'POST':
@@ -245,7 +250,10 @@ def create_app():
             db.session.commit()
             return redirect(url_for('poem_detail', poem_id=poem_id))
         
-        return render_template('poem_detail.html', poem=poem)
+        # Check if poem is saved by current user
+        is_saved = SavedPoem.query.filter_by(user_id=current_user.id, poem_id=poem_id).first() is not None
+        
+        return render_template('poem_detail.html', poem=poem, is_saved=is_saved)
     
     @app.route('/poem/<int:poem_id>/edit', methods=['GET', 'POST'])
     @login_required

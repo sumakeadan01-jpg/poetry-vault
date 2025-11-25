@@ -349,7 +349,10 @@
                             <a href="/poem/{{ poem.id }}/edit" class="menu-item">Edit</a>
                             <button onclick="confirmDelete({{ poem.id }})" class="menu-item">Delete</button>
                         {% endif %}
-                        <button onclick="toggleSave({{ poem.id }})" class="menu-item" id="save-btn-{{ poem.id }}">Save</button>
+                        <button onclick="toggleSave({{ poem.id }})" class="menu-item" id="save-btn-{{ poem.id }}">
+                            {% if poem.id in saved_poem_ids %}Unsave{% else %}Save{% endif %}
+                        </button>
+                        <button onclick="sharePoem({{ poem.id }})" class="menu-item">Share</button>
                         <a href="/poem/{{ poem.id }}" class="menu-item">View Details</a>
                     </div>
                 </div>
@@ -427,10 +430,42 @@
                 const btn = document.getElementById('save-btn-' + poemId);
                 if (data.action === 'saved') {
                     btn.textContent = 'Unsave';
+                    showToast('Poem saved!');
                 } else {
                     btn.textContent = 'Save';
+                    showToast('Poem unsaved');
                 }
             });
+        }
+
+        function sharePoem(poemId) {
+            const url = window.location.origin + '/poem/' + poemId;
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('Link copied to clipboard!');
+            }).catch(() => {
+                showToast('Failed to copy link');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(212, 175, 55, 0.95);
+                color: #1c2532;
+                padding: 12px 24px;
+                border-radius: 6px;
+                font-size: 14px;
+                font-weight: 600;
+                z-index: 10000;
+                animation: fadeInOut 2s ease-in-out;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
         }
 
         function toggleLike(event, poemId) {
@@ -451,5 +486,11 @@
             });
         }
     </script>
+    <style>
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+    </style>
 </body>
 </html>
