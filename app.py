@@ -136,7 +136,11 @@ def create_app():
     @app.route('/users')
     @login_required
     def users():
-        all_users = User.query.order_by(User.created_at.desc()).all()
+        # Only show real users, not classic poets
+        classic_poet_names = ['Shakespeare', 'Rumi', 'Emily Dickinson', 'Edgar Allan Poe', 
+                             'Walt Whitman', 'Lord Byron', 'William Wordsworth', 
+                             'John Keats', 'Percy Shelley', 'Robert Burns']
+        all_users = User.query.filter(~User.username.in_(classic_poet_names)).order_by(User.created_at.desc()).all()
         return render_template('users.html', users=all_users)
     
     @app.route('/settings')
