@@ -102,6 +102,70 @@ def create_app():
         logout_user()
         return redirect(url_for('login'))
     
+    @app.route('/admin/reset-database/<secret_code>')
+    def reset_database(secret_code):
+        """Admin route to reset the database - USE WITH CAUTION!"""
+        # Secret code to prevent accidental resets
+        if secret_code != 'RESET_POETRY_VAULT_2024':
+            abort(404)
+        
+        try:
+            import os
+            # Drop all tables
+            db.drop_all()
+            # Recreate all tables
+            db.create_all()
+            
+            # Auto-seed with classic poems
+            from seed_poems import FAMOUS_POEMS
+            
+            for poet_name, poems_list in FAMOUS_POEMS.items():
+                # Create poet user
+                poet = User(
+                    username=poet_name,
+                    email=f"{poet_name.lower().replace(' ', '')}@poetry.vault",
+                    age=100,
+                    favorite_poet=poet_name,
+                    is_admin=False
+                )
+                poet.set_password('classic_poet_password')
+                db.session.add(poet)
+                db.session.flush()
+                
+                # Add their poems
+                for poem_data in poems_list:
+                    poem = Poem(
+                        title=poem_data['title'],
+                        content=poem_data['content'],
+                        user_id=poet.id,
+                        is_classic=True
+                    )
+                    db.session.add(poem)
+            
+            db.session.commit()
+            
+            return '''
+            <html>
+            <head><title>Database Reset</title></head>
+            <body style="font-family: Arial; padding: 50px; text-align: center;">
+                <h1 style="color: green;">✅ Database Reset Successful!</h1>
+                <p>The database has been reset with all classic poets and poems.</p>
+                <p><a href="/register" style="color: #d4af37; text-decoration: none; font-size: 18px;">→ Register Your Account</a></p>
+            </body>
+            </html>
+            '''
+        except Exception as e:
+            return f'''
+            <html>
+            <head><title>Reset Failed</title></head>
+            <body style="font-family: Arial; padding: 50px; text-align: center;">
+                <h1 style="color: red;">❌ Reset Failed</h1>
+                <p>Error: {str(e)}</p>
+                <p><a href="/" style="color: #d4af37;">← Back to Home</a></p>
+            </body>
+            </html>
+            '''
+    
     @app.route('/home')
     @login_required
     def home():
