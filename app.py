@@ -432,6 +432,39 @@ def create_app():
     
     with app.app_context():
         db.create_all()
+        
+        # Auto-seed database if empty
+        if Poem.query.count() == 0:
+            from seed_poems import FAMOUS_POEMS
+            from werkzeug.security import generate_password_hash
+            
+            for poet_name, poems in FAMOUS_POEMS.items():
+                poet_user = User.query.filter_by(username=poet_name).first()
+                
+                if not poet_user:
+                    poet_user = User(
+                        username=poet_name,
+                        email=f'{poet_name.lower().replace(" ", "")}@poetryvault.com',
+                        password_hash=generate_password_hash('classic_poet_2024'),
+                        age=None,
+                        favorite_poet=poet_name,
+                        is_admin=False
+                    )
+                    db.session.add(poet_user)
+                    db.session.flush()
+                
+                for poem_data in poems:
+                    poem = Poem(
+                        title=poem_data['title'],
+                        content=poem_data['content'],
+                        category=poem_data.get('category', 'general'),
+                        user_id=poet_user.id,
+                        is_classic=True
+                    )
+                    db.session.add(poem)
+            
+            db.session.commit()
+            print("✅ Database auto-seeded with classic poems!")
     
     return app
 
