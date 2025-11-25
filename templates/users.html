@@ -124,6 +124,33 @@
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
+        .user-card a {
+            text-decoration: none;
+            color: inherit;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .follow-btn {
+            padding: 8px 24px;
+            background: #d4af37;
+            color: #1c2532;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .follow-btn:hover {
+            background: #b8956a;
+        }
+        .follow-btn.following {
+            background: transparent;
+            color: #d4af37;
+            border: 1px solid #d4af37;
+        }
     </style>
 </head>
 <body>
@@ -140,12 +167,14 @@
 
         {% for user in users %}
         <div class="user-card">
-            <div class="avatar">{{ user.username[0].upper() }}</div>
-            <div class="user-info">
-                <strong>{{ user.username }}</strong>
-                <div class="poet">Muse: {{ user.favorite_poet }}</div>
-                <div class="joined">Joined {{ user.created_at.strftime('%B %Y') }}</div>
-            </div>
+            <a href="/user/{{ user.id }}">
+                <div class="avatar">{{ user.username[0].upper() }}</div>
+                <div class="user-info">
+                    <strong>{{ user.username }}</strong>
+                    <div class="poet">Muse: {{ user.favorite_poet }}</div>
+                    <div class="joined">Joined {{ user.created_at.strftime('%B %Y') }}</div>
+                </div>
+            </a>
             {% if user.is_admin %}
             <div class="admin-badge">Admin</div>
             {% endif %}

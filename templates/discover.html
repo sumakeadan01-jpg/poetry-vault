@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Discover Poets - Poetry Vault</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Georgia', serif; background: #1c2532; min-height: 100vh; color: #e8e8e8; }
+        .navbar { background: rgba(28, 37, 50, 0.95); border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding: 15px 0; }
+        .nav-container { max-width: 600px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; color: #d4af37; font-weight: 600; text-decoration: none; }
+        .btn-back { padding: 8px 16px; background: transparent; color: #d4af37; border: 1px solid #d4af37; border-radius: 6px; text-decoration: none; font-size: 12px; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #d4af37; font-size: 28px; margin-bottom: 8px; font-weight: normal; }
+        .header p { color: #8e7a5a; font-size: 14px; font-style: italic; }
+        .user-card { background: rgba(28, 37, 50, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 25px; margin-bottom: 20px; }
+        .user-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .avatar { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #d4af37 0%, #b8956a 100%); display: flex; align-items: center; justify-content: center; color: #1c2532; font-weight: bold; font-size: 24px; }
+        .user-info { flex: 1; }
+        .user-info h3 { color: #e8e8e8; font-size: 18px; margin-bottom: 5px; font-weight: 600; }
+        .user-info p { color: #8e7a5a; font-size: 12px; }
+        .follow-btn { padding: 10px 30px; background: #d4af37; color: #1c2532; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .follow-btn:hover { background: #b8956a; }
+        .recent-poems { margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(212, 175, 55, 0.1); }
+        .recent-poems h4 { color: #d4af37; font-size: 14px; margin-bottom: 10px; font-weight: normal; }
+        .poem-preview { color: #e8e8e8; font-size: 13px; font-style: italic; margin-bottom: 8px; padding: 8px; background: rgba(0, 0, 0, 0.2); border-radius: 4px; }
+        .empty-state { text-align: center; padding: 60px 30px; background: rgba(28, 37, 50, 0.6); border: 1px dashed rgba(212, 175, 55, 0.3); border-radius: 8px; }
+        .empty-state h3 { color: #d4af37; font-size: 20px; margin-bottom: 10px; font-weight: normal; }
+        .empty-state p { color: #b8956a; font-style: italic; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/home" class="logo">Poetry Vault</a>
+            <a href="/home" class="btn-back">Back to Home</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="header">
+            <h1>Discover Poets</h1>
+            <p>Find new voices to follow</p>
+        </div>
+        {% if suggested_users %}
+            {% for user in suggested_users %}
+            <div class="user-card">
+                <div class="user-header">
+                    <div class="avatar">{{ user.username[0].upper() }}</div>
+                    <div class="user-info">
+                        <h3><a href="/user/{{ user.id }}" style="color: #e8e8e8; text-decoration: none;">{{ user.username }}</a></h3>
+                        <p>{{ user.poems|length }} poems • Muse: {{ user.favorite_poet }}</p>
+                    </div>
+                    <button class="follow-btn" onclick="followUser({{ user.id }}, this)">Follow</button>
+                </div>
+                {% if user.recent_poems %}
+                <div class="recent-poems">
+                    <h4>Recent Poems:</h4>
+                    {% for poem in user.recent_poems %}
+                    <div class="poem-preview">{{ poem.title }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <h3>You're All Caught Up!</h3>
+                <p>You're following everyone. Check back later for new poets.</p>
+            </div>
+        {% endif %}
+    </div>
+    <script>
+        function followUser(userId, btn) {
+            fetch('/user/' + userId + '/follow', {
+                method: 'POST',
+            }).then(response => response.json())
+            .then(data => {
+                if (data.action === 'followed') {
+                    btn.textContent = 'Following';
+                    btn.style.background = 'transparent';
+                    btn.style.color = '#d4af37';
+                    btn.style.border = '1px solid #d4af37';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

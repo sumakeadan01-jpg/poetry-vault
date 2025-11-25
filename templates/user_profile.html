@@ -18,6 +18,13 @@
         .stat { text-align: center; }
         .stat-number { color: #d4af37; font-size: 24px; font-weight: 600; }
         .stat-label { color: #8e7a5a; font-size: 12px; }
+        .follow-btn { margin-top: 20px; padding: 12px 40px; background: #d4af37; color: #1c2532; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .follow-btn:hover { background: #b8956a; }
+        .follow-btn.following { background: transparent; color: #d4af37; border: 1px solid #d4af37; }
+        .highlights { display: flex; gap: 15px; justify-content: center; margin-top: 25px; flex-wrap: wrap; }
+        .highlight { width: 70px; text-align: center; cursor: pointer; }
+        .highlight-circle { width: 70px; height: 70px; border-radius: 50%; border: 2px solid #d4af37; display: flex; align-items: center; justify-content: center; background: rgba(212, 175, 55, 0.1); margin-bottom: 5px; }
+        .highlight-name { color: #8e7a5a; font-size: 11px; }
         .section-title { color: #d4af37; font-size: 22px; margin-bottom: 20px; font-weight: normal; }
         .poem-card { background: rgba(28, 37, 50, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 25px; margin-bottom: 20px; }
         .poem-title { color: #d4af37; font-size: 20px; margin-bottom: 15px; font-weight: 600; }
@@ -39,8 +46,24 @@
             <p>Muse: {{ user.favorite_poet }}</p>
             <div class="stats">
                 <div class="stat"><div class="stat-number">{{ poems|length }}</div><div class="stat-label">Poems</div></div>
-                <div class="stat"><div class="stat-number">{{ user.created_at.strftime('%Y') }}</div><div class="stat-label">Joined</div></div>
+                <div class="stat"><div class="stat-number" id="followers-count">{{ followers_count }}</div><div class="stat-label">Followers</div></div>
+                <div class="stat"><div class="stat-number">{{ following_count }}</div><div class="stat-label">Following</div></div>
             </div>
+            {% if current_user.id != user.id %}
+                <button class="follow-btn {% if is_following %}following{% endif %}" id="follow-btn" onclick="toggleFollow({{ user.id }})">
+                    {% if is_following %}Following{% else %}Follow{% endif %}
+                </button>
+            {% endif %}
+            {% if highlights %}
+            <div class="highlights">
+                {% for highlight in highlights %}
+                <div class="highlight" onclick="window.location.href='/highlight/{{ highlight.id }}'">
+                    <div class="highlight-circle">📚</div>
+                    <div class="highlight-name">{{ highlight.name }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
         <div class="section-title">Poems by {{ user.username }}</div>
         {% for poem in poems %}
@@ -53,5 +76,24 @@
         </a>
         {% endfor %}
     </div>
+    <script>
+        function toggleFollow(userId) {
+            fetch('/user/' + userId + '/follow', {
+                method: 'POST',
+            }).then(response => response.json())
+            .then(data => {
+                const btn = document.getElementById('follow-btn');
+                const followersCount = document.getElementById('followers-count');
+                if (data.action === 'followed') {
+                    btn.textContent = 'Following';
+                    btn.classList.add('following');
+                } else {
+                    btn.textContent = 'Follow';
+                    btn.classList.remove('following');
+                }
+                followersCount.textContent = data.followers_count;
+            });
+        }
+    </script>
 </body>
 </html>

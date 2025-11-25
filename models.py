@@ -22,6 +22,11 @@ class User(UserMixin, db.Model):
     saved_poems = db.relationship('SavedPoem', backref='user', lazy=True, cascade='all, delete-orphan')
     likes = db.relationship('Like', backref='user', lazy=True, cascade='all, delete-orphan')
     notifications = db.relationship('Notification', backref='user', lazy=True, cascade='all, delete-orphan')
+    highlights = db.relationship('Highlight', backref='user', lazy=True, cascade='all, delete-orphan')
+    
+    # Follow relationships
+    following = db.relationship('Follow', foreign_keys='Follow.follower_id', backref='follower', lazy='dynamic', cascade='all, delete-orphan')
+    followers = db.relationship('Follow', foreign_keys='Follow.followed_id', backref='followed', lazy='dynamic', cascade='all, delete-orphan')
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -78,8 +83,38 @@ class Notification(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    type = db.Column(db.String(50), nullable=False)  # 'comment', 'like'
+    type = db.Column(db.String(50), nullable=False)  # 'comment', 'like', 'follow'
     message = db.Column(db.String(255), nullable=False)
     poem_id = db.Column(db.Integer, db.ForeignKey('poems.id'), nullable=True)
     is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class Follow(db.Model):
+    __tablename__ = 'follows'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # User who follows
+    followed_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # User being followed
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    __table_args__ = (db.UniqueConstraint('follower_id', 'followed_id', name='unique_follow'),)
+
+class Highlight(db.Model):
+    __tablename__ = 'highlights'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    poems = db.relationship('HighlightPoem', backref='highlight', lazy=True, cascade='all, delete-orphan')
+
+class HighlightPoem(db.Model):
+    __tablename__ = 'highlight_poems'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    highlight_id = db.Column(db.Integer, db.ForeignKey('highlights.id'), nullable=False)
+    poem_id = db.Column(db.Integer, db.ForeignKey('poems.id'), nullable=False)
+    added_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    __table_args__ = (db.UniqueConstraint('highlight_id', 'poem_id', name='unique_highlight_poem'),)

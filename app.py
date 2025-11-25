@@ -95,7 +95,7 @@ def create_app():
     @login_required
     def home():
         from datetime import datetime
-        from models import SavedPoem
+        from models import SavedPoem, Follow
         
         # Get current hour
         current_hour = datetime.now().hour
@@ -110,8 +110,15 @@ def create_app():
         else:
             greeting = "Good night"
         
-        # Only show user-created poems (not classic poems) on home feed
-        poems = Poem.query.filter_by(is_classic=False).order_by(Poem.created_at.desc()).all()
+        # Get IDs of users current user follows
+        following_ids = [f.followed_id for f in Follow.query.filter_by(follower_id=current_user.id).all()]
+        
+        # Show poems from followed users only (personalized feed)
+        if following_ids:
+            poems = Poem.query.filter(Poem.user_id.in_(following_ids), Poem.is_classic == False).order_by(Poem.created_at.desc()).all()
+        else:
+            # If not following anyone, show empty feed
+            poems = []
         
         # Get saved poem IDs for current user
         saved_poem_ids = [s.poem_id for s in SavedPoem.query.filter_by(user_id=current_user.id).all()]
@@ -359,9 +366,53 @@ def create_app():
     @app.route('/user/<int:user_id>')
     @login_required
     def user_profile(user_id):
+        from models import Follow, Highlight
         user = User.query.get_or_404(user_id)
-        poems = Poem.query.filter_by(user_id=user_id).order_by(Poem.created_at.desc()).all()
-        return render_template('user_profile.html', user=user, poems=poems)
+        poems = Poem.query.filter_by(user_id=user_id, is_classic=False).order_by(Poem.created_at.desc()).all()
+        
+        # Check if current user follows this user
+        is_following = Follow.query.filter_by(follower_id=current_user.id, followed_id=user_id).first() is not None
+        
+        # Get follower/following counts
+        followers_count = Follow.query.filter_by(followed_id=user_id).count()
+        following_count = Follow.query.filter_by(follower_id=user_id).count()
+        
+        # Get highlights
+        highlights = Highlight.query.filter_by(user_id=user_id).all()
+        
+        return render_template('user_profile.html', user=user, poems=poems, is_following=is_following, 
+                             followers_count=followers_count, following_count=following_count, highlights=highlights)
+    
+    @app.route('/user/<int:user_id>/follow', methods=['POST'])
+    @login_required
+    def toggle_follow(user_id):
+        from models import Follow, Notification
+        
+        if user_id == current_user.id:
+            return jsonify({'status': 'error', 'message': 'Cannot follow yourself'}), 400
+        
+        user = User.query.get_or_404(user_id)
+        follow = Follow.query.filter_by(follower_id=current_user.id, followed_id=user_id).first()
+        
+        if follow:
+            db.session.delete(follow)
+            action = 'unfollowed'
+        else:
+            new_follow = Follow(follower_id=current_user.id, followed_id=user_id)
+            db.session.add(new_follow)
+            action = 'followed'
+            
+            # Create notification
+            notif = Notification(
+                user_id=user_id,
+                type='follow',
+                message=f'{current_user.username} started following you'
+            )
+            db.session.add(notif)
+        
+        db.session.commit()
+        followers_count = Follow.query.filter_by(followed_id=user_id).count()
+        return jsonify({'status': 'success', 'action': action, 'followers_count': followers_count})
     
     @app.route('/search', methods=['GET'])
     @login_required
@@ -378,6 +429,36 @@ def create_app():
                 )
             ).order_by(Poem.created_at.desc()).all()
         return render_template('search.html', poems=poems, query=query)
+    
+    @app.route('/discover')
+    @login_required
+    def discover():
+        from models import Follow
+        import random
+        
+        # Get users current user already follows
+        following_ids = [f.followed_id for f in Follow.query.filter_by(follower_id=current_user.id).all()]
+        following_ids.append(current_user.id)  # Exclude self
+        
+        # Get classic poet names to exclude
+        classic_poet_names = ['Shakespeare', 'Rumi', 'Emily Dickinson', 'Edgar Allan Poe', 
+                             'Walt Whitman', 'Lord Byron', 'William Wordsworth', 
+                             'John Keats', 'Percy Shelley', 'Robert Burns']
+        
+        # Get suggested users (not following, not self, not classic poets)
+        suggested_users = User.query.filter(
+            ~User.id.in_(following_ids),
+            ~User.username.in_(classic_poet_names)
+        ).all()
+        
+        # Shuffle for variety
+        random.shuffle(suggested_users)
+        
+        # Get recent poems for each suggested user
+        for user in suggested_users[:10]:  # Limit to 10 suggestions
+            user.recent_poems = Poem.query.filter_by(user_id=user.id, is_classic=False).order_by(Poem.created_at.desc()).limit(3).all()
+        
+        return render_template('discover.html', suggested_users=suggested_users[:10])
     
     @app.route('/notifications')
     @login_required
