@@ -1873,6 +1873,96 @@ Beating out and beating out a—
 You think
 It's a happy beat?'''
         }
+    ],
+    'المتنبي': [
+        {
+            'title': 'على قدر أهل العزم',
+            'category': 'wisdom',
+            'content': '''على قدر أهل العزم تأتي العزائم
+وتأتي على قدر الكرام المكارم
+وتعظم في عين الصغير صغارها
+وتصغر في عين العظيم العظائم
+
+---
+Translation:
+Ambitions come according to those who possess resolve
+And noble deeds come according to the generous
+Small things appear great in the eyes of the small
+And great things appear small in the eyes of the great'''
+        },
+        {
+            'title': 'أعز مكان في الدنى',
+            'category': 'wisdom',
+            'content': '''أعز مكان في الدنى سرج سابح
+وخير جليس في الزمان كتاب
+
+---
+Translation:
+The most noble place in the world is the saddle of a swift horse
+And the best companion in time is a book'''
+        },
+        {
+            'title': 'الخيل والليل',
+            'category': 'pride',
+            'content': '''الخيل والليل والبيداء تعرفني
+والسيف والرمح والقرطاس والقلم
+
+---
+Translation:
+The horses, the night, and the desert know me
+As do the sword, the spear, the paper, and the pen'''
+        }
+    ],
+    'قيس بن الملوح': [
+        {
+            'title': 'أحبك حبين',
+            'category': 'love',
+            'content': '''أحبك حبين حب الهوى
+وحبا لأنك أهل لذاكا
+فأما الذي هو حب الهوى
+فشغلي بذكرك عمن سواكا
+وأما الذي أنت أهل له
+فكشفك لي الحجب حتى أراكا
+
+---
+Translation:
+I love you with two loves: the love of passion
+And a love because you are worthy of it
+As for the love of passion
+It is my preoccupation with your memory above all others
+And as for the love you are worthy of
+It is your lifting of the veils so I may see you'''
+        },
+        {
+            'title': 'ليلى',
+            'category': 'love',
+            'content': '''أمر على الديار ديار ليلى
+أقبل ذا الجدار وذا الجدارا
+وما حب الديار شغفن قلبي
+ولكن حب من سكن الديارا
+
+---
+Translation:
+I pass by the dwellings, the dwellings of Layla
+I kiss this wall and that wall
+It is not love of the dwellings that has captivated my heart
+But love of the one who dwells within'''
+        },
+        {
+            'title': 'يا ليل',
+            'category': 'love',
+            'content': '''يا ليل الصب متى غده
+أقيام الساعة موعده
+رقد السمار وأرقه
+أسف للبين يردده
+
+---
+Translation:
+O night of the lovesick, when is its tomorrow?
+Is the Day of Judgment its appointed time?
+The night companions sleep while he stays awake
+Grief for separation repeating within him'''
+        }
     ]
 }
 
