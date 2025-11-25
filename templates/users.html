@@ -177,9 +177,32 @@
             </a>
             {% if user.is_admin %}
             <div class="admin-badge">Admin</div>
+            {% elif user.id != current_user.id %}
+            <button class="follow-btn {% if user.id in current_user_following_ids %}following{% endif %}" 
+                    id="follow-btn-{{ user.id }}" 
+                    onclick="toggleFollow({{ user.id }})">
+                {% if user.id in current_user_following_ids %}Following{% else %}Follow{% endif %}
+            </button>
             {% endif %}
         </div>
         {% endfor %}
     </div>
+    <script>
+        function toggleFollow(userId) {
+            fetch('/user/' + userId + '/follow', {
+                method: 'POST',
+            }).then(response => response.json())
+            .then(data => {
+                const btn = document.getElementById('follow-btn-' + userId);
+                if (data.action === 'followed') {
+                    btn.textContent = 'Following';
+                    btn.classList.add('following');
+                } else {
+                    btn.textContent = 'Follow';
+                    btn.classList.remove('following');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

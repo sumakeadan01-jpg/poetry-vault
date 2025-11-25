@@ -1,13 +1,7 @@
 """
 Seed the database with famous poems from classic poets
-Run this script once to populate your Poetry Vault with classic works
+This file contains the FAMOUS_POEMS dictionary used by app.py for auto-seeding
 """
-
-from app import create_app
-from models import db, User, Poem
-from werkzeug.security import generate_password_hash
-
-app = create_app()
 
 # Famous poems database
 FAMOUS_POEMS = {
@@ -1965,59 +1959,3 @@ Grief for separation repeating within him'''
         }
     ]
 }
-
-def seed_database():
-    with app.app_context():
-        print("Starting to seed database with famous poems...")
-        
-        # Create or get poet accounts
-        poets_created = 0
-        poems_created = 0
-        
-        for poet_name, poems in FAMOUS_POEMS.items():
-            # Check if poet user already exists
-            poet_user = User.query.filter_by(username=poet_name).first()
-            
-            if not poet_user:
-                # Create poet user account
-                poet_user = User(
-                    username=poet_name,
-                    email=f'{poet_name.lower().replace(" ", "")}@poetryvault.com',
-                    password_hash=generate_password_hash('classic_poet_2024'),
-                    age=None,
-                    favorite_poet=poet_name,
-                    is_admin=False
-                )
-                db.session.add(poet_user)
-                db.session.flush()  # Get the user ID
-                poets_created += 1
-                print(f"Created poet account: {poet_name}")
-            
-            # Add poems for this poet
-            for poem_data in poems:
-                # Check if poem already exists
-                existing_poem = Poem.query.filter_by(
-                    title=poem_data['title'],
-                    user_id=poet_user.id
-                ).first()
-                
-                if not existing_poem:
-                    poem = Poem(
-                        title=poem_data['title'],
-                        content=poem_data['content'],
-                        category=poem_data.get('category', 'general'),
-                        user_id=poet_user.id,
-                        is_classic=True  # Mark as classic so it's hidden from home feed
-                    )
-                    db.session.add(poem)
-                    poems_created += 1
-                    print(f"  Added: {poem_data['title']}")
-        
-        db.session.commit()
-        print(f"\n Database seeded successfully!")
-        print(f"   Poets created: {poets_created}")
-        print(f"   Poems added: {poems_created}")
-        print(f"\nYou can now search for these classic poems in Poetry Vault!")
-
-if __name__ == '__main__':
-    seed_database()

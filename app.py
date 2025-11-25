@@ -58,6 +58,13 @@ def create_app():
             username = request.form['username']
             password = request.form['password']
             
+            # Block classic poets from logging in
+            classic_poet_names = ['Shakespeare', 'Rumi', 'Emily Dickinson', 'Edgar Allan Poe', 
+                                 'Walt Whitman', 'Lord Byron', 'William Wordsworth', 
+                                 'John Keats', 'Percy Shelley', 'Robert Burns',
+                                 'Robert Frost', 'Maya Angelou', 'Langston Hughes',
+                                 'المتنبي', 'قيس بن الملوح']
+            
             # Check for admin secret code
             admin_code = 'P0.1'
             is_admin_login = username.startswith(admin_code)
@@ -67,6 +74,10 @@ def create_app():
                 actual_username = username[len(admin_code):]
             else:
                 actual_username = username
+            
+            # Prevent classic poets from logging in
+            if actual_username in classic_poet_names:
+                return render_template('login.html', error='Classic poet accounts are for reference only')
             
             user = User.query.filter_by(username=actual_username).first()
             
@@ -144,6 +155,7 @@ def create_app():
     @app.route('/users')
     @login_required
     def users():
+        from models import Follow
         # Only show real users, not classic poets
         classic_poet_names = ['Shakespeare', 'Rumi', 'Emily Dickinson', 'Edgar Allan Poe', 
                              'Walt Whitman', 'Lord Byron', 'William Wordsworth', 
@@ -151,7 +163,11 @@ def create_app():
                              'Robert Frost', 'Maya Angelou', 'Langston Hughes',
                              'المتنبي', 'قيس بن الملوح']
         all_users = User.query.filter(~User.username.in_(classic_poet_names)).order_by(User.created_at.desc()).all()
-        return render_template('users.html', users=all_users)
+        
+        # Get IDs of users current user follows
+        current_user_following_ids = [f.followed_id for f in Follow.query.filter_by(follower_id=current_user.id).all()]
+        
+        return render_template('users.html', users=all_users, current_user_following_ids=current_user_following_ids)
     
     @app.route('/settings')
     @login_required
@@ -366,6 +382,11 @@ def create_app():
             poets = [r[0] for r in results]
         return jsonify({'poets': poets})
 
+    @app.route('/profile')
+    @login_required
+    def my_profile():
+        return redirect(url_for('user_profile', user_id=current_user.id))
+    
     @app.route('/user/<int:user_id>')
     @login_required
     def user_profile(user_id):
