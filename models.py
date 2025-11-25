@@ -35,6 +35,7 @@ class Poem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
+    category = db.Column(db.String(50), nullable=True)  # love, nature, death, spirituality, etc.
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     is_classic = db.Column(db.Boolean, default=False)  # Hide from home feed, show in search only

@@ -14,6 +14,7 @@ FAMOUS_POEMS = {
     'Shakespeare': [
         {
             'title': 'Sonnet 29: When in Disgrace with Fortune',
+            'category': 'love',
             'content': '''When, in disgrace with fortune and men's eyes,
 I all alone beweep my outcast state,
 And trouble deaf heaven with my bootless cries,
@@ -31,6 +32,7 @@ That then I scorn to change my state with kings.'''
         },
         {
             'title': 'Sonnet 130: My Mistress\' Eyes',
+            'category': 'love',
             'content': '''My mistress' eyes are nothing like the sun;
 Coral is far more red than her lips' red;
 If snow be white, why then her breasts are dun;
@@ -48,6 +50,7 @@ As any she belied with false compare.'''
         },
         {
             'title': 'Sonnet 73: That Time of Year',
+            'category': 'aging',
             'content': '''That time of year thou mayst in me behold
 When yellow leaves, or none, or few, do hang
 Upon those boughs which shake against the cold,
@@ -82,6 +85,7 @@ So long lives this, and this gives life to thee.'''
         },
         {
             'title': 'Sonnet 116: Let Me Not to the Marriage of True Minds',
+            'category': 'love',
             'content': '''Let me not to the marriage of true minds
 Admit impediments. Love is not love
 Which alters when it alteration finds,
@@ -114,6 +118,78 @@ Full of strange oaths and bearded like the pard,
 Jealous in honor, sudden and quick in quarrel,
 Seeking the bubble reputation
 Even in the cannon's mouth.'''
+        },
+        {
+            'title': 'Sonnet 55: Not Marble, Nor the Gilded Monuments',
+            'category': 'love',
+            'content': '''Not marble, nor the gilded monuments
+Of princes, shall outlive this powerful rhyme;
+But you shall shine more bright in these contents
+Than unswept stone besmear'd with sluttish time.
+When wasteful war shall statues overturn,
+And broils root out the work of masonry,
+Nor Mars his sword nor war's quick fire shall burn
+The living record of your memory.
+'Gainst death and all-oblivious enmity
+Shall you pace forth; your praise shall still find room
+Even in the eyes of all posterity
+That wear this world out to the ending doom.
+So, till the judgment that yourself arise,
+You live in this, and dwell in lover's eyes.'''
+        },
+        {
+            'title': 'Sonnet 60: Like as the Waves',
+            'category': 'time',
+            'content': '''Like as the waves make towards the pebbled shore,
+So do our minutes hasten to their end;
+Each changing place with that which goes before,
+In sequent toil all forwards do contend.
+Nativity, once in the main of light,
+Crawls to maturity, wherewith being crown'd,
+Crooked eclipses 'gainst his glory fight,
+And Time that gave doth now his gift confound.
+Time doth transfix the flourish set on youth
+And delves the parallels in beauty's brow,
+Feeds on the rarities of nature's truth,
+And nothing stands but for his scythe to mow:
+And yet to times in hope my verse shall stand,
+Praising thy worth, despite his cruel hand.'''
+        },
+        {
+            'title': 'Sonnet 106: When in the Chronicle of Wasted Time',
+            'category': 'love',
+            'content': '''When in the chronicle of wasted time
+I see descriptions of the fairest wights,
+And beauty making beautiful old rhyme
+In praise of ladies dead and lovely knights,
+Then, in the blazon of sweet beauty's best,
+Of hand, of foot, of lip, of eye, of brow,
+I see their antique pen would have express'd
+Even such a beauty as you master now.
+So all their praises are but prophecies
+Of this our time, all you prefiguring;
+And, for they look'd but with divining eyes,
+They had not skill enough your worth to sing:
+For we, which now behold these present days,
+Had eyes to wonder, but lack tongues to praise.'''
+        },
+        {
+            'title': 'Sonnet 71: No Longer Mourn for Me',
+            'category': 'death',
+            'content': '''No longer mourn for me when I am dead
+Than you shall hear the surly sullen bell
+Give warning to the world that I am fled
+From this vile world, with vilest worms to dwell:
+Nay, if you read this line, remember not
+The hand that writ it; for I love you so
+That I in your sweet thoughts would be forgot
+If thinking on me then should make you woe.
+O, if, I say, you look upon this verse
+When I perhaps compounded am with clay,
+Do not so much as my poor name rehearse.
+But let your love even with my life decay,
+Lest the wise world should look into your moan
+And mock you with me after I am gone.'''
         }
     ],
     'Rumi': [
@@ -140,6 +216,7 @@ is fire, not wind. Be that empty."'''
         },
         {
             'title': 'Only Breath',
+            'category': 'spirituality',
             'content': '''Not Christian or Jew or Muslim, not Hindu,
 Buddhist, sufi, or zen. Not any religion
 or cultural system. I am not from the East
@@ -157,6 +234,7 @@ breath breathing human being.'''
         },
         {
             'title': 'The Guest House',
+            'category': 'spirituality',
             'content': '''This being human is a guest house.
 Every morning a new arrival.
 A joy, a depression, a meanness,
@@ -178,6 +256,7 @@ as a guide from beyond.'''
         },
         {
             'title': 'Love Dogs',
+            'category': 'spirituality',
             'content': '''One night a man was crying,
 Allah! Allah!
 His lips grew sweet with the praising,
@@ -194,6 +273,7 @@ in a thick, green foliage.
         },
         {
             'title': 'The Breeze at Dawn',
+            'category': 'spirituality',
             'content': '''The breeze at dawn has secrets to tell you.
 Don't go back to sleep.
 You must ask for what you really want.
@@ -202,11 +282,73 @@ People are going back and forth across the doorsill
 where the two worlds touch.
 The door is round and open.
 Don't go back to sleep.'''
+        },
+        {
+            'title': 'The Minute I Heard My First Love Story',
+            'category': 'love',
+            'content': '''The minute I heard my first love story,
+I started looking for you, not knowing
+how blind that was.
+Lovers don't finally meet somewhere.
+They're in each other all along.'''
+        },
+        {
+            'title': 'Out Beyond Ideas',
+            'category': 'spirituality',
+            'content': '''Out beyond ideas of wrongdoing and rightdoing,
+there is a field. I'll meet you there.
+When the soul lies down in that grass,
+the world is too full to talk about.
+Ideas, language, even the phrase "each other"
+doesn't make any sense.'''
+        },
+        {
+            'title': 'Let Yourself Be Silently Drawn',
+            'category': 'spirituality',
+            'content': '''Let yourself be silently drawn
+by the strange pull of what you really love.
+It will not lead you astray.'''
+        },
+        {
+            'title': 'The Wound is the Place',
+            'category': 'spirituality',
+            'content': '''The wound is the place where the Light enters you.
+Don't grieve. Anything you lose comes round
+in another form.'''
+        },
+        {
+            'title': 'Forget Your Life',
+            'category': 'spirituality',
+            'content': '''Forget your life. Say God is Great. Get up.
+You think you know what time it is. It's time to pray.
+You've carved so many little figurines, too many.
+Don't knock on any random door like a beggar.
+Reach your long hand out to another door, beyond where
+you go on the street, the street
+where everyone says, "How are you?"
+and no one says How aren't you?'''
         }
     ],
     'Emily Dickinson': [
         {
+            'title': 'She rose to his requirement',
+            'category': 'life',
+            'content': '''She rose to his requirement, dropped
+The playthings of her life,
+To the honorable work
+Of woman and of wife.
+If aught she missed in her new day
+Of amplitude, or awe,
+Or first prospective, or the gold
+in using wore away,
+It lay unmentioned, as the sea
+Develops pearl and weed,
+But only to himself is known
+The fathoms they abide.'''
+        },
+        {
             'title': 'Wild Nights - Wild Nights!',
+            'category': 'love',
             'content': '''Wild nights - Wild nights!
 Were I with thee
 Wild nights should be
@@ -221,33 +363,8 @@ Might I but moor - tonight -
 In thee!'''
         },
         {
-            'title': 'Tell All the Truth but Tell It Slant',
-            'content': '''Tell all the truth but tell it slant —
-Success in Circuit lies
-Too bright for our infirm Delight
-The Truth's superb surprise
-As Lightning to the Children eased
-With explanation kind
-The Truth must dazzle gradually
-Or every man be blind —'''
-        },
-        {
-            'title': 'The Soul Selects Her Own Society',
-            'content': '''The Soul selects her own Society —
-Then — shuts the Door —
-To her divine Majority —
-Present no more —
-Unmoved — she notes the Chariots — pausing —
-At her low Gate —
-Unmoved — an Emperor be kneeling
-Upon her Mat —
-I've known her — from an ample nation —
-Choose One —
-Then — close the Valves of her attention —
-Like Stone —'''
-        },
-        {
             'title': 'Hope is the Thing with Feathers',
+            'category': 'hope',
             'content': '''Hope is the thing with feathers
 That perches in the soul,
 And sings the tune without the words,
@@ -263,6 +380,7 @@ It asked a crumb of me.'''
         },
         {
             'title': 'Because I Could Not Stop for Death',
+            'category': 'death',
             'content': '''Because I could not stop for Death –
 He kindly stopped for me –
 The Carriage held but just Ourselves –
@@ -278,7 +396,15 @@ We passed the Setting Sun –
 Or rather – He passed Us –
 The Dews drew quivering and Chill –
 For only Gossamer, my Gown –
-My Tippet – only Tulle –'''
+My Tippet – only Tulle –
+We paused before a House that seemed
+A Swelling of the Ground –
+The Roof was scarcely visible –
+The Cornice – in the Ground –
+Since then – 'tis Centuries – and yet
+Feels shorter than the Day
+I first surmised the Horses' Heads
+Were toward Eternity –'''
         },
         {
             'title': 'I\'m Nobody! Who Are You?',
@@ -290,11 +416,119 @@ How dreary – to be – Somebody!
 How public – like a Frog –
 To tell one's name – the livelong June –
 To an admiring Bog!'''
+        },
+        {
+            'title': 'Tell All the Truth but Tell It Slant',
+            'category': 'truth',
+            'content': '''Tell all the truth but tell it slant —
+Success in Circuit lies
+Too bright for our infirm Delight
+The Truth's superb surprise
+As Lightning to the Children eased
+With explanation kind
+The Truth must dazzle gradually
+Or every man be blind —'''
+        },
+        {
+            'title': 'The Soul Selects Her Own Society',
+            'category': 'solitude',
+            'content': '''The Soul selects her own Society —
+Then — shuts the Door —
+To her divine Majority —
+Present no more —
+Unmoved — she notes the Chariots — pausing —
+At her low Gate —
+Unmoved — an Emperor be kneeling
+Upon her Mat —
+I've known her — from an ample nation —
+Choose One —
+Then — close the Valves of her attention —
+Like Stone —'''
+        },
+        {
+            'title': 'A Bird Came Down the Walk',
+            'category': 'nature',
+            'content': '''A Bird came down the Walk —
+He did not know I saw —
+He bit an Angleworm in halves
+And ate the fellow, raw,
+And then he drank a Dew
+From a convenient Grass —
+And then hopped sidewise to the Wall
+To let a Beetle pass —
+He glanced with rapid eyes
+That hurried all around —
+They looked like frightened Beads, I thought —
+He stirred his Velvet Head
+Like one in danger, Cautious,
+I offered him a Crumb
+And he unrolled his feathers
+And rowed him softer home —
+Than Oars divide the Ocean,
+Too silver for a seam —
+Or Butterflies, off Banks of Noon
+Leap, plashless as they swim.'''
+        },
+        {
+            'title': 'There\'s a Certain Slant of Light',
+            'content': '''There's a certain Slant of light,
+Winter Afternoons —
+That oppresses, like the Heft
+Of Cathedral Tunes —
+Heavenly Hurt, it gives us —
+We can find no scar,
+But internal difference —
+Where the Meanings, are —
+None may teach it — Any —
+'Tis the seal Despair —
+An imperial affliction
+Sent us of the Air —
+When it comes, the Landscape listens —
+Shadows — hold their breath —
+When it goes, 'tis like the Distance
+On the look of Death —'''
+        },
+        {
+            'title': 'I Heard a Fly Buzz When I Died',
+            'category': 'death',
+            'content': '''I heard a Fly buzz — when I died —
+The Stillness in the Room
+Was like the Stillness in the Air —
+Between the Heaves of Storm —
+The Eyes around — had wrung them dry —
+And Breaths were gathering firm
+For that last Onset — when the King
+Be witnessed — in the Room —
+I willed my Keepsakes — Signed away
+What portion of me be
+Assignable — and then it was
+There interposed a Fly —
+With Blue — uncertain — stumbling Buzz —
+Between the light — and me —
+And then the Windows failed — and then
+I could not see to see —'''
+        },
+        {
+            'title': 'Success is Counted Sweetest',
+            'category': 'life',
+            'content': '''Success is counted sweetest
+By those who ne'er succeed.
+To comprehend a nectar
+Requires sorest need.
+Not one of all the purple Host
+Who took the Flag today
+Can tell the definition
+So clear of victory
+As he defeated — dying —
+On whose forbidden ear
+The distant strains of triumph
+Burst agonized and clear!'''
         }
     ],
     'Edgar Allan Poe': [
         {
             'title': 'Alone',
+            'category': 'solitude',
             'content': '''From childhood's hour I have not been
 As others were—I have not seen
 As others saw—I could not bring
@@ -320,6 +554,7 @@ Of a demon in my view—'''
         },
         {
             'title': 'Eldorado',
+            'category': 'quest',
             'content': '''Gaily bedight,
 A gallant knight,
 In sunshine and in shadow,
@@ -347,6 +582,7 @@ The shade replied,—
         },
         {
             'title': 'The Raven',
+            'category': 'grief',
             'content': '''Once upon a midnight dreary, while I pondered, weak and weary,
 Over many a quaint and curious volume of forgotten lore—
 While I nodded, nearly napping, suddenly there came a tapping,
@@ -362,6 +598,7 @@ Nameless here for evermore.'''
         },
         {
             'title': 'Annabel Lee',
+            'category': 'love',
             'content': '''It was many and many a year ago,
 In a kingdom by the sea,
 That a maiden there lived whom you may know
@@ -377,6 +614,7 @@ Coveted her and me.'''
         },
         {
             'title': 'A Dream Within a Dream',
+            'category': 'reality',
             'content': '''Take this kiss upon the brow!
 And, in parting from you now,
 Thus much let me avow —
@@ -388,11 +626,82 @@ In a vision, or in none,
 Is it therefore the less gone?
 All that we see or seem
 Is but a dream within a dream.'''
+        },
+        {
+            'title': 'The Bells',
+            'category': 'life',
+            'content': '''Hear the sledges with the bells—
+Silver bells!
+What a world of merriment their melody foretells!
+How they tinkle, tinkle, tinkle,
+In the icy air of night!
+While the stars that oversprinkle
+All the heavens, seem to twinkle
+With a crystalline delight;
+Keeping time, time, time,
+In a sort of Runic rhyme,
+To the tintinnabulation that so musically wells
+From the bells, bells, bells, bells,
+Bells, bells, bells—
+From the jingling and the tinkling of the bells.'''
+        },
+        {
+            'title': 'To Helen',
+            'category': 'love',
+            'content': '''Helen, thy beauty is to me
+Like those Nicéan barks of yore,
+That gently, o'er a perfumed sea,
+The weary, way-worn wanderer bore
+To his own native shore.
+On desperate seas long wont to roam,
+Thy hyacinth hair, thy classic face,
+Thy Naiad airs have brought me home
+To the glory that was Greece,
+And the grandeur that was Rome.'''
+        },
+        {
+            'title': 'The Haunted Palace',
+            'category': 'decay',
+            'content': '''In the greenest of our valleys
+By good angels tenanted,
+Once a fair and stately palace—
+Radiant palace—reared its head.
+In the monarch Thought's dominion—
+It stood there!
+Never seraph spread a pinion
+Over fabric half so fair!'''
+        },
+        {
+            'title': 'A Dream',
+            'category': 'melancholy',
+            'content': '''In visions of the dark night
+I have dreamed of joy departed—
+But a waking dream of life and light
+Hath left me broken-hearted.
+Ah! what is not a dream by day
+To him whose eyes are cast
+On things around him with a ray
+Turned back upon the past?'''
+        },
+        {
+            'title': 'Spirits of the Dead',
+            'category': 'death',
+            'content': '''Thy soul shall find itself alone
+'Mid dark thoughts of the grey tomb-stone;
+Not one, of all the crowd, to pry
+Into thine hour of secrecy.
+Be silent in that solitude,
+Which is not loneliness—for then
+The spirits of the dead, who stood
+In life before thee, are again
+In death around thee, and their will
+Shall overshadow thee; be still.'''
         }
     ],
     'Walt Whitman': [
         {
             'title': 'Song of Myself (Excerpt)',
+            'category': 'self',
             'content': '''I celebrate myself, and sing myself,
 And what I assume you shall assume,
 For every atom belonging to me as good belongs to you.
@@ -405,6 +714,7 @@ Hoping to cease not till death.'''
         },
         {
             'title': 'A Noiseless Patient Spider',
+            'category': 'solitude',
             'content': '''A noiseless patient spider,
 I mark'd where on a little promontory it stood isolated,
 Mark'd how to explore the vacant vast surrounding,
@@ -418,6 +728,7 @@ Till the gossamer thread you fling catch somewhere, O my soul.'''
         },
         {
             'title': 'O Captain! My Captain!',
+            'category': 'grief',
             'content': '''O Captain! my Captain! our fearful trip is done,
 The ship has weather'd every rack, the prize we sought is won,
 The port is near, the bells I hear, the people all exulting,
@@ -429,6 +740,7 @@ Fallen cold and dead.'''
         },
         {
             'title': 'I Hear America Singing',
+            'category': 'celebration',
             'content': '''I hear America singing, the varied carols I hear,
 Those of mechanics, each one singing his as it should be blithe and strong,
 The carpenter singing his as he measures his plank or beam,
@@ -440,11 +752,74 @@ The delicious singing of the mother, or of the young wife at work, or of the gir
 Each singing what belongs to him or her and to none else,
 The day what belongs to the day—at night the party of young fellows, robust, friendly,
 Singing with open mouths their strong melodious songs.'''
+        },
+        {
+            'title': 'When I Heard the Learn\'d Astronomer',
+            'content': '''When I heard the learn'd astronomer,
+When the proofs, the figures, were ranged in columns before me,
+When I was shown the charts and diagrams, to add, divide, and measure them,
+When I sitting heard the astronomer where he lectured with much applause in the lecture-room,
+How soon unaccountable I became tired and sick,
+Till rising and gliding out I wander'd off by myself,
+In the mystical moist night-air, and from time to time,
+Look'd up in perfect silence at the stars.'''
+        },
+        {
+            'title': 'For You O Democracy',
+            'category': 'patriotism',
+            'content': '''Come, I will make the continent indissoluble,
+I will make the most splendid race the sun ever shone upon,
+I will make divine magnetic lands,
+With the love of comrades,
+With the life-long love of comrades.
+I will plant companionship thick as trees along all the rivers of America,
+and along the shores of the great lakes, and all over the prairies,
+I will make inseparable cities with their arms about each other's necks,
+By the love of comrades,
+By the manly love of comrades.'''
+        },
+        {
+            'title': 'Miracles',
+            'category': 'wonder',
+            'content': '''Why, who makes much of a miracle?
+As to me I know of nothing else but miracles,
+Whether I walk the streets of Manhattan,
+Or dart my sight over the roofs of houses toward the sky,
+Or wade with naked feet along the beach just in the edge of the water,
+Or stand under trees in the woods,
+Or talk by day with any one I love,
+Or sleep in the bed at night with any one I love,
+Or sit at table at dinner with the rest,
+Or look at strangers opposite me riding in the car,
+Or watch honey-bees busy around the hive of a summer forenoon.'''
+        },
+        {
+            'title': 'The Wound-Dresser',
+            'category': 'war',
+            'content': '''Bearing the bandages, water and sponge,
+Straight and swift to my wounded I go,
+Where they lie on the ground after the battle brought in,
+Where their priceless blood reddens the grass, the ground,
+Or to the rows of the hospital tent, or under the roof'd hospital,
+To the long rows of cots up and down each side I return,
+To each and all one after another I draw near, not one do I miss,
+An attendant follows holding a tray, he carries a refuse pail,
+Soon to be fill'd with clotted rags and blood, emptied, and fill'd again.'''
+        },
+        {
+            'title': 'Crossing Brooklyn Ferry',
+            'category': 'time',
+            'content': '''Flood-tide below me! I see you face to face!
+Clouds of the west—sun there half an hour high—I see you also face to face.
+Crowds of men and women attired in the usual costumes, how curious you are to me!
+On the ferry-boats the hundreds and hundreds that cross, returning home, are more curious to me than you suppose,
+And you that shall cross from shore to shore years hence are more to me, and more in my meditations, than you might suppose.'''
         }
     ],
     'Lord Byron': [
         {
             'title': 'Darkness',
+            'category': 'apocalypse',
             'content': '''I had a dream, which was not all a dream.
 The bright sun was extinguish'd, and the stars
 Did wander darkling in the eternal space,
@@ -472,6 +847,7 @@ By the light of the moon.'''
         },
         {
             'title': 'She Walks in Beauty',
+            'category': 'beauty',
             'content': '''She walks in beauty, like the night
 Of cloudless climes and starry skies;
 And all that's best of dark and bright
@@ -487,6 +863,7 @@ How pure, how dear their dwelling-place.'''
         },
         {
             'title': 'When We Two Parted',
+            'category': 'heartbreak',
             'content': '''When we two parted
 In silence and tears,
 Half broken-hearted
@@ -495,11 +872,73 @@ Pale grew thy cheek and cold,
 Colder thy kiss;
 Truly that hour foretold
 Sorrow to this.'''
+        },
+        {
+            'title': 'The Destruction of Sennacherib',
+            'category': 'war',
+            'content': '''The Assyrian came down like the wolf on the fold,
+And his cohorts were gleaming in purple and gold;
+And the sheen of their spears was like stars on the sea,
+When the blue wave rolls nightly on deep Galilee.
+Like the leaves of the forest when Summer is green,
+That host with their banners at sunset were seen:
+Like the leaves of the forest when Autumn hath blown,
+That host on the morrow lay withered and strown.'''
+        },
+        {
+            'title': 'Stanzas for Music',
+            'category': 'love',
+            'content': '''There be none of Beauty's daughters
+With a magic like thee;
+And like music on the waters
+Is thy sweet voice to me:
+When, as if its sound were causing
+The charmed ocean's pausing,
+The waves lie still and gleaming,
+And the lull'd winds seem dreaming.'''
+        },
+        {
+            'title': 'The Ocean',
+            'category': 'nature',
+            'content': '''Roll on, thou deep and dark blue Ocean—roll!
+Ten thousand fleets sweep over thee in vain;
+Man marks the earth with ruin—his control
+Stops with the shore;—upon the watery plain
+The wrecks are all thy deed, nor doth remain
+A shadow of man's ravage, save his own,
+When for a moment, like a drop of rain,
+He sinks into thy depths with bubbling groan,
+Without a grave, unknell'd, uncoffin'd, and unknown.'''
+        },
+        {
+            'title': 'To Thomas Moore',
+            'category': 'friendship',
+            'content': '''My boat is on the shore,
+And my bark is on the sea;
+But, before I go, Tom Moore,
+Here's a double health to thee!
+Here's a sigh to those who love me,
+And a smile to those who hate;
+And, whatever sky's above me,
+Here's a heart for every fate.'''
+        },
+        {
+            'title': 'Remember Thee',
+            'category': 'betrayal',
+            'content': '''Remember thee! remember thee!
+Till Lethe quench life's burning stream
+Remorse and shame shall cling to thee,
+And haunt thee like a feverish dream!
+Remember thee! Aye, doubt it not.
+Thy husband too shall think of thee:
+By neither shalt thou be forgot,
+Thou false to him, thou fiend to me!'''
         }
     ],
     'William Wordsworth': [
         {
             'title': 'Lines Written in Early Spring',
+            'category': 'nature',
             'content': '''I heard a thousand blended notes,
 While in a grove I sate reclined,
 In that sweet mood when pleasant thoughts
@@ -515,6 +954,7 @@ Enjoys the air it breathes.'''
         },
         {
             'title': 'My Heart Leaps Up',
+            'category': 'joy',
             'content': '''My heart leaps up when I behold
 A rainbow in the sky:
 So was it when my life began;
@@ -527,6 +967,7 @@ Bound each to each by natural piety.'''
         },
         {
             'title': 'I Wandered Lonely as a Cloud',
+            'category': 'nature',
             'content': '''I wandered lonely as a cloud
 That floats on high o'er vales and hills,
 When all at once I saw a crowd,
@@ -542,6 +983,7 @@ Tossing their heads in sprightly dance.'''
         },
         {
             'title': 'The World Is Too Much with Us',
+            'category': 'nature',
             'content': '''The world is too much with us; late and soon,
 Getting and spending, we lay waste our powers;—
 Little we see in Nature that is ours;
@@ -556,11 +998,76 @@ So might I, standing on this pleasant lea,
 Have glimpses that would make me less forlorn;
 Have sight of Proteus rising from the sea;
 Or hear old Triton blow his wreathèd horn.'''
+        },
+        {
+            'title': 'Composed Upon Westminster Bridge',
+            'category': 'beauty',
+            'content': '''Earth has not anything to show more fair:
+Dull would he be of soul who could pass by
+A sight so touching in its majesty:
+This City now doth, like a garment, wear
+The beauty of the morning; silent, bare,
+Ships, towers, domes, theatres, and temples lie
+Open unto the fields, and to the sky;
+All bright and glittering in the smokeless air.'''
+        },
+        {
+            'title': 'She Dwelt Among the Untrodden Ways',
+            'category': 'loss',
+            'content': '''She dwelt among the untrodden ways
+Beside the springs of Dove,
+A Maid whom there were none to praise
+And very few to love:
+A violet by a mossy stone
+Half hidden from the eye!
+—Fair as a star, when only one
+Is shining in the sky.
+She lived unknown, and few could know
+When Lucy ceased to be;
+But she is in her grave, and, oh,
+The difference to me!'''
+        },
+        {
+            'title': 'A Slumber Did My Spirit Seal',
+            'category': 'death',
+            'content': '''A slumber did my spirit seal;
+I had no human fears:
+She seemed a thing that could not feel
+The touch of earthly years.
+No motion has she now, no force;
+She neither hears nor sees;
+Rolled round in earth's diurnal course,
+With rocks, and stones, and trees.'''
+        },
+        {
+            'title': 'The Solitary Reaper',
+            'category': 'nature',
+            'content': '''Behold her, single in the field,
+Yon solitary Highland Lass!
+Reaping and singing by herself;
+Stop here, or gently pass!
+Alone she cuts and binds the grain,
+And sings a melancholy strain;
+O listen! for the Vale profound
+Is overflowing with the sound.'''
+        },
+        {
+            'title': 'Tintern Abbey (Excerpt)',
+            'category': 'nature',
+            'content': '''Five years have past; five summers, with the length
+Of five long winters! and again I hear
+These waters, rolling from their mountain-springs
+With a soft inland murmur.—Once again
+Do I behold these steep and lofty cliffs,
+That on a wild secluded scene impress
+Thoughts of more deep seclusion; and connect
+The landscape with the quiet of the sky.'''
         }
     ],
     'John Keats': [
         {
             'title': 'When I Have Fears That I May Cease to Be',
+            'category': 'mortality',
             'content': '''When I have fears that I may cease to be
 Before my pen has gleaned my teeming brain,
 Before high-pilèd books, in charactery,
@@ -578,6 +1085,7 @@ Till love and fame to nothingness do sink.'''
         },
         {
             'title': 'La Belle Dame sans Merci',
+            'category': 'love',
             'content': '''O what can ail thee, knight-at-arms,
 Alone and palely loitering?
 The sedge has withered from the lake,
@@ -593,6 +1101,7 @@ Fast withereth too.'''
         },
         {
             'title': 'Ode to a Nightingale',
+            'category': 'mortality',
             'content': '''My heart aches, and a drowsy numbness pains
 My sense, as though of hemlock I had drunk,
 Or emptied some dull opiate to the drains
@@ -606,6 +1115,7 @@ Singest of summer in full-throated ease.'''
         },
         {
             'title': 'Bright Star',
+            'category': 'love',
             'content': '''Bright star, would I were stedfast as thou art—
 Not in lone splendour hung aloft the night
 And watching, with eternal lids apart,
@@ -620,11 +1130,85 @@ To feel for ever its soft fall and swell,
 Awake for ever in a sweet unrest,
 Still, still to hear her tender-taken breath,
 And so live ever—or else swoon to death.'''
+        },
+        {
+            'title': 'Ode on a Grecian Urn',
+            'category': 'art',
+            'content': '''Thou still unravish'd bride of quietness,
+Thou foster-child of silence and slow time,
+Sylvan historian, who canst thus express
+A flowery tale more sweetly than our rhyme:
+What leaf-fring'd legend haunts about thy shape
+Of deities or mortals, or of both,
+In Tempe or the dales of Arcady?
+What men or gods are these? What maidens loth?
+What mad pursuit? What struggle to escape?
+What pipes and timbrels? What wild ecstasy?'''
+        },
+        {
+            'title': 'Ode on Melancholy',
+            'category': 'melancholy',
+            'content': '''No, no, go not to Lethe, neither twist
+Wolf's-bane, tight-rooted, for its poisonous wine;
+Nor suffer thy pale forehead to be kiss'd
+By nightshade, ruby grape of Proserpine;
+Make not your rosary of yew-berries,
+Nor let the beetle, nor the death-moth be
+Your mournful Psyche, nor the downy owl
+A partner in your sorrow's mysteries;
+For shade to shade will come too drowsily,
+And drown the wakeful anguish of the soul.'''
+        },
+        {
+            'title': 'To Autumn',
+            'category': 'autumn',
+            'content': '''Season of mists and mellow fruitfulness,
+Close bosom-friend of the maturing sun;
+Conspiring with him how to load and bless
+With fruit the vines that round the thatch-eves run;
+To bend with apples the moss'd cottage-trees,
+And fill all fruit with ripeness to the core;
+To swell the gourd, and plump the hazel shells
+With a sweet kernel; to set budding more,
+And still more, later flowers for the bees,
+Until they think warm days will never cease,
+For summer has o'er-brimm'd their clammy cells.'''
+        },
+        {
+            'title': 'On First Looking into Chapman\'s Homer',
+            'content': '''Much have I travell'd in the realms of gold,
+And many goodly states and kingdoms seen;
+Round many western islands have I been
+Which bards in fealty to Apollo hold.
+Oft of one wide expanse had I been told
+That deep-brow'd Homer ruled as his demesne;
+Yet did I never breathe its pure serene
+Till I heard Chapman speak out loud and bold:
+Then felt I like some watcher of the skies
+When a new planet swims into his ken;
+Or like stout Cortez when with eagle eyes
+He star'd at the Pacific—and all his men
+Look'd at each other with a wild surmise—
+Silent, upon a peak in Darien.'''
+        },
+        {
+            'title': 'The Eve of St. Agnes (Excerpt)',
+            'category': 'winter',
+            'content': '''St. Agnes' Eve—Ah, bitter chill it was!
+The owl, for all his feathers, was a-cold;
+The hare limp'd trembling through the frozen grass,
+And silent was the flock in woolly fold:
+Numb were the Beadsman's fingers, while he told
+His rosary, and while his frosted breath,
+Like pious incense from a censer old,
+Seem'd taking flight for heaven, without a death,
+Past the sweet Virgin's picture, while his prayer he saith.'''
         }
     ],
     'Percy Shelley': [
         {
             'title': 'Ode to the West Wind',
+            'category': 'nature',
             'content': '''O wild West Wind, thou breath of Autumn's being,
 Thou, from whose unseen presence the leaves dead
 Are driven, like ghosts from an enchanter fleeing,
@@ -642,6 +1226,7 @@ Destroyer and preserver; hear, oh hear!'''
         },
         {
             'title': 'To a Skylark',
+            'category': 'nature',
             'content': '''Hail to thee, blithe Spirit!
 Bird thou never wert,
 That from Heaven, or near it,
@@ -655,6 +1240,7 @@ And singing still dost soar, and soaring ever singest.'''
         },
         {
             'title': 'Ozymandias',
+            'category': 'power',
             'content': '''I met a traveller from an antique land,
 Who said—"Two vast and trunkless legs of stone
 Stand in the desert. . . . Near them, on the sand,
@@ -688,11 +1274,75 @@ And the sunlight clasps the earth
 And the moonbeams kiss the sea:
 What is all this sweet work worth
 If thou kiss not me?'''
+        },
+        {
+            'title': 'Music, When Soft Voices Die',
+            'category': 'memory',
+            'content': '''Music, when soft voices die,
+Vibrates in the memory—
+Odours, when sweet violets sicken,
+Live within the sense they quicken.
+Rose leaves, when the rose is dead,
+Are heaped for the belovèd's bed;
+And so thy thoughts, when thou art gone,
+Love itself shall slumber on.'''
+        },
+        {
+            'title': 'The Cloud',
+            'category': 'nature',
+            'content': '''I bring fresh showers for the thirsting flowers,
+From the seas and the streams;
+I bear light shade for the leaves when laid
+In their noonday dreams.
+From my wings are shaken the dews that waken
+The sweet buds every one,
+When rocked to rest on their mother's breast,
+As she dances about the sun.'''
+        },
+        {
+            'title': 'Mutability',
+            'category': 'change',
+            'content': '''We are as clouds that veil the midnight moon;
+How restlessly they speed, and gleam, and quiver,
+Streaking the darkness radiantly!—yet soon
+Night closes round, and they are lost for ever:
+Or like forgotten lyres, whose dissonant strings
+Give various response to each varying blast,
+To whose frail frame no second motion brings
+One mood or modulation like the last.'''
+        },
+        {
+            'title': 'To Night',
+            'category': 'night',
+            'content': '''Swiftly walk o'er the western wave,
+Spirit of Night!
+Out of the misty eastern cave,
+Where, all the long and lone daylight,
+Thou wovest dreams of joy and fear,
+Which make thee terrible and dear,—
+Swift be thy flight!'''
+        },
+        {
+            'title': 'Hymn to Intellectual Beauty',
+            'category': 'beauty',
+            'content': '''The awful shadow of some unseen Power
+Floats though unseen among us; visiting
+This various world with as inconstant wing
+As summer winds that creep from flower to flower;
+Like moonbeams that behind some piny mountain shower,
+It visits with inconstant glance
+Each human heart and countenance;
+Like hues and harmonies of evening,
+Like clouds in starlight widely spread,
+Like memory of music fled,
+Like aught that for its grace may be
+Dear, and yet dearer for its mystery.'''
         }
     ],
     'Robert Burns': [
         {
             'title': 'Auld Lang Syne',
+            'category': 'friendship',
             'content': '''Should auld acquaintance be forgot,
 And never brought to mind?
 Should auld acquaintance be forgot,
@@ -708,6 +1358,7 @@ For auld lang syne.'''
         },
         {
             'title': 'Ae Fond Kiss',
+            'category': 'heartbreak',
             'content': '''Ae fond kiss, and then we sever;
 Ae fareweel, alas, for ever!
 Deep in heart-wrung tears I'll pledge thee,
@@ -719,6 +1370,7 @@ Dark despair around benights me.'''
         },
         {
             'title': 'A Red, Red Rose',
+            'category': 'love',
             'content': '''O my Luve is like a red, red rose
 That's newly sprung in June;
 O my Luve is like the melody
@@ -734,6 +1386,7 @@ While the sands o' life shall run.'''
         },
         {
             'title': 'To a Mouse',
+            'category': 'nature',
             'content': '''Wee, sleekit, cowrin, tim'rous beastie,
 O, what a panic's in thy breastie!
 Thou need na start awa sae hasty,
@@ -746,6 +1399,479 @@ An' justifies that ill opinion,
 Which makes thee startle
 At me, thy poor, earth-born companion,
 An' fellow-mortal!'''
+        },
+        {
+            'title': 'Tam o\' Shanter (Excerpt)',
+            'content': '''When chapman billies leave the street,
+And drouthy neibors neibors meet,
+As market-days are wearing late,
+An' folk begin to tak the gate;
+While we sit bousing at the nappy,
+An' getting fou and unco happy,
+We think na on the lang Scots miles,
+The mosses, waters, slaps, and stiles,
+That lie between us and our hame,
+Whare sits our sulky sullen dame,
+Gathering her brows like gathering storm,
+Nursing her wrath to keep it warm.'''
+        },
+        {
+            'title': 'To a Louse',
+            'category': 'humor',
+            'content': '''Ha! whare ye gaun, ye crowlin ferlie?
+Your impudence protects you sairly;
+I canna say but ye strunt rarely,
+Owre gauze and lace;
+Tho', faith! I fear ye dine but sparely
+On sic a place.
+Ye ugly, creepin, blastit wonner,
+Detested, shunn'd by saunt an' sinner,
+How daur ye set your fit upon her—
+Sae fine a lady!
+Gae somewhere else and seek your dinner
+On some poor body.'''
+        },
+        {
+            'title': 'Address to the Deil',
+            'category': 'humor',
+            'content': '''O Thou! whatever title suit thee,
+Auld Hornie, Satan, Nick, or Clootie!
+Wha in yon cavern, grim an' sootie,
+Clos'd under hatches,
+Spairges about the brunstane cootie
+To scaud poor wretches!
+Hear me, Auld Hangie, for a wee,
+An' let poor damned bodies be;
+I'm sure sma' pleasure it can gie,
+E'en to a deil,
+To skelp an' scaud poor dogs like me,
+An' hear us squeel!'''
+        },
+        {
+            'title': 'The Banks o\' Doon',
+            'content': '''Ye banks and braes o' bonnie Doon,
+How can ye bloom sae fresh and fair?
+How can ye chant, ye little birds,
+And I sae weary fu' o' care!
+Thou'll break my heart, thou warbling bird,
+That wantons thro' the flowering thorn:
+Thou minds me o' departed joys,
+Departed never to return.'''
+        },
+        {
+            'title': 'John Anderson, My Jo',
+            'category': 'love',
+            'content': '''John Anderson, my jo, John,
+When we were first acquent,
+Your locks were like the raven,
+Your bonie brow was brent;
+But now your brow is beld, John,
+Your locks are like the snaw,
+But blessings on your frosty pow,
+John Anderson, my jo!'''
+        },
+        {
+            'title': 'Scots Wha Hae',
+            'category': 'patriotism',
+            'content': '''Scots, wha hae wi' Wallace bled,
+Scots, wham Bruce has aften led,
+Welcome to your gory bed
+Or to victorie!
+Now's the day, and now's the hour:
+See the front o' battle lour,
+See approach proud Edward's power—
+Chains and slaverie!'''
+        }
+    ],
+    'Robert Frost': [
+        {
+            'title': 'The Road Not Taken',
+            'content': '''Two roads diverged in a yellow wood,
+And sorry I could not travel both
+And be one traveler, long I stood
+And looked down one as far as I could
+To where it bent in the undergrowth;
+Then took the other, as just as fair,
+And having perhaps the better claim,
+Because it was grassy and wanted wear;
+Though as for that the passing there
+Had worn them really about the same.'''
+        },
+        {
+            'title': 'Stopping by Woods on a Snowy Evening',
+            'content': '''Whose woods these are I think I know.
+His house is in the village though;
+He will not see me stopping here
+To watch his woods fill up with snow.
+My little horse must think it queer
+To stop without a farmhouse near
+Between the woods and frozen lake
+The darkest evening of the year.
+He gives his harness bells a shake
+To ask if there is some mistake.
+The only other sound's the sweep
+Of easy wind and downy flake.
+The woods are lovely, dark and deep,
+But I have promises to keep,
+And miles to go before I sleep,
+And miles to go before I sleep.'''
+        },
+        {
+            'title': 'Fire and Ice',
+            'content': '''Some say the world will end in fire,
+Some say in ice.
+From what I've tasted of desire
+I hold with those who favor fire.
+But if it had to perish twice,
+I think I know enough of hate
+To say that for destruction ice
+Is also great
+And would suffice.'''
+        },
+        {
+            'title': 'Mending Wall',
+            'content': '''Something there is that doesn't love a wall,
+That sends the frozen-ground-swell under it,
+And spills the upper boulders in the sun;
+And makes gaps even two can pass abreast.
+The work of hunters is another thing:
+I have come after them and made repair
+Where they have left not one stone on a stone,
+But they would have the rabbit out of hiding,
+To please the yelping dogs.'''
+        },
+        {
+            'title': 'Nothing Gold Can Stay',
+            'content': '''Nature's first green is gold,
+Her hardest hue to hold.
+Her early leaf's a flower;
+But only so an hour.
+Then leaf subsides to leaf.
+So Eden sank to grief,
+So dawn goes down to day.
+Nothing gold can stay.'''
+        },
+        {
+            'title': 'Birches',
+            'content': '''When I see birches bend to left and right
+Across the lines of straighter darker trees,
+I like to think some boy's been swinging them.
+But swinging doesn't bend them down to stay
+As ice-storms do. Often you must have seen them
+Loaded with ice a sunny winter morning
+After a rain. They click upon themselves
+As the breeze rises, and turn many-colored
+As the stir cracks and crazes their enamel.'''
+        },
+        {
+            'title': 'Acquainted with the Night',
+            'content': '''I have been one acquainted with the night.
+I have walked out in rain—and back in rain.
+I have outwalked the furthest city light.
+I have looked down the saddest city lane.
+I have passed by the watchman on his beat
+And dropped my eyes, unwilling to explain.'''
+        },
+        {
+            'title': 'The Gift Outright',
+            'content': '''The land was ours before we were the land's.
+She was our land more than a hundred years
+Before we were her people. She was ours
+In Massachusetts, in Virginia,
+But we were England's, still colonials,
+Possessing what we still were unpossessed by,
+Possessed by what we now no more possessed.'''
+        },
+        {
+            'title': 'Desert Places',
+            'content': '''Snow falling and night falling fast, oh, fast
+In a field I looked into going past,
+And the ground almost covered smooth in snow,
+But a few weeds and stubble showing last.
+The woods around it have it—it is theirs.
+All animals are smothered in their lairs.
+I am too absent-spirited to count;
+The loneliness includes me unawares.'''
+        },
+        {
+            'title': 'After Apple-Picking',
+            'content': '''My long two-pointed ladder's sticking through a tree
+Toward heaven still,
+And there's a barrel that I didn't fill
+Beside it, and there may be two or three
+Apples I didn't pick upon some bough.
+But I am done with apple-picking now.
+Essence of winter sleep is on the night,
+The scent of apples: I am drowsing off.'''
+        }
+    ],
+    'Maya Angelou': [
+        {
+            'title': 'Still I Rise',
+            'content': '''You may write me down in history
+With your bitter, twisted lies,
+You may trod me in the very dirt
+But still, like dust, I'll rise.
+Does my sassiness upset you?
+Why are you beset with gloom?
+'Cause I walk like I've got oil wells
+Pumping in my living room.
+Just like moons and like suns,
+With the certainty of tides,
+Just like hopes springing high,
+Still I'll rise.'''
+        },
+        {
+            'title': 'Phenomenal Woman',
+            'content': '''Pretty women wonder where my secret lies.
+I'm not cute or built to suit a fashion model's size
+But when I start to tell them,
+They think I'm telling lies.
+I say,
+It's in the reach of my arms,
+The span of my hips,
+The stride of my step,
+The curl of my lips.
+I'm a woman
+Phenomenally.
+Phenomenal woman,
+That's me.'''
+        },
+        {
+            'title': 'Caged Bird',
+            'content': '''A free bird leaps
+on the back of the wind
+and floats downstream
+till the current ends
+and dips his wing
+in the orange sun rays
+and dares to claim the sky.
+But a bird that stalks
+down his narrow cage
+can seldom see through
+his bars of rage
+his wings are clipped and
+his feet are tied
+so he opens his throat to sing.'''
+        },
+        {
+            'title': 'Alone',
+            'category': 'solitude',
+            'content': '''Lying, thinking
+Last night
+How to find my soul a home
+Where water is not thirsty
+And bread loaf is not stone
+I came up with one thing
+And I don't believe I'm wrong
+That nobody,
+But nobody
+Can make it out here alone.'''
+        },
+        {
+            'title': 'Human Family',
+            'content': '''I note the obvious differences
+in the human family.
+Some of us are serious,
+some thrive on comedy.
+Some declare their lives are lived
+as true profundity,
+and others claim they really live
+the real reality.
+The variety of our skin tones
+can confuse, bemuse, delight,
+brown and pink and beige and purple,
+tan and blue and white.'''
+        },
+        {
+            'title': 'On the Pulse of Morning',
+            'content': '''A Rock, A River, A Tree
+Hosts to species long since departed,
+Marked the mastodon,
+The dinosaur, who left dried tokens
+Of their sojourn here
+On our planet floor,
+Any broad alarm of their hastening doom
+Is lost in the gloom of dust and ages.'''
+        },
+        {
+            'title': 'Life Doesn\'t Frighten Me',
+            'content': '''Shadows on the wall
+Noises down the hall
+Life doesn't frighten me at all
+Bad dogs barking loud
+Big ghosts in a cloud
+Life doesn't frighten me at all
+Mean old Mother Goose
+Lions on the loose
+They don't frighten me at all.'''
+        },
+        {
+            'title': 'A Brave and Startling Truth',
+            'content': '''We, this people, on a small and lonely planet
+Traveling through casual space
+Past aloof stars, across the way of indifferent suns
+To a destination where all signs tell us
+It is possible and imperative that we learn
+A brave and startling truth.'''
+        },
+        {
+            'title': 'Weekend Glory',
+            'content': '''Some clichty folks
+don't know the facts,
+posin' and preenin'
+and puttin' on acts,
+stretchin' their necks
+and strainin' their backs.
+They move into condos
+up over the ranks,
+pawn their souls
+to the local banks.'''
+        },
+        {
+            'title': 'When I Think About Myself',
+            'content': '''When I think about myself,
+I almost laugh myself to death,
+My life has been one great big joke,
+A dance that's walked
+A song that's spoke,
+I laugh so hard I almost choke
+When I think about myself.'''
+        }
+    ],
+    'Langston Hughes': [
+        {
+            'title': 'Dreams',
+            'content': '''Hold fast to dreams
+For if dreams die
+Life is a broken-winged bird
+That cannot fly.
+Hold fast to dreams
+For when dreams go
+Life is a barren field
+Frozen with snow.'''
+        },
+        {
+            'title': 'Harlem',
+            'content': '''What happens to a dream deferred?
+Does it dry up
+like a raisin in the sun?
+Or fester like a sore—
+And then run?
+Does it stink like rotten meat?
+Or crust and sugar over—
+like a syrupy sweet?
+Maybe it just sags
+like a heavy load.
+Or does it explode?'''
+        },
+        {
+            'title': 'I, Too',
+            'content': '''I, too, sing America.
+I am the darker brother.
+They send me to eat in the kitchen
+When company comes,
+But I laugh,
+And eat well,
+And grow strong.
+Tomorrow,
+I'll be at the table
+When company comes.
+Nobody'll dare
+Say to me,
+"Eat in the kitchen,"
+Then.'''
+        },
+        {
+            'title': 'The Negro Speaks of Rivers',
+            'content': '''I've known rivers:
+I've known rivers ancient as the world and older than the flow of human blood in human veins.
+My soul has grown deep like the rivers.
+I bathed in the Euphrates when dawns were young.
+I built my hut near the Congo and it lulled me to sleep.
+I looked upon the Nile and raised the pyramids above it.
+I heard the singing of the Mississippi when Abe Lincoln went down to New Orleans, and I've seen its muddy bosom turn all golden in the sunset.
+I've known rivers:
+Ancient, dusky rivers.
+My soul has grown deep like the rivers.'''
+        },
+        {
+            'title': 'Mother to Son',
+            'content': '''Well, son, I'll tell you:
+Life for me ain't been no crystal stair.
+It's had tacks in it,
+And splinters,
+And boards torn up,
+And places with no carpet on the floor—
+Bare.
+But all the time
+I'se been a-climbin' on,
+And reachin' landin's,
+And turnin' corners,
+And sometimes goin' in the dark
+Where there ain't been no light.'''
+        },
+        {
+            'title': 'Theme for English B',
+            'content': '''The instructor said,
+Go home and write
+a page tonight.
+And let that page come out of you—
+Then, it will be true.
+I wonder if it's that simple?
+I am twenty-two, colored, born in Winston-Salem.
+I went to school there, then Durham, then here
+to this college on the hill above Harlem.'''
+        },
+        {
+            'title': 'Let America Be America Again',
+            'content': '''Let America be America again.
+Let it be the dream it used to be.
+Let it be the pioneer on the plain
+Seeking a home where he himself is free.
+(America never was America to me.)
+Let America be the dream the dreamers dreamed—
+Let it be that great strong land of love
+Where never kings connive nor tyrants scheme
+That any man be crushed by one above.'''
+        },
+        {
+            'title': 'As I Grew Older',
+            'content': '''It was a long time ago.
+I have almost forgotten my dream.
+But it was there then,
+In front of me,
+Bright like a sun—
+My dream.
+And then the wall rose,
+Rose slowly,
+Slowly,
+Between me and my dream.
+Rose until it touched the sky—
+The wall.'''
+        },
+        {
+            'title': 'Life is Fine',
+            'content': '''I went down to the river,
+I set down on the bank.
+I tried to think but couldn't,
+So I jumped in and sank.
+I came up once and hollered!
+I came up twice and cried!
+If that water hadn't a-been so cold
+I might've sunk and died.'''
+        },
+        {
+            'title': 'Montage of a Dream Deferred',
+            'content': '''Good morning, daddy!
+Ain't you heard
+The boogie-woogie rumble
+Of a dream deferred?
+Listen closely:
+You'll hear their feet
+Beating out and beating out a—
+You think
+It's a happy beat?'''
         }
     ]
 }
@@ -789,6 +1915,7 @@ def seed_database():
                     poem = Poem(
                         title=poem_data['title'],
                         content=poem_data['content'],
+                        category=poem_data.get('category', 'general'),
                         user_id=poet_user.id,
                         is_classic=True  # Mark as classic so it's hidden from home feed
                     )
@@ -797,7 +1924,7 @@ def seed_database():
                     print(f"  Added: {poem_data['title']}")
         
         db.session.commit()
-        print(f"\n✅ Database seeded successfully!")
+        print(f"\n Database seeded successfully!")
         print(f"   Poets created: {poets_created}")
         print(f"   Poems added: {poems_created}")
         print(f"\nYou can now search for these classic poems in Poetry Vault!")

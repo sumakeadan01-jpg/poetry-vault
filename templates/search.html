@@ -14,7 +14,7 @@
         .search-box input::placeholder { color: rgba(184, 149, 106, 0.5); font-style: italic; }
         .search-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); pointer-events: none; }
         .search-icon svg { width: 20px; height: 20px; stroke: #d4af37; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-        .btn-back { padding: 8px 16px; background: transparent; color: #d4af37; border: 1px solid #d4af37; border-radius: 6px; text-decoration: none; font-size: 12px; white-space: nowrap; }
+        .btn-back { padding: 8px 16px; background: transparent; color: #d4af37; border: 1px solid #d4af37; border-radius: 6px; text-decoration: none; font-size: 12px; black-space: nowrap; }
         .btn-back:hover { background: rgba(212, 175, 55, 0.1); }
         .container { max-width: 700px; margin: 40px auto; padding: 0 20px; }
         .search-prompt { text-align: center; padding: 80px 30px; color: #8e7a5a; }
@@ -70,5 +70,46 @@
             </div>
         {% endif %}
     </div>
+<script>
+const searchInput = document.querySelector('input[name="q"]');
+const autocompleteDiv = document.createElement('div');
+autocompleteDiv.className = 'autocomplete-dropdown';
+autocompleteDiv.style.cssText = 'position:absolute; background:white; border:1px solid #ddd; max-height:200px; overflow-y:auto; display:none; z-index:1000; width:100%; border-radius:8px; box-shadow:0 4px 6px rgba(0,0,0,0.1);';
+searchInput.parentElement.style.position = 'relative';
+searchInput.parentElement.appendChild(autocompleteDiv);
+
+searchInput.addEventListener('input', async (e) => {
+    const query = e.target.value.trim();
+    if (query.length < 1) {
+        autocompleteDiv.style.display = 'none';
+        return;
+    }
+
+    const response = await fetch(`/api/search-poets?q=${encodeURIComponent(query)}`);
+    const data = await response.json();
+
+    if (data.poets.length > 0) {
+        autocompleteDiv.innerHTML = data.poets.map(poet =>
+            `<div class="autocomplete-item" style="padding:10px; cursor:pointer; border-bottom:1px solid #eee; color:black;"
+                 onmouseover="this.style.background='#f5f5f5'"
+                 onmouseout="this.style.background='white'"
+                 onclick="document.querySelector('input[name=q]').value='${poet}'; document.querySelector('form').submit();">
+                ${poet}
+            </div>`
+        ).join('');
+        autocompleteDiv.style.display = 'block';
+    } else {
+        autocompleteDiv.style.display = 'none';
+    }
+});
+
+// Hide dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    if (!searchInput.contains(e.target)) {
+        autocompleteDiv.style.display = 'none';
+    }
+});
+</script>
+
 </body>
 </html>

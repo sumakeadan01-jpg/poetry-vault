@@ -330,7 +330,20 @@ def create_app():
         db.session.commit()
         like_count = Like.query.filter_by(poem_id=poem_id).count()
         return jsonify({'status': 'success', 'action': action, 'count': like_count})
-    
+
+    @app.route('/api/search-poets', methods=['GET'])
+    @login_required
+    def search_poets():
+        query = request.args.get('q', '').strip()
+        poets = []
+        if query:
+            results = db.session.query(User.username).join(Poem).filter(
+                User.username.ilike(f'%{query}%'),
+                Poem.is_classic == True
+            ).distinct().all()
+            poets = [r[0] for r in results]
+        return jsonify({'poets': poets})
+
     @app.route('/user/<int:user_id>')
     @login_required
     def user_profile(user_id):
@@ -344,11 +357,12 @@ def create_app():
         query = request.args.get('q', '').strip()
         poems = []
         if query:
-            # Search in both title and content
-            poems = Poem.query.filter(
+            # Search in title, content, AND author username
+            poems = Poem.query.join(User).filter(
                 db.or_(
                     Poem.title.ilike(f'%{query}%'),
-                    Poem.content.ilike(f'%{query}%')
+                    Poem.content.ilike(f'%{query}%'),
+                    User.username.ilike(f'%{query}%')
                 )
             ).order_by(Poem.created_at.desc()).all()
         return render_template('search.html', poems=poems, query=query)
