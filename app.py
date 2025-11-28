@@ -194,16 +194,26 @@ def create_app():
             # Add the column using raw SQL
             from sqlalchemy import text
             
-            if 'postgresql' in str(db.engine.url):
-                # PostgreSQL
-                db.session.execute(text('ALTER TABLE users ADD COLUMN has_seen_tutorial BOOLEAN DEFAULT FALSE'))
-                db.session.execute(text('UPDATE users SET has_seen_tutorial = FALSE'))
-            else:
-                # SQLite
-                db.session.execute(text('ALTER TABLE users ADD COLUMN has_seen_tutorial BOOLEAN DEFAULT 0'))
-                db.session.execute(text('UPDATE users SET has_seen_tutorial = 0'))
-            
-            db.session.commit()
+            try:
+                if 'postgresql' in str(db.engine.url):
+                    # PostgreSQL
+                    db.session.execute(text('ALTER TABLE users ADD COLUMN has_seen_tutorial BOOLEAN DEFAULT FALSE'))
+                    db.session.commit()
+                    db.session.execute(text('UPDATE users SET has_seen_tutorial = FALSE WHERE has_seen_tutorial IS NULL'))
+                    db.session.commit()
+                else:
+                    # SQLite
+                    db.session.execute(text('ALTER TABLE users ADD COLUMN has_seen_tutorial BOOLEAN DEFAULT 0'))
+                    db.session.commit()
+                    db.session.execute(text('UPDATE users SET has_seen_tutorial = 0 WHERE has_seen_tutorial IS NULL'))
+                    db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                if 'already exists' in str(e).lower() or 'duplicate column' in str(e).lower():
+                    # Column already exists, that's fine
+                    pass
+                else:
+                    raise e
             
             # Count users
             user_count = User.query.count()
