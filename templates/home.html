@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Poetry Vault - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='tutorial.css') }}">
     <style>
         * {
             margin: 0;
@@ -505,5 +506,12 @@
             10%, 90% { opacity: 1; }
         }
     </style>
+    
+    <!-- Tutorial Script -->
+    <script>
+        // Pass tutorial status from backend to frontend
+        const showTutorial = {{ 'true' if show_tutorial else 'false' }};
+    </script>
+    <script src="{{ url_for('static', filename='tutorial.js') }}"></script>
 </body>
 </html>

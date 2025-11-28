@@ -166,6 +166,144 @@ def create_app():
             </html>
             '''
     
+    @app.route('/admin/add-tutorial-column/<secret_code>')
+    def add_tutorial_column_route(secret_code):
+        """Add has_seen_tutorial column to database - Safe migration"""
+        if secret_code != 'ADD_TUTORIAL_2024':
+            abort(404)
+        
+        try:
+            # Check if column already exists
+            from sqlalchemy import inspect
+            inspector = inspect(db.engine)
+            columns = [col['name'] for col in inspector.get_columns('users')]
+            
+            if 'has_seen_tutorial' in columns:
+                return '''
+                <html>
+                <head><title>Migration Status</title></head>
+                <body style="font-family: Arial; padding: 50px; text-align: center;">
+                    <h1 style="color: green;">✅ Column Already Exists!</h1>
+                    <p>The has_seen_tutorial column is already in the database.</p>
+                    <p>No changes needed.</p>
+                    <p><a href="/" style="color: #d4af37; text-decoration: none; font-size: 18px;">→ Go to Home</a></p>
+                </body>
+                </html>
+                '''
+            
+            # Add the column using raw SQL
+            if 'postgresql' in str(db.engine.url):
+                # PostgreSQL
+                db.session.execute('ALTER TABLE users ADD COLUMN has_seen_tutorial BOOLEAN DEFAULT FALSE')
+                db.session.execute('UPDATE users SET has_seen_tutorial = FALSE')
+            else:
+                # SQLite
+                db.session.execute('ALTER TABLE users ADD COLUMN has_seen_tutorial BOOLEAN DEFAULT 0')
+                db.session.execute('UPDATE users SET has_seen_tutorial = 0')
+            
+            db.session.commit()
+            
+            # Count users
+            user_count = User.query.count()
+            
+            return f'''
+            <html>
+            <head><title>Migration Successful</title></head>
+            <body style="font-family: Arial; padding: 50px; text-align: center;">
+                <h1 style="color: green;">✅ Migration Successful!</h1>
+                <p>Added has_seen_tutorial column to database.</p>
+                <p>Updated {user_count} users - they will all see the tutorial once.</p>
+                <p><a href="/" style="color: #d4af37; text-decoration: none; font-size: 18px;">→ Go to Home</a></p>
+            </body>
+            </html>
+            '''
+        except Exception as e:
+            return f'''
+            <html>
+            <head><title>Migration Failed</title></head>
+            <body style="font-family: Arial; padding: 50px; text-align: center;">
+                <h1 style="color: red;">❌ Migration Failed</h1>
+                <p>Error: {str(e)}</p>
+                <p>The column might already exist, or there's a database issue.</p>
+                <p><a href="/" style="color: #d4af37;">← Back to Home</a></p>
+            </body>
+            </html>
+            '''
+    
+    @app.route('/admin/import-new-poems/<secret_code>')
+    def import_new_poems_route(secret_code):
+        """Import new poems from seed_poems_part2.py"""
+        if secret_code != 'IMPORT_POEMS_2024':
+            abort(404)
+        
+        try:
+            from seed_poems_part2 import ADDITIONAL_FAMOUS_POEMS
+            
+            added_total = 0
+            skipped_total = 0
+            results = []
+            
+            for poet_name, poems_list in ADDITIONAL_FAMOUS_POEMS.items():
+                poet = User.query.filter_by(username=poet_name).first()
+                
+                if not poet:
+                    results.append(f"❌ {poet_name}: Poet not found")
+                    continue
+                
+                added = 0
+                skipped = 0
+                
+                for poem_data in poems_list:
+                    existing = Poem.query.filter_by(
+                        title=poem_data['title'],
+                        user_id=poet.id
+                    ).first()
+                    
+                    if existing:
+                        skipped += 1
+                    else:
+                        poem = Poem(
+                            title=poem_data['title'],
+                            content=poem_data['content'],
+                            category=poem_data.get('category', 'general'),
+                            user_id=poet.id,
+                            is_classic=True
+                        )
+                        db.session.add(poem)
+                        added += 1
+                
+                db.session.commit()
+                added_total += added
+                skipped_total += skipped
+                results.append(f"✅ {poet_name}: Added {added}, Skipped {skipped}")
+            
+            results_html = '<br>'.join(results)
+            
+            return f'''
+            <html>
+            <head><title>Import Successful</title></head>
+            <body style="font-family: Arial; padding: 50px; text-align: center;">
+                <h1 style="color: green;">✅ Import Successful!</h1>
+                <p>Added {added_total} new poems, Skipped {skipped_total} (already exist)</p>
+                <div style="text-align: left; max-width: 600px; margin: 20px auto; padding: 20px; background: #f5f5f5; border-radius: 8px;">
+                    {results_html}
+                </div>
+                <p><a href="/" style="color: #d4af37; text-decoration: none; font-size: 18px;">→ Go to Home</a></p>
+            </body>
+            </html>
+            '''
+        except Exception as e:
+            return f'''
+            <html>
+            <head><title>Import Failed</title></head>
+            <body style="font-family: Arial; padding: 50px; text-align: center;">
+                <h1 style="color: red;">❌ Import Failed</h1>
+                <p>Error: {str(e)}</p>
+                <p><a href="/" style="color: #d4af37;">← Back to Home</a></p>
+            </body>
+            </html>
+            '''
+    
     @app.route('/home')
     @login_required
     def home():
@@ -198,7 +336,10 @@ def create_app():
         # Get saved poem IDs for current user
         saved_poem_ids = [s.poem_id for s in SavedPoem.query.filter_by(user_id=current_user.id).all()]
         
-        return render_template('home.html', poems=poems, greeting=greeting, saved_poem_ids=saved_poem_ids)
+        # Check if user should see tutorial
+        show_tutorial = not current_user.has_seen_tutorial
+        
+        return render_template('home.html', poems=poems, greeting=greeting, saved_poem_ids=saved_poem_ids, show_tutorial=show_tutorial)
     
     @app.route('/new-poem', methods=['GET', 'POST'])
     @login_required
@@ -599,6 +740,14 @@ def create_app():
         from models import Notification
         count = Notification.query.filter_by(user_id=current_user.id, is_read=False).count()
         return jsonify({'count': count})
+    
+    @app.route('/mark-tutorial-seen', methods=['POST'])
+    @login_required
+    def mark_tutorial_seen():
+        """Mark that user has seen the onboarding tutorial"""
+        current_user.has_seen_tutorial = True
+        db.session.commit()
+        return jsonify({'status': 'success'})
     
     @app.route('/chat-with-poet')
     @login_required

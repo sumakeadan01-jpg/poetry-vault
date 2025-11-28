@@ -15,6 +15,7 @@ class User(UserMixin, db.Model):
     age = db.Column(db.Integer, nullable=True)
     favorite_poet = db.Column(db.String(100), nullable=True)
     is_admin = db.Column(db.Boolean, default=False)
+    has_seen_tutorial = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     poems = db.relationship('Poem', backref='author', lazy=True)
