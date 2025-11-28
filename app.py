@@ -192,14 +192,16 @@ def create_app():
                 '''
             
             # Add the column using raw SQL
+            from sqlalchemy import text
+            
             if 'postgresql' in str(db.engine.url):
                 # PostgreSQL
-                db.session.execute('ALTER TABLE users ADD COLUMN has_seen_tutorial BOOLEAN DEFAULT FALSE')
-                db.session.execute('UPDATE users SET has_seen_tutorial = FALSE')
+                db.session.execute(text('ALTER TABLE users ADD COLUMN has_seen_tutorial BOOLEAN DEFAULT FALSE'))
+                db.session.execute(text('UPDATE users SET has_seen_tutorial = FALSE'))
             else:
                 # SQLite
-                db.session.execute('ALTER TABLE users ADD COLUMN has_seen_tutorial BOOLEAN DEFAULT 0')
-                db.session.execute('UPDATE users SET has_seen_tutorial = 0')
+                db.session.execute(text('ALTER TABLE users ADD COLUMN has_seen_tutorial BOOLEAN DEFAULT 0'))
+                db.session.execute(text('UPDATE users SET has_seen_tutorial = 0'))
             
             db.session.commit()
             
