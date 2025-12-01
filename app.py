@@ -858,6 +858,7 @@ def create_app():
             ip_address = request.remote_addr
             user_agent = data.get('userAgent', '')[:255]
             referrer = data.get('referrer', '')[:255]
+            nickname = data.get('nickname', '')  # Get nickname from URL parameter
             source = 'instagram'
             
             # Check if visitor exists
@@ -869,9 +870,12 @@ def create_app():
                 visitor.visit_count += 1
                 if visitor.source == 'direct':  # Update if was previously direct
                     visitor.source = source
+                if nickname and not visitor.nickname:  # Add nickname if provided
+                    visitor.nickname = nickname
             else:
                 # Create new visitor
                 visitor = Visitor(
+                    nickname=nickname if nickname else None,
                     source=source,
                     ip_address=ip_address,
                     user_agent=user_agent,
