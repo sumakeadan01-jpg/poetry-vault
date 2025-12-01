@@ -8,9 +8,12 @@ from models import db, UserActivity, Visitor
 from flask_login import current_user
 from datetime import datetime
 
-def get_source_from_referrer(referrer):
-    """Determine source from referrer URL"""
+def get_source_from_referrer(referrer, user_agent=''):
+    """Determine source from referrer URL and user agent"""
     if not referrer:
+        # Check user agent for Instagram app
+        if user_agent and 'instagram' in user_agent.lower():
+            return 'instagram'
         return 'direct'
     
     referrer_lower = referrer.lower()
@@ -39,8 +42,20 @@ def track_visitor():
         # Get nickname from URL parameter (e.g., ?from=john_instagram)
         nickname = request.args.get('from') or request.args.get('ref')
         
-        # Determine source
-        source = get_source_from_referrer(referrer)
+        # Determine source (use nickname if provided, otherwise detect from referrer/user agent)
+        if nickname:
+            # If nickname contains social media name, use that as source
+            nickname_lower = nickname.lower()
+            if 'instagram' in nickname_lower or 'ig' in nickname_lower:
+                source = 'instagram'
+            elif 'facebook' in nickname_lower or 'fb' in nickname_lower:
+                source = 'facebook'
+            elif 'twitter' in nickname_lower:
+                source = 'twitter'
+            else:
+                source = get_source_from_referrer(referrer, user_agent)
+        else:
+            source = get_source_from_referrer(referrer, user_agent)
         
         # Check if visitor exists (by IP)
         visitor = Visitor.query.filter_by(ip_address=ip_address).first()
