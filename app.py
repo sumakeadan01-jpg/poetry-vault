@@ -508,6 +508,44 @@ def create_app():
         db.session.commit()
         return render_template('settings.html', message='Password changed successfully!', message_type='success')
     
+    @app.route('/settings/delete-account', methods=['POST'])
+    @login_required
+    def delete_account():
+        """Permanently delete user account and all associated data"""
+        try:
+            from models import Notification, Follow
+            
+            user_id = current_user.id
+            
+            # Delete all user's poems (this will cascade delete comments via relationship)
+            user_poems = Poem.query.filter_by(user_id=user_id).all()
+            for poem in user_poems:
+                db.session.delete(poem)
+            
+            # Delete all notifications (sent and received)
+            Notification.query.filter_by(user_id=user_id).delete()
+            Notification.query.filter_by(from_user_id=user_id).delete()
+            
+            # Delete all follow relationships (following and followers)
+            Follow.query.filter_by(follower_id=user_id).delete()
+            Follow.query.filter_by(followed_id=user_id).delete()
+            
+            # Delete all comments by this user
+            Comment.query.filter_by(user_id=user_id).delete()
+            
+            # Finally, delete the user account
+            db.session.delete(current_user)
+            db.session.commit()
+            
+            # Log out the user
+            logout_user()
+            
+            return jsonify({'status': 'success', 'message': 'Account deleted successfully'})
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error deleting account: {e}")
+            return jsonify({'status': 'error', 'message': str(e)}), 500
+    
     @app.route('/admin')
     @login_required
     def admin():

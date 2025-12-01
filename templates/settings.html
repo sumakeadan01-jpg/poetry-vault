@@ -222,7 +222,57 @@
 
                 <button type="submit">Change Password</button>
             </form>
+
+            <div class="section-title" style="color: #ff6b6b; border-bottom-color: rgba(255, 107, 107, 0.3);">⚠️ Danger Zone</div>
+            <div style="background: rgba(255, 107, 107, 0.05); border: 1px solid rgba(255, 107, 107, 0.3); border-radius: 6px; padding: 20px; margin-top: 20px;">
+                <h3 style="color: #ff6b6b; font-size: 16px; margin-bottom: 10px; font-weight: normal;">Delete Account</h3>
+                <p style="color: #a0a0a0; font-size: 14px; margin-bottom: 15px; line-height: 1.6;">
+                    Once you delete your account, there is no going back. All your data will be permanently deleted:
+                </p>
+                <ul style="color: #a0a0a0; font-size: 13px; margin-bottom: 20px; margin-left: 20px; line-height: 1.8;">
+                    <li>Your username and email</li>
+                    <li>All your poems and comments</li>
+                    <li>Your followers and following list</li>
+                    <li>All likes and notifications</li>
+                    <li>Your entire account history</li>
+                </ul>
+                <button onclick="confirmDeleteAccount()" style="background: #ff6b6b; color: white;">Delete My Account</button>
+            </div>
         </div>
     </div>
+
+    <script>
+        function confirmDeleteAccount() {
+            // First confirmation
+            const confirmed = confirm('⚠️ WARNING!\n\nAre you absolutely sure you want to delete your account?\n\nThis action CANNOT be undone!\n\nAll your information will be permanently deleted:\n• Username and email\n• All poems and comments\n• Followers and following\n• Likes and notifications\n• Everything!\n\nClick OK to continue, or Cancel to go back.');
+            
+            if (confirmed) {
+                // Second confirmation - make them type to confirm
+                const finalConfirm = confirm('⚠️ FINAL WARNING!\n\nThis is your last chance!\n\nYour account and ALL data will be PERMANENTLY DELETED and CANNOT BE RESTORED.\n\nAre you 100% sure you want to proceed?');
+                
+                if (finalConfirm) {
+                    // Send delete request
+                    fetch('/settings/delete-account', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert('Your account has been permanently deleted. You will now be redirected to the login page.');
+                            window.location.href = '/login';
+                        } else {
+                            alert('Error deleting account: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        alert('Error deleting account. Please try again.');
+                    });
+                }
+            }
+        }
+    </script>
 </body>
 </html>
