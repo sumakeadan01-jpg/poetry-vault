@@ -3,6 +3,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from config import Config
 from models import db, User, Poem, Comment
 import requests
+from analytics import track_visitor, log_activity
 
 def create_app():
     app = Flask(__name__)
@@ -20,6 +21,9 @@ def create_app():
     
     @app.route('/')
     def index():
+        # Track visitor
+        track_visitor()
+        
         if current_user.is_authenticated:
             return redirect(url_for('home'))
         return redirect(url_for('login'))
@@ -88,6 +92,7 @@ def create_app():
                     db.session.commit()
                 
                 login_user(user)
+                log_activity('login', f'User {user.username} logged in')
                 return redirect(url_for('home'))
             
             return render_template('login.html', error='Invalid username or password')
@@ -316,6 +321,70 @@ def create_app():
             </html>
             '''
     
+    @app.route('/admin/add-analytics-tables/<secret_code>')
+    def add_analytics_tables_route(secret_code):
+        """Add analytics tables to database"""
+        if secret_code != 'ADD_ANALYTICS_2024':
+            abort(404)
+        
+        try:
+            from sqlalchemy import text
+            
+            # Create user_activities table
+            db.session.execute(text('''
+                CREATE TABLE IF NOT EXISTS user_activities (
+                    id SERIAL PRIMARY KEY,
+                    user_id INTEGER REFERENCES users(id),
+                    activity_type VARCHAR(50) NOT NULL,
+                    description VARCHAR(255),
+                    ip_address VARCHAR(50),
+                    user_agent VARCHAR(255),
+                    referrer VARCHAR(255),
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            '''))
+            
+            # Create visitors table
+            db.session.execute(text('''
+                CREATE TABLE IF NOT EXISTS visitors (
+                    id SERIAL PRIMARY KEY,
+                    nickname VARCHAR(100),
+                    source VARCHAR(100),
+                    ip_address VARCHAR(50),
+                    user_agent VARCHAR(255),
+                    referrer VARCHAR(255),
+                    first_visit TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    last_visit TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    visit_count INTEGER DEFAULT 1
+                )
+            '''))
+            
+            db.session.commit()
+            
+            return '''
+            <html>
+            <head><title>Analytics Tables Added</title></head>
+            <body style="font-family: Arial; padding: 50px; text-align: center;">
+                <h1 style="color: green;">✅ Analytics Tables Created!</h1>
+                <p>Successfully added user_activities and visitors tables.</p>
+                <p>Your admin panel now tracks visitor and user activity!</p>
+                <p><a href="/admin" style="color: #d4af37; text-decoration: none; font-size: 18px;">→ Go to Admin Panel</a></p>
+            </body>
+            </html>
+            '''
+        except Exception as e:
+            return f'''
+            <html>
+            <head><title>Migration Failed</title></head>
+            <body style="font-family: Arial; padding: 50px; text-align: center;">
+                <h1 style="color: red;">❌ Migration Failed</h1>
+                <p>Error: {str(e)}</p>
+                <p>Tables might already exist.</p>
+                <p><a href="/" style="color: #d4af37;">← Back to Home</a></p>
+            </body>
+            </html>
+            '''
+    
     @app.route('/home')
     @login_required
     def home():
@@ -445,18 +514,43 @@ def create_app():
         if not current_user.is_admin:
             abort(403)
         
+        from models import UserActivity, Visitor
+        from datetime import datetime, timedelta
+        
         total_users = User.query.count()
         total_poems = Poem.query.count()
         total_comments = Comment.query.count()
         all_users = User.query.order_by(User.created_at.desc()).all()
         recent_poems = Poem.query.order_by(Poem.created_at.desc()).limit(10).all()
         
+        # Analytics data
+        total_visitors = Visitor.query.count()
+        recent_visitors = Visitor.query.order_by(Visitor.last_visit.desc()).limit(20).all()
+        recent_activities = UserActivity.query.order_by(UserActivity.created_at.desc()).limit(50).all()
+        
+        # Today's stats
+        today = datetime.utcnow().date()
+        today_start = datetime.combine(today, datetime.min.time())
+        today_activities = UserActivity.query.filter(UserActivity.created_at >= today_start).count()
+        today_visitors = Visitor.query.filter(Visitor.last_visit >= today_start).count()
+        
+        # Source breakdown
+        instagram_visitors = Visitor.query.filter_by(source='instagram').count()
+        direct_visitors = Visitor.query.filter_by(source='direct').count()
+        
         return render_template('admin.html', 
                              total_users=total_users,
                              total_poems=total_poems,
                              total_comments=total_comments,
                              users=all_users,
-                             poems=recent_poems)
+                             poems=recent_poems,
+                             total_visitors=total_visitors,
+                             recent_visitors=recent_visitors,
+                             recent_activities=recent_activities,
+                             today_activities=today_activities,
+                             today_visitors=today_visitors,
+                             instagram_visitors=instagram_visitors,
+                             direct_visitors=direct_visitors)
     @app.route('/admin/reset-password/<int:user_id>', methods=['GET', 'POST'])
     @login_required
     def reset_password(user_id):
@@ -752,6 +846,28 @@ def create_app():
         from models import Notification
         count = Notification.query.filter_by(user_id=current_user.id, is_read=False).count()
         return jsonify({'count': count})
+    
+    @app.route('/api/check-new-notifications')
+    @login_required
+    def check_new_notifications():
+        """API endpoint for desktop notifications - returns unread notifications"""
+        from models import Notification
+        
+        # Get unread notifications
+        notifications = Notification.query.filter_by(
+            user_id=current_user.id,
+            is_read=False
+        ).order_by(Notification.created_at.desc()).limit(5).all()
+        
+        # Convert to JSON
+        notif_list = [{
+            'id': n.id,
+            'type': n.type,
+            'message': n.message,
+            'created_at': n.created_at.isoformat()
+        } for n in notifications]
+        
+        return jsonify({'notifications': notif_list})
     
     @app.route('/mark-tutorial-seen', methods=['POST'])
     @login_required

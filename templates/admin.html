@@ -49,6 +49,18 @@
                 <div class="stat-number">{{ total_comments }}</div>
                 <div class="stat-label">Total Comments</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ total_visitors }}</div>
+                <div class="stat-label">Total Visitors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ today_visitors }}</div>
+                <div class="stat-label">Today's Visitors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ instagram_visitors }}</div>
+                <div class="stat-label">From Instagram</div>
+            </div>
         </div>
 
         <div class="section-title">All Users</div>
@@ -69,6 +81,90 @@
                         <td>{{ user.email }}</td>
                         <td>{{ user.created_at.strftime('%B %d, %Y') }}</td>
                         <td>{% if user.is_admin %}<span class="badge">Admin</span>{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-title">Recent Visitors</div>
+        <div class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nickname/Source</th>
+                        <th>Source</th>
+                        <th>First Visit</th>
+                        <th>Last Visit</th>
+                        <th>Visits</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for visitor in recent_visitors %}
+                    <tr>
+                        <td>
+                            {% if visitor.nickname %}
+                                <strong style="color: #d4af37;">{{ visitor.nickname }}</strong>
+                            {% else %}
+                                Anonymous
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if visitor.source == 'instagram' %}
+                                <span class="badge" style="background: rgba(225, 48, 108, 0.2); color: #e1306c;">Instagram</span>
+                            {% elif visitor.source == 'facebook' %}
+                                <span class="badge" style="background: rgba(66, 103, 178, 0.2); color: #4267B2;">Facebook</span>
+                            {% elif visitor.source == 'direct' %}
+                                <span class="badge">Direct</span>
+                            {% else %}
+                                <span class="badge">{{ visitor.source }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ visitor.first_visit.strftime('%b %d, %H:%M') }}</td>
+                        <td>{{ visitor.last_visit.strftime('%b %d, %H:%M') }}</td>
+                        <td>{{ visitor.visit_count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-title">Recent Activity</div>
+        <div class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Activity</th>
+                        <th>Description</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for activity in recent_activities %}
+                    <tr>
+                        <td>
+                            {% if activity.user_id %}
+                                {{ activity.user.username if activity.user else 'Unknown' }}
+                            {% else %}
+                                <span style="color: #8e7a5a;">Visitor</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if activity.activity_type == 'login' %}
+                                <span class="badge" style="background: rgba(76, 175, 80, 0.2); color: #4CAF50;">Login</span>
+                            {% elif activity.activity_type == 'poem_created' %}
+                                <span class="badge" style="background: rgba(33, 150, 243, 0.2); color: #2196F3;">New Poem</span>
+                            {% elif activity.activity_type == 'like' %}
+                                <span class="badge" style="background: rgba(244, 67, 54, 0.2); color: #F44336;">Like</span>
+                            {% elif activity.activity_type == 'comment' %}
+                                <span class="badge" style="background: rgba(255, 152, 0, 0.2); color: #FF9800;">Comment</span>
+                            {% else %}
+                                <span class="badge">{{ activity.activity_type }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ activity.description or '-' }}</td>
+                        <td>{{ activity.created_at.strftime('%b %d, %H:%M') }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

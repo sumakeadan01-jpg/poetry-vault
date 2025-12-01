@@ -120,3 +120,28 @@ class HighlightPoem(db.Model):
     added_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     __table_args__ = (db.UniqueConstraint('highlight_id', 'poem_id', name='unique_highlight_poem'),)
+
+class UserActivity(db.Model):
+    __tablename__ = 'user_activities'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # Null for anonymous visitors
+    activity_type = db.Column(db.String(50), nullable=False)  # 'login', 'poem_created', 'like', 'comment', 'visit'
+    description = db.Column(db.String(255), nullable=True)
+    ip_address = db.Column(db.String(50), nullable=True)
+    user_agent = db.Column(db.String(255), nullable=True)
+    referrer = db.Column(db.String(255), nullable=True)  # Where they came from (Instagram, direct, etc.)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class Visitor(db.Model):
+    __tablename__ = 'visitors'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    nickname = db.Column(db.String(100), nullable=True)  # Optional nickname from URL parameter
+    source = db.Column(db.String(100), nullable=True)  # 'instagram', 'direct', 'google', etc.
+    ip_address = db.Column(db.String(50), nullable=True)
+    user_agent = db.Column(db.String(255), nullable=True)
+    referrer = db.Column(db.String(255), nullable=True)
+    first_visit = db.Column(db.DateTime, default=datetime.utcnow)
+    last_visit = db.Column(db.DateTime, default=datetime.utcnow)
+    visit_count = db.Column(db.Integer, default=1)
