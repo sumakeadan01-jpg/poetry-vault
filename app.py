@@ -847,6 +847,45 @@ def create_app():
         count = Notification.query.filter_by(user_id=current_user.id, is_read=False).count()
         return jsonify({'count': count})
     
+    @app.route('/api/track-instagram-visitor', methods=['POST'])
+    def track_instagram_visitor():
+        """Hidden API endpoint to track Instagram visitors automatically"""
+        try:
+            from models import Visitor
+            from datetime import datetime
+            
+            data = request.get_json()
+            ip_address = request.remote_addr
+            user_agent = data.get('userAgent', '')[:255]
+            referrer = data.get('referrer', '')[:255]
+            source = 'instagram'
+            
+            # Check if visitor exists
+            visitor = Visitor.query.filter_by(ip_address=ip_address).first()
+            
+            if visitor:
+                # Update existing visitor
+                visitor.last_visit = datetime.utcnow()
+                visitor.visit_count += 1
+                if visitor.source == 'direct':  # Update if was previously direct
+                    visitor.source = source
+            else:
+                # Create new visitor
+                visitor = Visitor(
+                    source=source,
+                    ip_address=ip_address,
+                    user_agent=user_agent,
+                    referrer=referrer if referrer else None
+                )
+                db.session.add(visitor)
+            
+            db.session.commit()
+            return jsonify({'status': 'success'})
+        except Exception as e:
+            print(f"Error tracking Instagram visitor: {e}")
+            db.session.rollback()
+            return jsonify({'status': 'error'}), 500
+    
     @app.route('/api/check-new-notifications')
     @login_required
     def check_new_notifications():
