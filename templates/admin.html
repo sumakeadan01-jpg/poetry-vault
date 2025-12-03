@@ -75,6 +75,7 @@
                         <th>Email</th>
                         <th>Joined</th>
                         <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -84,6 +85,11 @@
                         <td>{{ user.email }}</td>
                         <td>{{ user.created_at.strftime('%B %d, %Y') }}</td>
                         <td>{% if user.is_admin %}<span class="badge">Admin</span>{% endif %}</td>
+                        <td>
+                            {% if not user.is_admin %}
+                            <button onclick="deleteUser('{{ user.username }}', {{ user.id }})" style="background: #ff6b6b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">Delete</button>
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -198,5 +204,30 @@
             </table>
         </div>
     </div>
+    
+    <script>
+        function deleteUser(username, userId) {
+            if (confirm(`⚠️ WARNING!\n\nAre you sure you want to delete user "${username}"?\n\nThis will permanently delete:\n• Their account\n• All their poems\n• All their comments\n• All their followers/following\n• Everything!\n\nThis CANNOT be undone!`)) {
+                fetch(`/admin/delete-user/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(`✅ User "${username}" has been deleted successfully!`);
+                        location.reload();
+                    } else {
+                        alert(`❌ Error: ${data.message}`);
+                    }
+                })
+                .catch(error => {
+                    alert('❌ Error deleting user. Please try again.');
+                });
+            }
+        }
+    </script>
 </body>
 </html>

@@ -589,6 +589,53 @@ def create_app():
                              today_visitors=today_visitors,
                              instagram_visitors=instagram_visitors,
                              direct_visitors=direct_visitors)
+    
+    @app.route('/admin/delete-user/<int:user_id>', methods=['POST'])
+    @login_required
+    def admin_delete_user(user_id):
+        """Admin route to delete a user account"""
+        if not current_user.is_admin:
+            return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
+        
+        try:
+            from models import Notification, Follow
+            
+            user = User.query.get(user_id)
+            if not user:
+                return jsonify({'status': 'error', 'message': 'User not found'}), 404
+            
+            # Prevent deleting admin accounts
+            if user.is_admin:
+                return jsonify({'status': 'error', 'message': 'Cannot delete admin accounts'}), 403
+            
+            username = user.username
+            
+            # Delete all user's poems (comments will cascade)
+            user_poems = Poem.query.filter_by(user_id=user_id).all()
+            for poem in user_poems:
+                db.session.delete(poem)
+            
+            # Delete all notifications
+            Notification.query.filter_by(user_id=user_id).delete()
+            Notification.query.filter_by(from_user_id=user_id).delete()
+            
+            # Delete all follow relationships
+            Follow.query.filter_by(follower_id=user_id).delete()
+            Follow.query.filter_by(followed_id=user_id).delete()
+            
+            # Delete all comments
+            Comment.query.filter_by(user_id=user_id).delete()
+            
+            # Delete the user
+            db.session.delete(user)
+            db.session.commit()
+            
+            return jsonify({'status': 'success', 'message': f'User {username} deleted successfully'})
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error deleting user: {e}")
+            return jsonify({'status': 'error', 'message': str(e)}), 500
+    
     @app.route('/admin/reset-password/<int:user_id>', methods=['GET', 'POST'])
     @login_required
     def reset_password(user_id):
