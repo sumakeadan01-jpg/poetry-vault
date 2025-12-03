@@ -522,9 +522,8 @@ def create_app():
             for poem in user_poems:
                 db.session.delete(poem)
             
-            # Delete all notifications (sent and received)
+            # Delete all notifications for this user
             Notification.query.filter_by(user_id=user_id).delete()
-            Notification.query.filter_by(from_user_id=user_id).delete()
             
             # Delete all follow relationships (following and followers)
             Follow.query.filter_by(follower_id=user_id).delete()
@@ -615,9 +614,8 @@ def create_app():
             for poem in user_poems:
                 db.session.delete(poem)
             
-            # Delete all notifications
+            # Delete all notifications for this user
             Notification.query.filter_by(user_id=user_id).delete()
-            Notification.query.filter_by(from_user_id=user_id).delete()
             
             # Delete all follow relationships
             Follow.query.filter_by(follower_id=user_id).delete()
