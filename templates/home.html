@@ -305,7 +305,9 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">Poetry Vault</div>
+            <a href="/home" class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Poetry Vault" style="height: 40px; width: auto; vertical-align: middle;">
+            </a>
             <div class="nav-buttons">
                 <a href="/search" class="icon-btn" title="Search">
                     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>

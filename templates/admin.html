@@ -28,7 +28,10 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="/home" class="logo">Poetry Vault Admin</a>
+            <a href="/home" class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Poetry Vault" style="height: 40px; width: auto; vertical-align: middle;">
+                <span style="margin-left: 10px;">Admin</span>
+            </a>
             <a href="/home" class="btn-back">Back to Home</a>
         </div>
     </nav>

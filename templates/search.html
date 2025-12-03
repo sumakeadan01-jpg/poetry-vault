@@ -34,7 +34,9 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="/home" class="logo">Poetry Vault</a>
+            <a href="/home" class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Poetry Vault" style="height: 40px; width: auto; vertical-align: middle;">
+            </a>
             <div class="search-box">
                 <form action="/search" method="GET">
                     <input type="text" name="q" value="{{ query }}" placeholder="Search poems by title or content..." autofocus>
