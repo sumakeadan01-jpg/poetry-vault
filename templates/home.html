@@ -37,6 +37,14 @@
             color: #d4af37;
             font-weight: 600;
             letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        .logo img {
+            height: 45px;
+            width: auto;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
         .nav-buttons {
             display: flex;
@@ -299,6 +307,9 @@
             .logo {
                 font-size: 20px;
             }
+            .logo img {
+                height: 35px;
+            }
         }
     </style>
 </head>
@@ -306,7 +317,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="/home" class="logo">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Poetry Vault" style="height: 40px; width: auto; vertical-align: middle;">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Poetry Vault">
             </a>
             <div class="nav-buttons">
                 <a href="/search" class="icon-btn" title="Search">
