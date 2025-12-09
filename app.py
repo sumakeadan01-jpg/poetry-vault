@@ -28,6 +28,32 @@ def create_app():
             return redirect(url_for('home'))
         return redirect(url_for('login'))
     
+    @app.route('/reset-by-email')
+    def reset_by_email():
+        """Reset password for specific email"""
+        try:
+            user = User.query.filter_by(email='sumakeadan01@gmail.com').first()
+            if user:
+                user.set_password('NewPass2024')
+                db.session.commit()
+                return f'''
+                <html>
+                <body style="font-family: Arial; background: #1c2532; color: #d4af37; padding: 50px; text-align: center;">
+                    <h1>✅ Password Reset Successful!</h1>
+                    <div style="background: rgba(212, 175, 55, 0.1); padding: 20px; border-radius: 10px; margin: 20px auto; max-width: 400px;">
+                        <p style="font-size: 18px;"><strong>Username:</strong> {user.username}</p>
+                        <p style="font-size: 18px;"><strong>Email:</strong> {user.email}</p>
+                        <p style="font-size: 18px;"><strong>New Password:</strong> NewPass2024</p>
+                    </div>
+                    <p><a href="/login" style="color: #d4af37; font-size: 16px; text-decoration: none; border: 2px solid #d4af37; padding: 10px 20px; display: inline-block; border-radius: 6px; margin-top: 20px;">Go to Login →</a></p>
+                    <p style="color: #ff6b6b; margin-top: 30px; font-size: 14px;">⚠️ Change this password in Settings after logging in!</p>
+                </body>
+                </html>
+                '''
+            return '<html><body style="background: #1c2532; color: #ff6b6b; padding: 50px; text-align: center;"><h1>❌ Email not found in database</h1></body></html>'
+        except Exception as e:
+            return f'<html><body style="background: #1c2532; color: #ff6b6b; padding: 50px;"><h1>Error: {str(e)}</h1></body></html>'
+    
     @app.route('/emergency-reset/<secret_code>', methods=['GET', 'POST'])
     def emergency_reset(secret_code):
         """Emergency password reset - use secret URL"""
