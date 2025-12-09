@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emergency Password Reset - Poetry Vault</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #1c2532;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 450px;
+            width: 100%;
+            padding: 20px;
+        }
+        .reset-card {
+            background: rgba(28, 37, 50, 0.85);
+            border: 2px solid #d4af37;
+            border-radius: 12px;
+            padding: 50px 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            color: #d4af37;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #8e7a5a;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            color: #d4af37;
+            font-size: 13px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 6px;
+            color: #e8e8e8;
+            font-family: 'Georgia', serif;
+            font-size: 15px;
+        }
+        input:focus {
+            outline: none;
+            border-color: #d4af37;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #d4af37;
+            color: #1c2532;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #b8956a;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-link a {
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="reset-card">
+            <h1>🔑 Emergency Reset</h1>
+            <p class="subtitle">Reset your admin password</p>
+            
+            <form method="POST">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" value="P0.1Autumn" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" name="new_password" required placeholder="Enter new password">
+                </div>
+                
+                <button type="submit">Reset Password</button>
+            </form>
+            
+            <div class="back-link">
+                <a href="/login">← Back to Login</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

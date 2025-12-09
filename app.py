@@ -28,6 +28,28 @@ def create_app():
             return redirect(url_for('home'))
         return redirect(url_for('login'))
     
+    @app.route('/emergency-reset/<secret_code>', methods=['GET', 'POST'])
+    def emergency_reset(secret_code):
+        """Emergency password reset - use secret URL"""
+        if secret_code != 'reset2024poetry':
+            abort(404)
+        
+        if request.method == 'POST':
+            username = request.form.get('username')
+            new_password = request.form.get('new_password')
+            
+            user = User.query.filter_by(username=username).first()
+            if user:
+                user.set_password(new_password)
+                db.session.commit()
+                flash(f'Password reset successful for {username}!', 'success')
+                return redirect(url_for('login'))
+            else:
+                flash(f'User not found: {username}', 'error')
+        
+        # Show reset form
+        return render_template('emergency_reset.html')
+    
     @app.route('/register', methods=['GET', 'POST'])
     def register():
         if request.method == 'POST':
