@@ -132,6 +132,9 @@ class UserActivity(db.Model):
     user_agent = db.Column(db.String(255), nullable=True)
     referrer = db.Column(db.String(255), nullable=True)  # Where they came from (Instagram, direct, etc.)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationship to User
+    user = db.relationship('User', backref='activities', foreign_keys=[user_id])
 
 class Visitor(db.Model):
     __tablename__ = 'visitors'
