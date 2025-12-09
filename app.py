@@ -12,6 +12,20 @@ def create_app():
     
     db.init_app(app)
     
+    # Auto-restore database if RESTORE_NOW.txt exists
+    import os
+    import shutil
+    if os.path.exists('RESTORE_NOW.txt'):
+        try:
+            backup = 'instance/backups/poetry_app_20251201_163559.db'
+            current = 'instance/poetry_app.db'
+            if os.path.exists(backup):
+                shutil.copy2(backup, current)
+                print("✅ DATABASE AUTO-RESTORED FROM BACKUP!")
+                os.remove('RESTORE_NOW.txt')  # Remove trigger file
+        except Exception as e:
+            print(f"Restore error: {e}")
+    
     login_manager = LoginManager()
     login_manager.init_app(app)
     login_manager.login_view = 'login'
