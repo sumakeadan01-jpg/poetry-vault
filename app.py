@@ -120,6 +120,17 @@ def create_app():
         
         return render_template('register.html')
     
+    @app.route('/reset-admin-now')
+    def reset_admin_now():
+        """Quick admin password reset"""
+        user = User.query.filter_by(username='P0.1Autumn').first()
+        if user:
+            # Set a temporary password
+            user.set_password('temp2024')
+            db.session.commit()
+            return '<html><body style="font-family: Arial; background: #1c2532; color: #d4af37; padding: 50px; text-align: center;"><h1>✅ Password Reset!</h1><p>Username: P0.1Autumn</p><p>New Password: temp2024</p><p><a href="/login" style="color: #d4af37;">Go to Login</a></p><p style="color: #ff6b6b; margin-top: 30px;">⚠️ Change this password immediately after logging in!</p></body></html>'
+        return '<html><body style="background: #1c2532; color: #ff6b6b; padding: 50px; text-align: center;"><h1>User not found</h1></body></html>'
+    
     @app.route('/login', methods=['GET', 'POST'])
     def login():
         if request.method == 'POST':
