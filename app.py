@@ -12,20 +12,6 @@ def create_app():
     
     db.init_app(app)
     
-    # Auto-restore database if RESTORE_NOW.txt exists
-    import os
-    import shutil
-    if os.path.exists('RESTORE_NOW.txt'):
-        try:
-            backup = 'instance/backups/poetry_app_20251201_163559.db'
-            current = 'instance/poetry_app.db'
-            if os.path.exists(backup):
-                shutil.copy2(backup, current)
-                print("✅ DATABASE AUTO-RESTORED FROM BACKUP!")
-                os.remove('RESTORE_NOW.txt')  # Remove trigger file
-        except Exception as e:
-            print(f"Restore error: {e}")
-    
     login_manager = LoginManager()
     login_manager.init_app(app)
     login_manager.login_view = 'login'
@@ -42,124 +28,6 @@ def create_app():
         if current_user.is_authenticated:
             return redirect(url_for('home'))
         return redirect(url_for('login'))
-    
-    @app.route('/restore-database-now/<secret>')
-    def restore_database_now(secret):
-        """Restore database from backup - EMERGENCY USE ONLY"""
-        if secret != 'restore2024emergency':
-            abort(404)
-        
-        try:
-            import shutil
-            import os
-            
-            backup_file = 'instance/backups/poetry_app_20251201_163559.db'
-            current_db = 'instance/poetry_app.db'
-            
-            if os.path.exists(backup_file):
-                # Make safety backup
-                safety = f'instance/backups/before_restore_{datetime.utcnow().strftime("%Y%m%d_%H%M%S")}.db'
-                if os.path.exists(current_db):
-                    shutil.copy2(current_db, safety)
-                
-                # Restore
-                shutil.copy2(backup_file, current_db)
-                
-                return '<html><body style="background: #1c2532; color: #4CAF50; padding: 50px; text-align: center; font-family: Arial;"><h1>✅ DATABASE RESTORED!</h1><p>All data from December 1st backup has been restored!</p><p>Autumn, BBean, and all accounts are back!</p><a href="/login" style="color: #d4af37;">Go to Login</a></body></html>'
-            else:
-                return '<html><body style="background: #1c2532; color: #ff6b6b; padding: 50px;"><h1>Backup file not found on server</h1></body></html>'
-        except Exception as e:
-            return f'<html><body style="background: #1c2532; color: #ff6b6b; padding: 50px;"><h1>Error: {str(e)}</h1></body></html>'
-    
-    @app.route('/reset-by-email')
-    def reset_by_email():
-        """Reset password for specific email"""
-        try:
-            user = User.query.filter_by(email='sumakeadan01@gmail.com').first()
-            if user:
-                user.set_password('NewPass2024')
-                db.session.commit()
-                return f'''
-                <html>
-                <body style="font-family: Arial; background: #1c2532; color: #d4af37; padding: 50px; text-align: center;">
-                    <h1>✅ Password Reset Successful!</h1>
-                    <div style="background: rgba(212, 175, 55, 0.1); padding: 20px; border-radius: 10px; margin: 20px auto; max-width: 400px;">
-                        <p style="font-size: 18px;"><strong>Username:</strong> {user.username}</p>
-                        <p style="font-size: 18px;"><strong>Email:</strong> {user.email}</p>
-                        <p style="font-size: 18px;"><strong>New Password:</strong> NewPass2024</p>
-                    </div>
-                    <p><a href="/login" style="color: #d4af37; font-size: 16px; text-decoration: none; border: 2px solid #d4af37; padding: 10px 20px; display: inline-block; border-radius: 6px; margin-top: 20px;">Go to Login →</a></p>
-                    <p style="color: #ff6b6b; margin-top: 30px; font-size: 14px;">⚠️ Change this password in Settings after logging in!</p>
-                </body>
-                </html>
-                '''
-            return '<html><body style="background: #1c2532; color: #ff6b6b; padding: 50px; text-align: center;"><h1>❌ Email not found in database</h1></body></html>'
-        except Exception as e:
-            return f'<html><body style="background: #1c2532; color: #ff6b6b; padding: 50px;"><h1>Error: {str(e)}</h1></body></html>'
-    
-    @app.route('/emergency-reset/<secret_code>', methods=['GET', 'POST'])
-    def emergency_reset(secret_code):
-        """Emergency password reset - use secret URL"""
-        if secret_code != 'reset2024poetry':
-            abort(404)
-        
-        if request.method == 'POST':
-            username = request.form.get('username')
-            new_password = request.form.get('new_password')
-            
-            user = User.query.filter_by(username=username).first()
-            if user:
-                user.set_password(new_password)
-                db.session.commit()
-                return '''
-                    <html>
-                    <head><title>Password Reset Successful</title></head>
-                    <body style="font-family: Georgia; background: #1c2532; color: #d4af37; padding: 50px; text-align: center;">
-                        <h1>✅ Password Reset Successful!</h1>
-                        <p style="font-size: 18px; margin: 20px 0;">Password updated for: ''' + username + '''</p>
-                        <p><a href="/login" style="color: #d4af37; font-size: 16px; text-decoration: none; border: 2px solid #d4af37; padding: 10px 20px; display: inline-block; border-radius: 6px;">Go to Login →</a></p>
-                    </body>
-                    </html>
-                '''
-            else:
-                return '<html><body style="font-family: Georgia; background: #1c2532; color: #ff6b6b; padding: 50px; text-align: center;"><h1>❌ User not found: ' + username + '</h1></body></html>'
-        
-        # Show reset form (inline HTML - no template needed)
-        return '''
-            <html>
-            <head><title>Emergency Password Reset - Poetry Vault</title></head>
-            <body style="font-family: Georgia; background: #1c2532; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0;">
-                <div style="max-width: 450px; width: 100%; padding: 20px;">
-                    <div style="background: rgba(28, 37, 50, 0.85); border: 2px solid #d4af37; border-radius: 12px; padding: 50px 40px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);">
-                        <h1 style="color: #d4af37; text-align: center; margin-bottom: 10px; font-size: 28px;">🔑 Emergency Reset</h1>
-                        <p style="color: #8e7a5a; text-align: center; margin-bottom: 30px; font-size: 14px;">Reset your admin password</p>
-                        
-                        <form method="POST">
-                            <div style="margin-bottom: 20px;">
-                                <label style="display: block; color: #d4af37; font-size: 13px; margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase;">Username</label>
-                                <input type="text" name="username" value="P0.1Autumn" required 
-                                       style="width: 100%; padding: 15px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 6px; color: #e8e8e8; font-family: Georgia; font-size: 15px; box-sizing: border-box;">
-                            </div>
-                            
-                            <div style="margin-bottom: 20px;">
-                                <label style="display: block; color: #d4af37; font-size: 13px; margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase;">New Password</label>
-                                <input type="password" name="new_password" required placeholder="Enter new password"
-                                       style="width: 100%; padding: 15px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 6px; color: #e8e8e8; font-family: Georgia; font-size: 15px; box-sizing: border-box;">
-                            </div>
-                            
-                            <button type="submit" style="width: 100%; padding: 15px; background: #d4af37; color: #1c2532; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: Georgia; margin-top: 10px;">
-                                Reset Password
-                            </button>
-                        </form>
-                        
-                        <div style="text-align: center; margin-top: 20px;">
-                            <a href="/login" style="color: #d4af37; text-decoration: none; font-size: 14px;">← Back to Login</a>
-                        </div>
-                    </div>
-                </div>
-            </body>
-            </html>
-        '''
     
     @app.route('/register', methods=['GET', 'POST'])
     def register():
@@ -189,39 +57,8 @@ def create_app():
         
         return render_template('register.html')
     
-    @app.route('/test-route')
-    def test_route():
-        return '<h1>Route works!</h1>'
-    
-    @app.route('/reset-admin-now')
-    def reset_admin_now():
-        """Quick admin password reset - tries multiple usernames"""
-        # Try different possible usernames
-        possible_usernames = ['P0.1Autumn', 'Autumn', 'P0.1autumn', 'autumn']
-        
-        for username in possible_usernames:
-            user = User.query.filter_by(username=username).first()
-            if user:
-                # Set a temporary password
-                user.set_password('temp2024')
-                db.session.commit()
-                return f'<html><body style="font-family: Arial; background: #1c2532; color: #d4af37; padding: 50px; text-align: center;"><h1>✅ Password Reset!</h1><p>Username: {user.username}</p><p>New Password: temp2024</p><p><a href="/login" style="color: #d4af37;">Go to Login</a></p><p style="color: #ff6b6b; margin-top: 30px;">⚠️ Change this password immediately after logging in!</p></body></html>'
-        
-        # If no user found, show all users
-        all_users = User.query.all()
-        user_list = '<br>'.join([f'{u.username} ({u.email}) {"[ADMIN]" if u.is_admin else ""}' for u in all_users])
-        return f'<html><body style="background: #1c2532; color: #ff6b6b; padding: 50px;"><h1>Admin user not found</h1><p>Available users:</p><p style="color: #d4af37;">{user_list}</p></body></html>'
-    
     @app.route('/login', methods=['GET', 'POST'])
     def login():
-        # Secret password reset via URL parameter
-        if request.args.get('reset') == 'autumn2024':
-            user = User.query.filter_by(email='sumakeadan01@gmail.com').first()
-            if user:
-                user.set_password('NewPassword2024')
-                db.session.commit()
-                return render_template('login.html', error=f'Password reset! Username: {user.username}, Password: NewPassword2024')
-        
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
