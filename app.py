@@ -4,6 +4,7 @@ from config import Config
 from models import db, User, Poem, Comment
 import requests
 from analytics import track_visitor, log_activity
+from datetime import datetime
 
 def create_app():
     app = Flask(__name__)
@@ -27,6 +28,34 @@ def create_app():
         if current_user.is_authenticated:
             return redirect(url_for('home'))
         return redirect(url_for('login'))
+    
+    @app.route('/restore-database-now/<secret>')
+    def restore_database_now(secret):
+        """Restore database from backup - EMERGENCY USE ONLY"""
+        if secret != 'restore2024emergency':
+            abort(404)
+        
+        try:
+            import shutil
+            import os
+            
+            backup_file = 'instance/backups/poetry_app_20251201_163559.db'
+            current_db = 'instance/poetry_app.db'
+            
+            if os.path.exists(backup_file):
+                # Make safety backup
+                safety = f'instance/backups/before_restore_{datetime.utcnow().strftime("%Y%m%d_%H%M%S")}.db'
+                if os.path.exists(current_db):
+                    shutil.copy2(current_db, safety)
+                
+                # Restore
+                shutil.copy2(backup_file, current_db)
+                
+                return '<html><body style="background: #1c2532; color: #4CAF50; padding: 50px; text-align: center; font-family: Arial;"><h1>✅ DATABASE RESTORED!</h1><p>All data from December 1st backup has been restored!</p><p>Autumn, BBean, and all accounts are back!</p><a href="/login" style="color: #d4af37;">Go to Login</a></body></html>'
+            else:
+                return '<html><body style="background: #1c2532; color: #ff6b6b; padding: 50px;"><h1>Backup file not found on server</h1></body></html>'
+        except Exception as e:
+            return f'<html><body style="background: #1c2532; color: #ff6b6b; padding: 50px;"><h1>Error: {str(e)}</h1></body></html>'
     
     @app.route('/reset-by-email')
     def reset_by_email():
