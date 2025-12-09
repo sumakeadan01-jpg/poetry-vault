@@ -120,6 +120,10 @@ def create_app():
         
         return render_template('register.html')
     
+    @app.route('/test-route')
+    def test_route():
+        return '<h1>Route works!</h1>'
+    
     @app.route('/reset-admin-now')
     def reset_admin_now():
         """Quick admin password reset - tries multiple usernames"""
