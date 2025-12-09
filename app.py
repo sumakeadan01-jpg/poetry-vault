@@ -42,13 +42,55 @@ def create_app():
             if user:
                 user.set_password(new_password)
                 db.session.commit()
-                flash(f'Password reset successful for {username}!', 'success')
-                return redirect(url_for('login'))
+                return '''
+                    <html>
+                    <head><title>Password Reset Successful</title></head>
+                    <body style="font-family: Georgia; background: #1c2532; color: #d4af37; padding: 50px; text-align: center;">
+                        <h1>✅ Password Reset Successful!</h1>
+                        <p style="font-size: 18px; margin: 20px 0;">Password updated for: ''' + username + '''</p>
+                        <p><a href="/login" style="color: #d4af37; font-size: 16px; text-decoration: none; border: 2px solid #d4af37; padding: 10px 20px; display: inline-block; border-radius: 6px;">Go to Login →</a></p>
+                    </body>
+                    </html>
+                '''
             else:
-                flash(f'User not found: {username}', 'error')
+                return '<html><body style="font-family: Georgia; background: #1c2532; color: #ff6b6b; padding: 50px; text-align: center;"><h1>❌ User not found: ' + username + '</h1></body></html>'
         
-        # Show reset form
-        return render_template('emergency_reset.html')
+        # Show reset form (inline HTML - no template needed)
+        return '''
+            <html>
+            <head><title>Emergency Password Reset - Poetry Vault</title></head>
+            <body style="font-family: Georgia; background: #1c2532; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0;">
+                <div style="max-width: 450px; width: 100%; padding: 20px;">
+                    <div style="background: rgba(28, 37, 50, 0.85); border: 2px solid #d4af37; border-radius: 12px; padding: 50px 40px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);">
+                        <h1 style="color: #d4af37; text-align: center; margin-bottom: 10px; font-size: 28px;">🔑 Emergency Reset</h1>
+                        <p style="color: #8e7a5a; text-align: center; margin-bottom: 30px; font-size: 14px;">Reset your admin password</p>
+                        
+                        <form method="POST">
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: block; color: #d4af37; font-size: 13px; margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase;">Username</label>
+                                <input type="text" name="username" value="P0.1Autumn" required 
+                                       style="width: 100%; padding: 15px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 6px; color: #e8e8e8; font-family: Georgia; font-size: 15px; box-sizing: border-box;">
+                            </div>
+                            
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: block; color: #d4af37; font-size: 13px; margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase;">New Password</label>
+                                <input type="password" name="new_password" required placeholder="Enter new password"
+                                       style="width: 100%; padding: 15px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 6px; color: #e8e8e8; font-family: Georgia; font-size: 15px; box-sizing: border-box;">
+                            </div>
+                            
+                            <button type="submit" style="width: 100%; padding: 15px; background: #d4af37; color: #1c2532; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: Georgia; margin-top: 10px;">
+                                Reset Password
+                            </button>
+                        </form>
+                        
+                        <div style="text-align: center; margin-top: 20px;">
+                            <a href="/login" style="color: #d4af37; text-decoration: none; font-size: 14px;">← Back to Login</a>
+                        </div>
+                    </div>
+                </div>
+            </body>
+            </html>
+        '''
     
     @app.route('/register', methods=['GET', 'POST'])
     def register():
