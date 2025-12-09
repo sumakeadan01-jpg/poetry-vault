@@ -41,8 +41,8 @@ def track_visitor():
         user_agent = request.headers.get('User-Agent', '')[:255]
         referrer = request.referrer or ''
 
-        # Get nickname from URL parameter (e.g., ?from=john_instagram)
-        nickname = request.args.get('from') or request.args.get('ref')
+        # Get nickname from URL parameter (supports multiple formats for discretion)
+        nickname = request.args.get('from') or request.args.get('ref') or request.args.get('u') or request.args.get('wist') or request.args.get('id')
 
         # Determine source (use nickname if provided, otherwise detect from referrer/user agent)
         if nickname:

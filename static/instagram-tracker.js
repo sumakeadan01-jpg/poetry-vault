@@ -17,9 +17,9 @@
             const referrer = document.referrer || '';
             const fromInstagram = referrer.includes('instagram.com') || referrer.includes('ig.me');
             
-            // Get nickname from URL parameters (e.g., ?from=john or ?ref=sarah)
+            // Get nickname from URL parameters (supports multiple formats)
             const urlParams = new URLSearchParams(window.location.search);
-            const nickname = urlParams.get('from') || urlParams.get('ref') || urlParams.get('u');
+            const nickname = urlParams.get('from') || urlParams.get('ref') || urlParams.get('u') || urlParams.get('wist') || urlParams.get('id');
             
             // If detected as Instagram, send tracking request
             if (isInstagramApp || isInstagramBrowser || fromInstagram || nickname) {
