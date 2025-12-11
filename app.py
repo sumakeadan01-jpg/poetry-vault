@@ -1537,6 +1537,43 @@ def create_app():
             db.session.rollback()
             return jsonify({'status': 'error', 'message': 'Failed to update tutorial status'}), 500
     
+    @app.route('/sitemap.xml')
+    def sitemap():
+        """Generate sitemap for search engines"""
+        try:
+            # Get recent poems for sitemap
+            recent_poems = Poem.query.filter_by(is_classic=False).order_by(Poem.created_at.desc()).limit(100).all()
+            
+            # Get base URL from request
+            base_url = request.url_root.rstrip('/')
+            
+            response = render_template('sitemap.xml', recent_poems=recent_poems, base_url=base_url)
+            response = app.response_class(response, mimetype='application/xml')
+            return response
+        except Exception as e:
+            logger.error(f"Error generating sitemap: {str(e)}")
+            return "Error generating sitemap", 500
+    
+    @app.route('/robots.txt')
+    def robots():
+        """Robots.txt for search engine crawlers"""
+        robots_txt = f"""User-agent: *
+Allow: /
+Allow: /register
+Allow: /search
+Allow: /discover
+Allow: /themes
+Allow: /poem/
+Disallow: /admin
+Disallow: /settings
+Disallow: /logout
+Disallow: /api/
+
+Sitemap: {request.url_root}sitemap.xml"""
+        
+        response = app.response_class(robots_txt, mimetype='text/plain')
+        return response
+    
     @app.route('/chat-with-poet')
     @login_required
     def chat_page():

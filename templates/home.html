@@ -1,7 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Poetry Vault - Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poetry Vault - Where Verses Connect | Social Platform for Poetry Lovers</title>
+    <meta name="description" content="Join Poetry Vault, the premier social platform for poetry lovers. Discover classic and contemporary poems, connect with poets, and share your verses with a passionate community.">
+    <meta name="keywords" content="poetry, poems, poets, literature, verse, social platform, poetry community, classic poetry, contemporary poetry">
+    <meta name="author" content="Poetry Vault">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:title" content="Poetry Vault - Where Verses Connect">
+    <meta property="og:description" content="The premier social platform for poetry lovers. Discover, share, and connect through the power of verse.">
+    <meta property="og:image" content="{{ url_for('static', filename='images/logo.png', _external=True) }}">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ request.url }}">
+    <meta property="twitter:title" content="Poetry Vault - Where Verses Connect">
+    <meta property="twitter:description" content="The premier social platform for poetry lovers. Discover, share, and connect through the power of verse.">
+    <meta property="twitter:image" content="{{ url_for('static', filename='images/logo.png', _external=True) }}">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ request.url }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='tutorial.css') }}">
     <style>
         * {
