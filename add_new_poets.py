@@ -1,14 +1,17 @@
 """
-Add new classic poets to the database WITHOUT deleting existing data
-Run this script to add more poets while keeping all current users and poems
+Enhanced Poet Addition Tool
+Safely add new classic poets to the database without affecting existing data
 """
-
 from app import create_app
 from models import db, User, Poem
 from werkzeug.security import generate_password_hash
+import sys
+import json
+from pathlib import Path
 
-# Add your new poets here
-NEW_POETS = {
+
+# Default poets to add (can be customized)
+DEFAULT_POETS = {
     'Pablo Neruda': [
         {
             'title': 'Tonight I Can Write',
@@ -200,57 +203,237 @@ I shut my eyes and all the world drops dead.
     ]
 }
 
-def add_poets():
-    """Add new poets without deleting existing data"""
-    app = create_app()
+
+class PoetAdder:
+    """Manages adding new poets to the database safely"""
     
-    with app.app_context():
-        added_poets = 0
-        added_poems = 0
+    def __init__(self):
+        self.app = create_app()
+    
+    def _print_section(self, title):
+        """Print formatted section header"""
+        print("\n" + "="*70)
+        print(f"  {title}")
+        print("="*70)
+    
+    def _validate_poet_data(self, poet_name, poems_list):
+        """
+        Validate poet data before adding
         
-        for poet_name, poems_list in NEW_POETS.items():
-            # Check if poet already exists
-            existing_poet = User.query.filter_by(username=poet_name).first()
-            
-            if existing_poet:
-                print(f"⚠️  {poet_name} already exists, skipping...")
-                continue
-            
-            # Create new poet user
-            poet = User(
-                username=poet_name,
-                email=f"{poet_name.lower().replace(' ', '').replace("'", '')}@poetryvault.com",
-                password_hash=generate_password_hash('classic_poet_2024'),
-                age=None,
-                favorite_poet=poet_name,
-                is_admin=False
-            )
-            db.session.add(poet)
-            db.session.flush()  # Get the poet ID
-            
-            added_poets += 1
-            print(f"✅ Added poet: {poet_name}")
-            
-            # Add their poems
-            for poem_data in poems_list:
-                poem = Poem(
-                    title=poem_data['title'],
-                    content=poem_data['content'],
-                    category=poem_data.get('category', 'general'),
-                    user_id=poet.id,
-                    is_classic=True
-                )
-                db.session.add(poem)
-                added_poems += 1
-                print(f"   📝 Added poem: {poem_data['title']}")
+        Returns:
+            tuple: (is_valid, error_message)
+        """
+        if not poet_name or not isinstance(poet_name, str):
+            return False, "Invalid poet name"
         
-        # Save all changes
-        db.session.commit()
+        if not poems_list or not isinstance(poems_list, list):
+            return False, f"Invalid poems list for {poet_name}"
         
-        print(f"\n🎉 Success!")
-        print(f"   Added {added_poets} new poets")
-        print(f"   Added {added_poems} new poems")
-        print(f"   All existing data preserved!")
+        for i, poem in enumerate(poems_list):
+            if not isinstance(poem, dict):
+                return False, f"Poem {i+1} for {poet_name} is not a dictionary"
+            
+            if 'title' not in poem:
+                return False, f"Poem {i+1} for {poet_name} missing title"
+            
+            if 'content' not in poem:
+                return False, f"Poem {i+1} for {poet_name} missing content"
+            
+            if not poem['title'] or not poem['content']:
+                return False, f"Poem {i+1} for {poet_name} has empty title or content"
+        
+        return True, None
+    
+    def _sanitize_email(self, poet_name):
+        """Create a safe email address from poet name"""
+        try:
+            # Remove special characters and spaces
+            safe_name = poet_name.lower()
+            safe_name = safe_name.replace(' ', '').replace("'", '').replace('"', '')
+            safe_name = ''.join(c for c in safe_name if c.isalnum())
+            return f"{safe_name}@poetryvault.com"
+        except Exception:
+            # Fallback to a generic email
+            return f"poet{hash(poet_name)}@poetryvault.com"
+    
+    def add_poets(self, poets_dict=None, dry_run=False):
+        """
+        Add new poets to the database
+        
+        Args:
+            poets_dict: Dictionary of poets to add (defaults to DEFAULT_POETS)
+            dry_run: If True, validate but don't commit changes
+        
+        Returns:
+            dict: Statistics about the operation
+        """
+        if poets_dict is None:
+            poets_dict = DEFAULT_POETS
+        
+        self._print_section("📚 ADDING NEW POETS")
+        
+        if dry_run:
+            print("\n  🔍 DRY RUN MODE - No changes will be made\n")
+        
+        stats = {
+            'poets_added': 0,
+            'poets_skipped': 0,
+            'poems_added': 0,
+            'errors': []
+        }
+        
+        try:
+            with self.app.app_context():
+                for poet_name, poems_list in poets_dict.items():
+                    print(f"\n  📖 Processing: {poet_name}")
+                    
+                    # Validate data
+                    is_valid, error_msg = self._validate_poet_data(poet_name, poems_list)
+                    if not is_valid:
+                        print(f"     ❌ Validation failed: {error_msg}")
+                        stats['errors'].append(f"{poet_name}: {error_msg}")
+                        stats['poets_skipped'] += 1
+                        continue
+                    
+                    # Check if poet already exists
+                    existing_poet = User.query.filter_by(username=poet_name).first()
+                    
+                    if existing_poet:
+                        print(f"     ⚠️  Already exists, skipping...")
+                        stats['poets_skipped'] += 1
+                        continue
+                    
+                    if dry_run:
+                        print(f"     ✓ Would add poet: {poet_name}")
+                        print(f"     ✓ Would add {len(poems_list)} poems")
+                        stats['poets_added'] += 1
+                        stats['poems_added'] += len(poems_list)
+                        continue
+                    
+                    # Create new poet user
+                    try:
+                        email = self._sanitize_email(poet_name)
+                        poet = User(
+                            username=poet_name,
+                            email=email,
+                            password_hash=generate_password_hash('classic_poet_2024'),
+                            age=None,
+                            favorite_poet=poet_name,
+                            is_admin=False
+                        )
+                        db.session.add(poet)
+                        db.session.flush()  # Get the poet ID
+                        
+                        stats['poets_added'] += 1
+                        print(f"     ✅ Added poet: {poet_name}")
+                        
+                        # Add their poems
+                        for poem_data in poems_list:
+                            try:
+                                poem = Poem(
+                                    title=poem_data['title'],
+                                    content=poem_data['content'],
+                                    category=poem_data.get('category', 'general'),
+                                    user_id=poet.id,
+                                    is_classic=True
+                                )
+                                db.session.add(poem)
+                                stats['poems_added'] += 1
+                                print(f"        📝 Added: {poem_data['title'][:50]}...")
+                            except Exception as e:
+                                error_msg = f"Failed to add poem '{poem_data.get('title', 'Unknown')}': {e}"
+                                print(f"        ❌ {error_msg}")
+                                stats['errors'].append(f"{poet_name}: {error_msg}")
+                        
+                    except Exception as e:
+                        error_msg = f"Failed to add poet: {e}"
+                        print(f"     ❌ {error_msg}")
+                        stats['errors'].append(f"{poet_name}: {error_msg}")
+                        stats['poets_skipped'] += 1
+                        db.session.rollback()
+                        continue
+                
+                # Commit all changes
+                if not dry_run:
+                    db.session.commit()
+                    print("\n  💾 Changes committed to database")
+                
+                # Print summary
+                self._print_section("📊 SUMMARY")
+                print(f"\n  Poets Added: {stats['poets_added']}")
+                print(f"  Poets Skipped: {stats['poets_skipped']}")
+                print(f"  Poems Added: {stats['poems_added']}")
+                
+                if stats['errors']:
+                    print(f"\n  ⚠️  Errors ({len(stats['errors'])}):")
+                    for error in stats['errors']:
+                        print(f"     - {error}")
+                
+                if not dry_run and stats['poets_added'] > 0:
+                    print(f"\n  ✅ All existing data preserved!")
+                
+                return stats
+                
+        except Exception as e:
+            print(f"\n  ❌ Critical error: {e}")
+            if not dry_run:
+                db.session.rollback()
+            stats['errors'].append(f"Critical: {e}")
+            return stats
+    
+    def load_from_json(self, json_file):
+        """Load poets from JSON file"""
+        try:
+            with open(json_file, 'r', encoding='utf-8') as f:
+                poets_dict = json.load(f)
+            return poets_dict
+        except Exception as e:
+            print(f"❌ Error loading JSON file: {e}")
+            return None
+
+
+def main():
+    """Main entry point"""
+    adder = PoetAdder()
+    
+    if len(sys.argv) > 1:
+        command = sys.argv[1]
+        
+        if command == 'dry-run':
+            adder.add_poets(dry_run=True)
+        elif command == 'add':
+            adder.add_poets(dry_run=False)
+        elif command == 'from-json' and len(sys.argv) > 2:
+            poets_dict = adder.load_from_json(sys.argv[2])
+            if poets_dict:
+                adder.add_poets(poets_dict, dry_run=False)
+        else:
+            print("Enhanced Poet Addition Tool")
+            print("="*70)
+            print("\nUsage:")
+            print("  python add_new_poets.py [command] [args]")
+            print("\nCommands:")
+            print("  dry-run              - Validate without making changes")
+            print("  add                  - Add poets to database")
+            print("  from-json <file>     - Load poets from JSON file")
+            print("\nExamples:")
+            print("  python add_new_poets.py dry-run")
+            print("  python add_new_poets.py add")
+            print("  python add_new_poets.py from-json poets.json")
+            print("\nJSON Format:")
+            print('  {')
+            print('    "Poet Name": [')
+            print('      {')
+            print('        "title": "Poem Title",')
+            print('        "content": "Poem content...",')
+            print('        "category": "love"')
+            print('      }')
+            print('    ]')
+            print('  }')
+    else:
+        # Default: add poets
+        adder.add_poets(dry_run=False)
+
 
 if __name__ == '__main__':
-    add_poets()
+    main()

@@ -1,86 +1,205 @@
 """
-Automatic database backup system
-This runs in the background and creates backups automatically
+Enhanced Automatic Database Backup System
+Runs in the background with intelligent scheduling, notifications, and error recovery
 """
 import os
-import shutil
 import time
-from datetime import datetime
+import logging
+from datetime import datetime, timedelta
+from pathlib import Path
 import schedule
+from backup_db import BackupManager
 
-def backup_database():
-    """Create a timestamped backup of the database"""
-    db_path = 'instance/poetry_app.db'
-    backup_dir = 'instance/backups'
+# Configuration
+BACKUP_INTERVAL_HOURS = 6
+MAX_BACKUPS = 10
+LOG_FILE = 'instance/backups/auto_backup.log'
+ENABLE_NOTIFICATIONS = True
+
+
+class AutoBackupScheduler:
+    """Manages automatic database backups with intelligent scheduling"""
     
-    # Create backup directory if it doesn't exist
-    if not os.path.exists(backup_dir):
-        os.makedirs(backup_dir)
+    def __init__(self, interval_hours=BACKUP_INTERVAL_HOURS):
+        self.interval_hours = interval_hours
+        self.backup_manager = BackupManager()
+        self.last_backup_time = None
+        self.backup_count = 0
+        self.failed_count = 0
+        self._setup_logging()
     
-    # Check if database exists
-    if not os.path.exists(db_path):
-        print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ⚠️  No database found to backup")
-        return False
-    
-    # Create timestamped backup filename
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    backup_path = f'{backup_dir}/poetry_app_{timestamp}.db'
-    
-    # Copy database to backup
-    try:
-        shutil.copy2(db_path, backup_path)
-        file_size = os.path.getsize(backup_path) / 1024  # Size in KB
-        print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ✅ Auto-backup created!")
-        print(f"   📁 {backup_path}")
-        print(f"   📊 Size: {file_size:.2f} KB")
+    def _setup_logging(self):
+        """Setup logging to file and console"""
+        log_dir = Path(LOG_FILE).parent
+        log_dir.mkdir(parents=True, exist_ok=True)
         
-        # Clean up old backups (keep last 10)
-        cleanup_old_backups(backup_dir)
-        return True
-    except Exception as e:
-        print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ❌ Backup failed: {e}")
-        return False
-
-def cleanup_old_backups(backup_dir, keep_count=10):
-    """Keep only the most recent backups"""
-    try:
-        backups = [f for f in os.listdir(backup_dir) if f.startswith('poetry_app_') and f.endswith('.db')]
-        backups.sort(reverse=True)
+        # Configure logging
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s [%(levelname)s] %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S',
+            handlers=[
+                logging.FileHandler(LOG_FILE),
+                logging.StreamHandler()
+            ]
+        )
+        self.logger = logging.getLogger(__name__)
+    
+    def _log_system_info(self):
+        """Log system information"""
+        self.logger.info("="*60)
+        self.logger.info("🔄 AUTOMATIC BACKUP SYSTEM")
+        self.logger.info("="*60)
+        self.logger.info(f"📅 Backup Interval: Every {self.interval_hours} hours")
+        self.logger.info(f"📦 Max Backups: {MAX_BACKUPS}")
+        self.logger.info(f"📁 Log File: {LOG_FILE}")
+        self.logger.info(f"🔔 Notifications: {'Enabled' if ENABLE_NOTIFICATIONS else 'Disabled'}")
+        self.logger.info("="*60)
+    
+    def _get_next_backup_time(self):
+        """Calculate next backup time"""
+        if self.last_backup_time:
+            return self.last_backup_time + timedelta(hours=self.interval_hours)
+        return datetime.now()
+    
+    def _send_notification(self, title, message, success=True):
+        """Send system notification (if enabled)"""
+        if not ENABLE_NOTIFICATIONS:
+            return
         
-        # Delete old backups beyond keep_count
-        for old_backup in backups[keep_count:]:
-            old_path = os.path.join(backup_dir, old_backup)
-            os.remove(old_path)
-            print(f"   🗑️  Removed old backup: {old_backup}")
-    except Exception as e:
-        print(f"   ⚠️  Cleanup warning: {e}")
+        try:
+            # Try to send desktop notification (macOS/Linux)
+            import subprocess
+            
+            if os.system('which osascript > /dev/null 2>&1') == 0:
+                # macOS
+                script = f'display notification "{message}" with title "{title}"'
+                subprocess.run(['osascript', '-e', script], check=False)
+            elif os.system('which notify-send > /dev/null 2>&1') == 0:
+                # Linux
+                subprocess.run(['notify-send', title, message], check=False)
+        except Exception:
+            pass  # Silently fail if notifications not available
+    
+    def perform_backup(self):
+        """Perform a backup with error handling and logging"""
+        self.logger.info("\n" + "="*60)
+        self.logger.info("🚀 Starting Scheduled Backup")
+        self.logger.info("="*60)
+        
+        try:
+            # Perform backup
+            success = self.backup_manager.backup_database()
+            
+            if success:
+                self.backup_count += 1
+                self.last_backup_time = datetime.now()
+                self.failed_count = 0  # Reset failed count on success
+                
+                next_backup = self._get_next_backup_time()
+                self.logger.info(f"✅ Backup #{self.backup_count} completed successfully")
+                self.logger.info(f"⏰ Next backup scheduled for: {next_backup.strftime('%Y-%m-%d %H:%M:%S')}")
+                
+                self._send_notification(
+                    "Backup Successful",
+                    f"Database backup #{self.backup_count} completed",
+                    success=True
+                )
+            else:
+                self.failed_count += 1
+                self.logger.error(f"❌ Backup failed (Failure #{self.failed_count})")
+                
+                if self.failed_count >= 3:
+                    self.logger.error("⚠️  WARNING: 3 consecutive backup failures!")
+                    self._send_notification(
+                        "Backup Failed",
+                        "Multiple backup failures detected. Check logs.",
+                        success=False
+                    )
+            
+            return success
+            
+        except Exception as e:
+            self.failed_count += 1
+            self.logger.error(f"❌ Backup error: {e}", exc_info=True)
+            
+            if self.failed_count >= 3:
+                self._send_notification(
+                    "Backup Error",
+                    f"Critical backup error: {str(e)[:50]}",
+                    success=False
+                )
+            
+            return False
+    
+    def run_initial_backup(self):
+        """Run initial backup on startup"""
+        self.logger.info("\n🚀 Creating initial backup...")
+        self.perform_backup()
+    
+    def start(self):
+        """Start the automatic backup scheduler"""
+        self._log_system_info()
+        
+        # Schedule backups
+        schedule.every(self.interval_hours).hours.do(self.perform_backup)
+        
+        # Run initial backup
+        self.run_initial_backup()
+        
+        self.logger.info("\n⏰ Scheduler running... (Press Ctrl+C to stop)")
+        self.logger.info("="*60 + "\n")
+        
+        # Keep the scheduler running
+        try:
+            while True:
+                schedule.run_pending()
+                time.sleep(60)  # Check every minute
+        except KeyboardInterrupt:
+            self._shutdown()
+    
+    def _shutdown(self):
+        """Graceful shutdown"""
+        self.logger.info("\n" + "="*60)
+        self.logger.info("🛑 Shutting down backup scheduler...")
+        self.logger.info("="*60)
+        self.logger.info(f"📊 Total backups created: {self.backup_count}")
+        self.logger.info(f"❌ Total failures: {self.failed_count}")
+        
+        if self.last_backup_time:
+            self.logger.info(f"📅 Last backup: {self.last_backup_time.strftime('%Y-%m-%d %H:%M:%S')}")
+        
+        self.logger.info("👋 Backup scheduler stopped")
+        self.logger.info("="*60)
 
-def run_backup_scheduler():
-    """Run the backup scheduler"""
-    print("🔄 Automatic Backup System Started")
-    print("=" * 60)
-    print("📅 Backup Schedule:")
-    print("   - Every 6 hours")
-    print("   - Keeps last 10 backups")
-    print("=" * 60)
+
+def main():
+    """Main entry point"""
+    import sys
     
-    # Schedule backups every 6 hours
-    schedule.every(6).hours.do(backup_database)
+    # Parse command line arguments
+    interval_hours = BACKUP_INTERVAL_HOURS
     
-    # Create initial backup
-    print("\n🚀 Creating initial backup...")
-    backup_database()
+    if len(sys.argv) > 1:
+        try:
+            interval_hours = int(sys.argv[1])
+            if interval_hours < 1:
+                print("❌ Error: Interval must be at least 1 hour")
+                sys.exit(1)
+        except ValueError:
+            print("❌ Error: Invalid interval. Must be a number.")
+            print("\nUsage:")
+            print("  python auto_backup.py [interval_hours]")
+            print("\nExamples:")
+            print("  python auto_backup.py        # Use default (6 hours)")
+            print("  python auto_backup.py 3      # Backup every 3 hours")
+            print("  python auto_backup.py 12     # Backup every 12 hours")
+            sys.exit(1)
     
-    print("\n⏰ Scheduler running... (Press Ctrl+C to stop)")
-    print("=" * 60)
-    
-    # Keep the scheduler running
-    while True:
-        schedule.run_pending()
-        time.sleep(60)  # Check every minute
+    # Start scheduler
+    scheduler = AutoBackupScheduler(interval_hours=interval_hours)
+    scheduler.start()
+
 
 if __name__ == '__main__':
-    try:
-        run_backup_scheduler()
-    except KeyboardInterrupt:
-        print("\n\n👋 Backup scheduler stopped")
+    main()

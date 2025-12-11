@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+import re
 
 db = SQLAlchemy()
 
@@ -16,6 +17,8 @@ class User(UserMixin, db.Model):
     favorite_poet = db.Column(db.String(100), nullable=True)
     is_admin = db.Column(db.Boolean, default=False)
     has_seen_tutorial = db.Column(db.Boolean, default=False)
+    subscription_tier = db.Column(db.String(20), default='free')  # free, plus, pro
+    subscription_expires = db.Column(db.DateTime, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     poems = db.relationship('Poem', backref='author', lazy=True)
@@ -30,10 +33,56 @@ class User(UserMixin, db.Model):
     followers = db.relationship('Follow', foreign_keys='Follow.followed_id', backref='followed', lazy='dynamic', cascade='all, delete-orphan')
     
     def set_password(self, password):
+        """Set hashed password with validation"""
+        if not password or len(password) < 6:
+            raise ValueError("Password must be at least 6 characters long")
         self.password_hash = generate_password_hash(password)
     
     def check_password(self, password):
+        """Verify password against hash"""
+        if not password:
+            return False
         return check_password_hash(self.password_hash, password)
+    
+    @staticmethod
+    def validate_username(username):
+        """Validate username format"""
+        if not username or len(username) < 3:
+            return False, "Username must be at least 3 characters"
+        if len(username) > 80:
+            return False, "Username must be less than 80 characters"
+        if not re.match(r'^[a-zA-Z0-9_\u0600-\u06FF\s]+$', username):
+            return False, "Username can only contain letters, numbers, underscores, and spaces"
+        return True, "Valid"
+    
+    @staticmethod
+    def validate_email(email):
+        """Validate email format"""
+        if not email:
+            return False, "Email is required"
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_pattern, email):
+            return False, "Invalid email format"
+        return True, "Valid"
+    
+    def get_follower_count(self):
+        """Get number of followers"""
+        return self.followers.count()
+    
+    def get_following_count(self):
+        """Get number of users being followed"""
+        return self.following.count()
+    
+    def get_poem_count(self):
+        """Get number of poems authored"""
+        return Poem.query.filter_by(user_id=self.id, is_classic=False).count()
+    
+    def is_following(self, user):
+        """Check if this user follows another user"""
+        return self.following.filter_by(followed_id=user.id).first() is not None
+    
+    def __repr__(self):
+        return f'<User {self.username}>'
 
 class Poem(db.Model):
     __tablename__ = 'poems'
@@ -42,6 +91,8 @@ class Poem(db.Model):
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
     category = db.Column(db.String(50), nullable=True)  # love, nature, death, spirituality, etc.
+    mood = db.Column(db.String(50), nullable=True)  # happy, sad, contemplative, passionate, etc.
+    theme = db.Column(db.String(50), nullable=True)  # romance, loss, hope, rebellion, etc.
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     is_classic = db.Column(db.Boolean, default=False)  # Hide from home feed, show in search only
@@ -50,6 +101,51 @@ class Poem(db.Model):
     comments = db.relationship('Comment', backref='poem', lazy=True, cascade='all, delete-orphan')
     saved_by = db.relationship('SavedPoem', backref='poem', lazy=True, cascade='all, delete-orphan')
     likes = db.relationship('Like', backref='poem', lazy=True, cascade='all, delete-orphan')
+    
+    @staticmethod
+    def validate_title(title):
+        """Validate poem title"""
+        if not title or not title.strip():
+            return False, "Title is required"
+        if len(title) > 200:
+            return False, "Title must be less than 200 characters"
+        return True, "Valid"
+    
+    @staticmethod
+    def validate_content(content):
+        """Validate poem content"""
+        if not content or not content.strip():
+            return False, "Content is required"
+        if len(content) < 10:
+            return False, "Poem must be at least 10 characters"
+        if len(content) > 50000:
+            return False, "Poem must be less than 50,000 characters"
+        return True, "Valid"
+    
+    def get_like_count(self):
+        """Get number of likes"""
+        return Like.query.filter_by(poem_id=self.id).count()
+    
+    def get_comment_count(self):
+        """Get number of comments"""
+        return Comment.query.filter_by(poem_id=self.id).count()
+    
+    def is_liked_by(self, user):
+        """Check if user has liked this poem"""
+        return Like.query.filter_by(user_id=user.id, poem_id=self.id).first() is not None
+    
+    def is_saved_by(self, user):
+        """Check if user has saved this poem"""
+        return SavedPoem.query.filter_by(user_id=user.id, poem_id=self.id).first() is not None
+    
+    def get_author_display_name(self):
+        """Get display name (Anonymous or actual username)"""
+        if self.is_anonymous:
+            return "Anonymous"
+        return self.author.username if self.author else "Unknown"
+    
+    def __repr__(self):
+        return f'<Poem {self.title}>'
 
 class Comment(db.Model):
     __tablename__ = 'comments'
@@ -59,6 +155,18 @@ class Comment(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     poem_id = db.Column(db.Integer, db.ForeignKey('poems.id'), nullable=False)
+    
+    @staticmethod
+    def validate_content(content):
+        """Validate comment content"""
+        if not content or not content.strip():
+            return False, "Comment cannot be empty"
+        if len(content) > 5000:
+            return False, "Comment must be less than 5,000 characters"
+        return True, "Valid"
+    
+    def __repr__(self):
+        return f'<Comment by {self.author.username} on Poem {self.poem_id}>'
 
 class SavedPoem(db.Model):
     __tablename__ = 'saved_poems'
@@ -90,6 +198,27 @@ class Notification(db.Model):
     poem_id = db.Column(db.Integer, db.ForeignKey('poems.id'), nullable=True)
     is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    @staticmethod
+    def create_notification(user_id, notif_type, message, poem_id=None):
+        """Factory method to create notifications safely"""
+        try:
+            if not user_id or not notif_type or not message:
+                return None
+            
+            notif = Notification(
+                user_id=user_id,
+                type=notif_type,
+                message=message[:255],  # Truncate if too long
+                poem_id=poem_id
+            )
+            return notif
+        except Exception as e:
+            print(f"Error creating notification: {e}")
+            return None
+    
+    def __repr__(self):
+        return f'<Notification {self.type} for User {self.user_id}>'
 
 class Follow(db.Model):
     __tablename__ = 'follows'
@@ -148,3 +277,42 @@ class Visitor(db.Model):
     first_visit = db.Column(db.DateTime, default=datetime.utcnow)
     last_visit = db.Column(db.DateTime, default=datetime.utcnow)
     visit_count = db.Column(db.Integer, default=1)
+
+class Collection(db.Model):
+    __tablename__ = 'collections'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    is_private = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    poems = db.relationship('CollectionPoem', backref='collection', lazy=True, cascade='all, delete-orphan')
+    user = db.relationship('User', backref='collections')
+
+class CollectionPoem(db.Model):
+    __tablename__ = 'collection_poems'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    collection_id = db.Column(db.Integer, db.ForeignKey('collections.id'), nullable=False)
+    poem_id = db.Column(db.Integer, db.ForeignKey('poems.id'), nullable=False)
+    added_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    poem = db.relationship('Poem')
+    __table_args__ = (db.UniqueConstraint('collection_id', 'poem_id', name='unique_collection_poem'),)
+
+class UserAnalytics(db.Model):
+    __tablename__ = 'user_analytics'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    total_views = db.Column(db.Integer, default=0)
+    total_likes = db.Column(db.Integer, default=0)
+    total_comments = db.Column(db.Integer, default=0)
+    total_saves = db.Column(db.Integer, default=0)
+    most_popular_poem_id = db.Column(db.Integer, db.ForeignKey('poems.id'), nullable=True)
+    last_updated = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    user = db.relationship('User', backref='analytics')
+    most_popular_poem = db.relationship('Poem')

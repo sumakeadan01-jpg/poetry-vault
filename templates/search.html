@@ -14,6 +14,18 @@
         .search-box input::placeholder { color: rgba(184, 149, 106, 0.5); font-style: italic; }
         .search-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); pointer-events: none; }
         .search-icon svg { width: 20px; height: 20px; stroke: #d4af37; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .filters { background: rgba(28, 37, 50, 0.6); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .filters h3 { color: #d4af37; margin-bottom: 15px; font-size: 18px; }
+        .filter-row { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+        .filter-group { flex: 1; min-width: 150px; }
+        .filter-group label { display: block; color: #8e7a5a; font-size: 13px; margin-bottom: 5px; }
+        .filter-group select, .filter-group input { width: 100%; padding: 8px 12px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 6px; color: #e8e8e8; font-size: 14px; }
+        .filter-group select:focus, .filter-group input:focus { outline: none; border-color: #d4af37; }
+        .filter-buttons { display: flex; gap: 10px; }
+        .btn-filter { padding: 8px 16px; background: #d4af37; color: #1c2532; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        .btn-filter:hover { background: #b8956a; }
+        .btn-clear { padding: 8px 16px; background: transparent; color: #d4af37; border: 1px solid #d4af37; border-radius: 6px; cursor: pointer; font-size: 14px; text-decoration: none; }
+        .btn-clear:hover { background: rgba(212, 175, 55, 0.1); }
         .btn-back { padding: 8px 16px; background: transparent; color: #d4af37; border: 1px solid #d4af37; border-radius: 6px; text-decoration: none; font-size: 12px; black-space: nowrap; }
         .btn-back:hover { background: rgba(212, 175, 55, 0.1); }
         .container { max-width: 700px; margin: 40px auto; padding: 0 20px; }
@@ -38,7 +50,7 @@
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Poetry Vault" style="height: 40px; width: auto; vertical-align: middle;">
             </a>
             <div class="search-box">
-                <form action="/search" method="GET">
+                <form action="/search" method="GET" id="searchForm">
                     <input type="text" name="q" value="{{ query }}" placeholder="Search poems by title or content..." autofocus>
                     <span class="search-icon">
                         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
@@ -49,26 +61,95 @@
         </div>
     </nav>
     <div class="container">
-        {% if query %}
-            <div class="results-header">Results for "{{ query }}"</div>
+        <!-- Advanced Filters -->
+        <div class="filters">
+            <h3>Advanced Search</h3>
+            <form action="/search" method="GET" id="advancedSearchForm">
+                <input type="hidden" name="q" value="{{ query }}">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Mood</label>
+                        <select name="mood">
+                            <option value="">Any mood</option>
+                            {% for mood in moods %}
+                            <option value="{{ mood }}" {% if mood_filter == mood %}selected{% endif %}>{{ mood.title() }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Theme</label>
+                        <select name="theme">
+                            <option value="">Any theme</option>
+                            {% for theme in themes %}
+                            <option value="{{ theme }}" {% if theme_filter == theme %}selected{% endif %}>{{ theme.title() }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Category</label>
+                        <select name="category">
+                            <option value="">Any category</option>
+                            {% for category in categories %}
+                            <option value="{{ category }}" {% if category_filter == category %}selected{% endif %}>{{ category.title() }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Poet</label>
+                        <input type="text" name="poet" value="{{ poet_filter }}" placeholder="Poet name">
+                    </div>
+                </div>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label>Sort by</label>
+                        <select name="sort">
+                            <option value="recent" {% if sort_by == 'recent' %}selected{% endif %}>Most Recent</option>
+                            <option value="popular" {% if sort_by == 'popular' %}selected{% endif %}>Most Popular</option>
+                            <option value="oldest" {% if sort_by == 'oldest' %}selected{% endif %}>Oldest First</option>
+                        </select>
+                    </div>
+                    <div class="filter-buttons" style="display: flex; align-items: end; gap: 10px;">
+                        <button type="submit" class="btn-filter">Apply Filters</button>
+                        <a href="/search" class="btn-clear">Clear All</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {% if query or mood_filter or theme_filter or category_filter or poet_filter %}
+            <div class="results-header">
+                Search Results
+                {% if query %} for "{{ query }}"{% endif %}
+                {% if mood_filter %} • Mood: {{ mood_filter.title() }}{% endif %}
+                {% if theme_filter %} • Theme: {{ theme_filter.title() }}{% endif %}
+                {% if category_filter %} • Category: {{ category_filter.title() }}{% endif %}
+                {% if poet_filter %} • Poet: {{ poet_filter }}{% endif %}
+            </div>
             {% if poems %}
                 {% for poem in poems %}
                 <a href="/poem/{{ poem.id }}" class="poem-card">
                     <div class="poem-title">{{ poem.title }}</div>
-                    <div class="poem-author">by {{ poem.author.username }}</div>
+                    <div class="poem-author">by {{ poem.get_author_display_name() }}</div>
+                    {% if poem.mood or poem.theme or poem.category %}
+                    <div style="color: #8e7a5a; font-size: 12px; margin-bottom: 10px;">
+                        {% if poem.mood %}Mood: {{ poem.mood.title() }}{% endif %}
+                        {% if poem.theme %}{% if poem.mood %} • {% endif %}Theme: {{ poem.theme.title() }}{% endif %}
+                        {% if poem.category %}{% if poem.mood or poem.theme %} • {% endif %}Category: {{ poem.category.title() }}{% endif %}
+                    </div>
+                    {% endif %}
                     <div class="poem-content">{{ poem.content[:200] }}{% if poem.content|length > 200 %}...{% endif %}</div>
                 </a>
                 {% endfor %}
             {% else %}
                 <div class="no-results">
                     <h3>No Results Found</h3>
-                    <p>Try searching with different keywords</p>
+                    <p>Try adjusting your search criteria</p>
                 </div>
             {% endif %}
         {% else %}
             <div class="search-prompt">
                 <h2>Search Poetry Vault</h2>
-                <p>Find poems by title, content, or author</p>
+                <p>Find poems by title, content, author, mood, theme, or category</p>
             </div>
         {% endif %}
     </div>

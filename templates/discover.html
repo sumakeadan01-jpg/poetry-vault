@@ -40,10 +40,39 @@
     </nav>
     <div class="container">
         <div class="header">
-            <h1>Discover Poets</h1>
-            <p>Find new voices to follow</p>
+            <h1>{% if is_mood_discovery %}{{ selected_mood.title() }} Poems{% else %}Discover Poets{% endif %}</h1>
+            <p>{% if is_mood_discovery %}Explore poems that match your mood{% else %}Find new voices to follow{% endif %}</p>
         </div>
-        {% if suggested_users %}
+
+        {% if not is_mood_discovery and available_moods %}
+        <div style="background: rgba(28, 37, 50, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+            <h3 style="color: #d4af37; margin-bottom: 15px; font-size: 18px;">Discover by Mood</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
+                {% for mood in available_moods %}
+                <a href="/discover?mood={{ mood }}" style="padding: 10px 15px; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 6px; text-decoration: none; color: #d4af37; text-align: center; font-size: 14px; transition: all 0.2s;">
+                    {{ mood.title() }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if is_mood_discovery %}
+            {% if poems %}
+                {% for poem in poems %}
+                <div style="background: rgba(28, 37, 50, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 25px; margin-bottom: 20px;">
+                    <h3 style="color: #d4af37; font-size: 20px; margin-bottom: 10px;"><a href="/poem/{{ poem.id }}" style="color: #d4af37; text-decoration: none;">{{ poem.title }}</a></h3>
+                    <p style="color: #8e7a5a; font-size: 13px; margin-bottom: 15px;">by {{ poem.get_author_display_name() }}</p>
+                    <div style="color: #e8e8e8; line-height: 1.8; font-style: italic;">{{ poem.content[:200] }}{% if poem.content|length > 200 %}...{% endif %}</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <h3>No {{ selected_mood.title() }} Poems Found</h3>
+                    <p>No poems match this mood yet. Try a different mood or check back later.</p>
+                </div>
+            {% endif %}
+        {% elif suggested_users %}
             {% for user in suggested_users %}
             <div class="user-card">
                 <div class="user-header">

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thematic Channels - Poetry Vault</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Georgia', serif; background: #1c2532; min-height: 100vh; color: #e8e8e8; }
+        .navbar { background: rgba(28, 37, 50, 0.95); border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding: 15px 0; }
+        .nav-container { max-width: 700px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; color: #d4af37; font-weight: 600; text-decoration: none; }
+        .btn-back { padding: 8px 16px; background: transparent; color: #d4af37; border: 1px solid #d4af37; border-radius: 6px; text-decoration: none; font-size: 12px; }
+        .btn-back:hover { background: rgba(212, 175, 55, 0.1); }
+        .container { max-width: 700px; margin: 40px auto; padding: 0 20px; }
+        .page-title { color: #d4af37; font-size: 28px; margin-bottom: 30px; font-weight: normal; text-align: center; }
+        .themes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 40px; }
+        .theme-card { background: rgba(28, 37, 50, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 20px; text-decoration: none; color: inherit; text-align: center; transition: border-color 0.2s; }
+        .theme-card:hover { border-color: rgba(212, 175, 55, 0.4); }
+        .theme-card.active { border-color: #d4af37; background: rgba(212, 175, 55, 0.1); }
+        .theme-name { color: #d4af37; font-size: 18px; font-weight: 600; }
+        .poem-card { background: rgba(28, 37, 50, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; padding: 25px; margin-bottom: 20px; text-decoration: none; color: inherit; display: block; transition: border-color 0.2s; }
+        .poem-card:hover { border-color: rgba(212, 175, 55, 0.4); }
+        .poem-title { color: #d4af37; font-size: 20px; margin-bottom: 10px; font-weight: 600; }
+        .poem-author { color: #8e7a5a; font-size: 13px; margin-bottom: 15px; }
+        .poem-content { color: #e8e8e8; line-height: 1.8; font-style: italic; }
+        .section-title { color: #d4af37; font-size: 22px; margin-bottom: 20px; font-weight: normal; }
+        .empty-state { text-align: center; padding: 60px 30px; }
+        .empty-state h3 { color: #d4af37; font-size: 22px; margin-bottom: 10px; font-weight: normal; }
+        .empty-state p { color: #8e7a5a; font-style: italic; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/home" class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Poetry Vault" style="height: 40px; width: auto; vertical-align: middle;">
+            </a>
+            <a href="/home" class="btn-back">Back to Home</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">Thematic Channels</h1>
+        
+        {% if error %}
+        <div style="background: rgba(220, 53, 69, 0.2); border: 1px solid #dc3545; border-radius: 8px; padding: 15px; margin-bottom: 20px; color: #dc3545; text-align: center;">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if available_themes %}
+        <div class="themes-grid">
+            {% for theme in available_themes %}
+            <a href="/themes?theme={{ theme }}" class="theme-card {% if selected_theme == theme %}active{% endif %}">
+                <div class="theme-name">{{ theme.title() }}</div>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if selected_theme %}
+            <div class="section-title">{{ selected_theme.title() }} Poems</div>
+            {% if poems %}
+                {% for poem in poems %}
+                <a href="/poem/{{ poem.id }}" class="poem-card">
+                    <div class="poem-title">{{ poem.title }}</div>
+                    <div class="poem-author">by {{ poem.get_author_display_name() }}</div>
+                    <div class="poem-content">{{ poem.content[:200] }}{% if poem.content|length > 200 %}...{% endif %}</div>
+                </a>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <h3>No Poems Found</h3>
+                    <p>No poems found for the "{{ selected_theme }}" theme</p>
+                </div>
+            {% endif %}
+        {% elif not available_themes %}
+            <div class="empty-state">
+                <h3>No Themes Available</h3>
+                <p>Poems with themes will appear here as they are created</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

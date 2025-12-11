@@ -5,6 +5,15 @@ from models import db, User, Poem, Comment
 import requests
 from analytics import track_visitor, log_activity
 from datetime import datetime
+import logging
+import traceback
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 def create_app():
     app = Flask(__name__)
@@ -18,95 +27,174 @@ def create_app():
     
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.get(int(user_id))
+        try:
+            return User.query.get(int(user_id))
+        except Exception as e:
+            logger.error(f"Error loading user {user_id}: {str(e)}")
+            return None
+    
+    # Global error handlers
+    @app.errorhandler(404)
+    def not_found_error(error):
+        logger.warning(f"404 error: {request.url}")
+        return render_template('404.html'), 404 if app.config.get('DEBUG') else ('Page not found', 404)
+    
+    @app.errorhandler(403)
+    def forbidden_error(error):
+        logger.warning(f"403 error: {request.url}")
+        return render_template('403.html'), 403 if app.config.get('DEBUG') else ('Access forbidden', 403)
+    
+    @app.errorhandler(500)
+    def internal_error(error):
+        logger.error(f"500 error: {str(error)}\n{traceback.format_exc()}")
+        db.session.rollback()
+        return render_template('500.html'), 500 if app.config.get('DEBUG') else ('Internal server error', 500)
+    
+    @app.errorhandler(Exception)
+    def handle_exception(error):
+        logger.error(f"Unhandled exception: {str(error)}\n{traceback.format_exc()}")
+        db.session.rollback()
+        return jsonify({'status': 'error', 'message': 'An unexpected error occurred'}), 500
     
     @app.route('/')
     def index():
-        # Track visitor
-        track_visitor()
-        
-        if current_user.is_authenticated:
-            return redirect(url_for('home'))
-        return redirect(url_for('login'))
+        try:
+            # Track visitor
+            track_visitor()
+            
+            if current_user.is_authenticated:
+                return redirect(url_for('home'))
+            return redirect(url_for('login'))
+        except Exception as e:
+            logger.error(f"Error in index route: {str(e)}")
+            return redirect(url_for('login'))
     
     @app.route('/register', methods=['GET', 'POST'])
     def register():
-        if request.method == 'POST':
-            username = request.form['username']
-            email = request.form['email']
-            password = request.form['password']
-            age = request.form['age']
-            favorite_poet = request.form['favorite_poet']
+        try:
+            if request.method == 'POST':
+                username = request.form.get('username', '').strip()
+                email = request.form.get('email', '').strip()
+                password = request.form.get('password', '')
+                age = request.form.get('age', '').strip()
+                favorite_poet = request.form.get('favorite_poet', '').strip()
+                
+                # Validate inputs
+                username_valid, username_msg = User.validate_username(username)
+                if not username_valid:
+                    return render_template('register.html', error=username_msg)
+                
+                email_valid, email_msg = User.validate_email(email)
+                if not email_valid:
+                    return render_template('register.html', error=email_msg)
+                
+                if not password or len(password) < 6:
+                    return render_template('register.html', error='Password must be at least 6 characters')
+                
+                # Check for existing users
+                if User.query.filter_by(username=username).first():
+                    return render_template('register.html', error='Username already exists')
+                
+                if User.query.filter_by(email=email).first():
+                    return render_template('register.html', error='Email already exists')
+                
+                # Validate age
+                try:
+                    age_int = int(age) if age else None
+                    if age_int and (age_int < 13 or age_int > 120):
+                        return render_template('register.html', error='Please enter a valid age')
+                except ValueError:
+                    return render_template('register.html', error='Please enter a valid age')
+                
+                # Make first user admin
+                is_first_user = User.query.count() == 0
+                
+                user = User(
+                    username=username,
+                    email=email,
+                    age=age_int,
+                    favorite_poet=favorite_poet if favorite_poet else None,
+                    is_admin=is_first_user
+                )
+                user.set_password(password)
+                
+                db.session.add(user)
+                db.session.commit()
+                
+                login_user(user)
+                logger.info(f"New user registered: {username}")
+                return redirect(url_for('home'))
             
-            if User.query.filter_by(username=username).first():
-                return render_template('register.html', error='Username already exists')
-            
-            if User.query.filter_by(email=email).first():
-                return render_template('register.html', error='Email already exists')
-            
-            # Make first user admin
-            is_first_user = User.query.count() == 0
-            
-            user = User(username=username, email=email, age=age, favorite_poet=favorite_poet, is_admin=is_first_user)
-            user.set_password(password)
-            db.session.add(user)
-            db.session.commit()
-            
-            login_user(user)
-            return redirect(url_for('home'))
-        
-        return render_template('register.html')
+            return render_template('register.html')
+        except Exception as e:
+            logger.error(f"Error in register route: {str(e)}")
+            db.session.rollback()
+            return render_template('register.html', error='Registration failed. Please try again.')
     
     @app.route('/login', methods=['GET', 'POST'])
     def login():
-        if request.method == 'POST':
-            username = request.form['username']
-            password = request.form['password']
-            
-            # Block classic poets from logging in
-            classic_poet_names = ['Shakespeare', 'Rumi', 'Emily Dickinson', 'Edgar Allan Poe', 
-                                 'Walt Whitman', 'Lord Byron', 'William Wordsworth', 
-                                 'John Keats', 'Percy Shelley', 'Robert Burns',
-                                 'Robert Frost', 'Maya Angelou', 'Langston Hughes',
-                                 'المتنبي', 'قيس بن الملوح']
-            
-            # Check for admin secret code
-            admin_code = 'P0.1'
-            is_admin_login = username.startswith(admin_code)
-            
-            # Remove admin code from username for lookup
-            if is_admin_login:
-                actual_username = username[len(admin_code):]
-            else:
-                actual_username = username
-            
-            # Prevent classic poets from logging in
-            if actual_username in classic_poet_names:
-                return render_template('login.html', error='Classic poet accounts are for reference only')
-            
-            user = User.query.filter_by(username=actual_username).first()
-            
-            if user and user.check_password(password):
-                # Grant admin access if they used the code
-                if is_admin_login:
-                    user.is_admin = True
-                    db.session.commit()
+        try:
+            if request.method == 'POST':
+                username = request.form.get('username', '').strip()
+                password = request.form.get('password', '')
                 
-                login_user(user)
-                log_activity('login', f'User {user.username} logged in')
-                return redirect(url_for('home'))
+                if not username or not password:
+                    return render_template('login.html', error='Username and password are required')
+                
+                # Block classic poets from logging in
+                classic_poet_names = ['Shakespeare', 'Rumi', 'Emily Dickinson', 'Edgar Allan Poe', 
+                                     'Walt Whitman', 'Lord Byron', 'William Wordsworth', 
+                                     'John Keats', 'Percy Shelley', 'Robert Burns',
+                                     'Robert Frost', 'Maya Angelou', 'Langston Hughes',
+                                     'المتنبي', 'قيس بن الملوح']
+                
+                # Check for admin secret code
+                admin_code = 'P0.1'
+                is_admin_login = username.startswith(admin_code)
+                
+                # Remove admin code from username for lookup
+                if is_admin_login:
+                    actual_username = username[len(admin_code):]
+                else:
+                    actual_username = username
+                
+                # Prevent classic poets from logging in
+                if actual_username in classic_poet_names:
+                    return render_template('login.html', error='Classic poet accounts are for reference only')
+                
+                user = User.query.filter_by(username=actual_username).first()
+                
+                if user and user.check_password(password):
+                    # Grant admin access if they used the code
+                    if is_admin_login:
+                        user.is_admin = True
+                        db.session.commit()
+                    
+                    login_user(user)
+                    log_activity('login', f'User {user.username} logged in')
+                    logger.info(f"User logged in: {user.username}")
+                    return redirect(url_for('home'))
+                
+                return render_template('login.html', error='Invalid username or password')
             
-            return render_template('login.html', error='Invalid username or password')
-        
-        return render_template('login.html')
+            return render_template('login.html')
+        except Exception as e:
+            logger.error(f"Error in login route: {str(e)}")
+            return render_template('login.html', error='Login failed. Please try again.')
     
 
     
     @app.route('/logout')
     @login_required
     def logout():
-        logout_user()
-        return redirect(url_for('login'))
+        try:
+            username = current_user.username
+            logout_user()
+            logger.info(f"User logged out: {username}")
+            return redirect(url_for('login'))
+        except Exception as e:
+            logger.error(f"Error in logout route: {str(e)}")
+            return redirect(url_for('login'))
     
     @app.route('/admin/reset-database/<secret_code>')
     def reset_database(secret_code):
@@ -389,72 +477,123 @@ def create_app():
     @app.route('/home')
     @login_required
     def home():
-        from datetime import datetime
-        from models import SavedPoem, Follow
-        
-        # Get current hour
-        current_hour = datetime.now().hour
-        
-        # Determine greeting based on time
-        if 5 <= current_hour < 12:
-            greeting = "Good morning"
-        elif 12 <= current_hour < 17:
-            greeting = "Good afternoon"
-        elif 17 <= current_hour < 21:
-            greeting = "Good evening"
-        else:
-            greeting = "Good night"
-        
-        # Get IDs of users current user follows
-        following_ids = [f.followed_id for f in Follow.query.filter_by(follower_id=current_user.id).all()]
-        
-        # Show poems from followed users, or all poems if not following anyone yet
-        if following_ids:
-            poems = Poem.query.filter(Poem.user_id.in_(following_ids), Poem.is_classic == False).order_by(Poem.created_at.desc()).all()
-        else:
-            # If not following anyone, show all user poems (not classic) to help discover
-            poems = Poem.query.filter_by(is_classic=False).order_by(Poem.created_at.desc()).all()
-        
-        # Get saved poem IDs for current user
-        saved_poem_ids = [s.poem_id for s in SavedPoem.query.filter_by(user_id=current_user.id).all()]
-        
-        # Check if user should see tutorial
-        show_tutorial = not current_user.has_seen_tutorial
-        
-        return render_template('home.html', poems=poems, greeting=greeting, saved_poem_ids=saved_poem_ids, show_tutorial=show_tutorial)
+        try:
+            from datetime import datetime
+            from models import SavedPoem, Follow
+            
+            # Get current hour
+            current_hour = datetime.now().hour
+            
+            # Determine greeting based on time
+            if 5 <= current_hour < 12:
+                greeting = "Good morning"
+            elif 12 <= current_hour < 17:
+                greeting = "Good afternoon"
+            elif 17 <= current_hour < 21:
+                greeting = "Good evening"
+            else:
+                greeting = "Good night"
+            
+            # Get IDs of users current user follows
+            following_ids = [f.followed_id for f in Follow.query.filter_by(follower_id=current_user.id).all()]
+            
+            # Show poems from followed users, or all poems if not following anyone yet
+            if following_ids:
+                poems = Poem.query.filter(
+                    Poem.user_id.in_(following_ids),
+                    Poem.is_classic == False
+                ).order_by(Poem.created_at.desc()).limit(50).all()  # Limit for performance
+            else:
+                # If not following anyone, show all user poems (not classic) to help discover
+                poems = Poem.query.filter_by(is_classic=False).order_by(Poem.created_at.desc()).limit(50).all()
+            
+            # Get saved poem IDs for current user
+            saved_poem_ids = [s.poem_id for s in SavedPoem.query.filter_by(user_id=current_user.id).all()]
+            
+            # Check if user should see tutorial
+            show_tutorial = not current_user.has_seen_tutorial
+            
+            return render_template('home.html', poems=poems, greeting=greeting, saved_poem_ids=saved_poem_ids, show_tutorial=show_tutorial)
+        except Exception as e:
+            logger.error(f"Error in home route: {str(e)}")
+            return render_template('home.html', poems=[], greeting="Hello", saved_poem_ids=[], show_tutorial=False, error='Failed to load home page')
     
     @app.route('/new-poem', methods=['GET', 'POST'])
     @login_required
     def new_poem():
-        if request.method == 'POST':
-            title = request.form['title']
-            content = request.form['content']
-            is_anonymous = request.form.get('anonymous') == 'on'
+        try:
+            if request.method == 'POST':
+                title = request.form.get('title', '').strip()
+                content = request.form.get('content', '').strip()
+                category = request.form.get('category', '').strip()
+                mood = request.form.get('mood', '').strip()
+                theme = request.form.get('theme', '').strip()
+                is_anonymous = request.form.get('anonymous') == 'on'
+                
+                # Validate inputs
+                title_valid, title_msg = Poem.validate_title(title)
+                if not title_valid:
+                    return render_template('new_poem.html', error=title_msg)
+                
+                content_valid, content_msg = Poem.validate_content(content)
+                if not content_valid:
+                    return render_template('new_poem.html', error=content_msg)
+                
+                poem = Poem(
+                    title=title,
+                    content=content,
+                    category=category if category else None,
+                    mood=mood if mood else None,
+                    theme=theme if theme else None,
+                    user_id=current_user.id,
+                    is_anonymous=is_anonymous
+                )
+                db.session.add(poem)
+                db.session.commit()
+                
+                logger.info(f"New poem created by {current_user.username}: {title}")
+                return redirect(url_for('home'))
             
-            poem = Poem(title=title, content=content, user_id=current_user.id, is_anonymous=is_anonymous)
-            db.session.add(poem)
-            db.session.commit()
+            # Get existing options for dropdowns
+            categories = db.session.query(Poem.category).filter(Poem.category.isnot(None)).distinct().all()
+            moods = db.session.query(Poem.mood).filter(Poem.mood.isnot(None)).distinct().all()
+            themes = db.session.query(Poem.theme).filter(Poem.theme.isnot(None)).distinct().all()
             
-            return redirect(url_for('home'))
-        
-        return render_template('new_poem.html')
+            existing_categories = [c[0] for c in categories if c[0]]
+            existing_moods = [m[0] for m in moods if m[0]]
+            existing_themes = [t[0] for t in themes if t[0]]
+            
+            return render_template('new_poem.html', 
+                                 existing_categories=existing_categories,
+                                 existing_moods=existing_moods,
+                                 existing_themes=existing_themes)
+        except Exception as e:
+            logger.error(f"Error in new_poem route: {str(e)}")
+            db.session.rollback()
+            return render_template('new_poem.html', error='Failed to create poem. Please try again.')
     
     @app.route('/users')
     @login_required
     def users():
-        from models import Follow
-        # Only show real users, not classic poets
-        classic_poet_names = ['Shakespeare', 'Rumi', 'Emily Dickinson', 'Edgar Allan Poe', 
-                             'Walt Whitman', 'Lord Byron', 'William Wordsworth', 
-                             'John Keats', 'Percy Shelley', 'Robert Burns',
-                             'Robert Frost', 'Maya Angelou', 'Langston Hughes',
-                             'المتنبي', 'قيس بن الملوح']
-        all_users = User.query.filter(~User.username.in_(classic_poet_names)).order_by(User.created_at.desc()).all()
-        
-        # Get IDs of users current user follows
-        current_user_following_ids = [f.followed_id for f in Follow.query.filter_by(follower_id=current_user.id).all()]
-        
-        return render_template('users.html', users=all_users, current_user_following_ids=current_user_following_ids)
+        try:
+            from models import Follow
+            # Only show real users, not classic poets
+            classic_poet_names = ['Shakespeare', 'Rumi', 'Emily Dickinson', 'Edgar Allan Poe', 
+                                 'Walt Whitman', 'Lord Byron', 'William Wordsworth', 
+                                 'John Keats', 'Percy Shelley', 'Robert Burns',
+                                 'Robert Frost', 'Maya Angelou', 'Langston Hughes',
+                                 'المتنبي', 'قيس بن الملوح']
+            all_users = User.query.filter(
+                ~User.username.in_(classic_poet_names)
+            ).order_by(User.created_at.desc()).limit(100).all()  # Limit for performance
+            
+            # Get IDs of users current user follows
+            current_user_following_ids = [f.followed_id for f in Follow.query.filter_by(follower_id=current_user.id).all()]
+            
+            return render_template('users.html', users=all_users, current_user_following_ids=current_user_following_ids)
+        except Exception as e:
+            logger.error(f"Error in users route: {str(e)}")
+            return render_template('users.html', users=[], current_user_following_ids=[], error='Failed to load users')
     
     @app.route('/settings')
     @login_required
@@ -472,42 +611,72 @@ def create_app():
     @app.route('/settings/profile', methods=['POST'])
     @login_required
     def update_profile():
-        username = request.form.get('username')
-        email = request.form.get('email')
-        favorite_poet = request.form.get('favorite_poet')
-        
-        if username and username != current_user.username:
-            if User.query.filter_by(username=username).first():
-                return render_template('settings.html', message='Username already taken', message_type='error')
-            current_user.username = username
-        
-        if email and email != current_user.email:
-            if User.query.filter_by(email=email).first():
-                return render_template('settings.html', message='Email already in use', message_type='error')
-            current_user.email = email
-        
-        if favorite_poet:
-            current_user.favorite_poet = favorite_poet
-        
-        db.session.commit()
-        return render_template('settings.html', message='Profile updated successfully!', message_type='success')
+        try:
+            username = request.form.get('username', '').strip()
+            email = request.form.get('email', '').strip()
+            favorite_poet = request.form.get('favorite_poet', '').strip()
+            
+            if username and username != current_user.username:
+                # Validate username
+                username_valid, username_msg = User.validate_username(username)
+                if not username_valid:
+                    return render_template('settings.html', message=username_msg, message_type='error')
+                
+                if User.query.filter_by(username=username).first():
+                    return render_template('settings.html', message='Username already taken', message_type='error')
+                current_user.username = username
+            
+            if email and email != current_user.email:
+                # Validate email
+                email_valid, email_msg = User.validate_email(email)
+                if not email_valid:
+                    return render_template('settings.html', message=email_msg, message_type='error')
+                
+                if User.query.filter_by(email=email).first():
+                    return render_template('settings.html', message='Email already in use', message_type='error')
+                current_user.email = email
+            
+            if favorite_poet:
+                current_user.favorite_poet = favorite_poet
+            
+            db.session.commit()
+            logger.info(f"Profile updated for user: {current_user.username}")
+            return render_template('settings.html', message='Profile updated successfully!', message_type='success')
+        except Exception as e:
+            logger.error(f"Error in update_profile route: {str(e)}")
+            db.session.rollback()
+            return render_template('settings.html', message='Failed to update profile', message_type='error')
     
     @app.route('/settings/password', methods=['POST'])
     @login_required
     def change_password():
-        old_password = request.form['old_password']
-        new_password = request.form['new_password']
-        confirm_password = request.form['confirm_password']
-        
-        if not current_user.check_password(old_password):
-            return render_template('settings.html', message='Current password is incorrect', message_type='error')
-        
-        if new_password != confirm_password:
-            return render_template('settings.html', message='New passwords do not match', message_type='error')
-        
-        current_user.set_password(new_password)
-        db.session.commit()
-        return render_template('settings.html', message='Password changed successfully!', message_type='success')
+        try:
+            old_password = request.form.get('old_password', '')
+            new_password = request.form.get('new_password', '')
+            confirm_password = request.form.get('confirm_password', '')
+            
+            if not old_password or not new_password or not confirm_password:
+                return render_template('settings.html', message='All password fields are required', message_type='error')
+            
+            if not current_user.check_password(old_password):
+                return render_template('settings.html', message='Current password is incorrect', message_type='error')
+            
+            if new_password != confirm_password:
+                return render_template('settings.html', message='New passwords do not match', message_type='error')
+            
+            if len(new_password) < 6:
+                return render_template('settings.html', message='New password must be at least 6 characters', message_type='error')
+            
+            current_user.set_password(new_password)
+            db.session.commit()
+            logger.info(f"Password changed for user: {current_user.username}")
+            return render_template('settings.html', message='Password changed successfully!', message_type='success')
+        except ValueError as e:
+            return render_template('settings.html', message=str(e), message_type='error')
+        except Exception as e:
+            logger.error(f"Error in change_password route: {str(e)}")
+            db.session.rollback()
+            return render_template('settings.html', message='Failed to change password', message_type='error')
     
     @app.route('/settings/delete-account', methods=['POST'])
     @login_required
@@ -549,46 +718,50 @@ def create_app():
     @app.route('/admin')
     @login_required
     def admin():
-        if not current_user.is_admin:
-            abort(403)
-        
-        from models import UserActivity, Visitor
-        from datetime import datetime, timedelta
-        
-        total_users = User.query.count()
-        total_poems = Poem.query.count()
-        total_comments = Comment.query.count()
-        all_users = User.query.order_by(User.created_at.desc()).all()
-        recent_poems = Poem.query.order_by(Poem.created_at.desc()).limit(10).all()
-        
-        # Analytics data
-        total_visitors = Visitor.query.count()
-        recent_visitors = Visitor.query.order_by(Visitor.last_visit.desc()).limit(20).all()
-        recent_activities = UserActivity.query.order_by(UserActivity.created_at.desc()).limit(50).all()
-        
-        # Today's stats
-        today = datetime.utcnow().date()
-        today_start = datetime.combine(today, datetime.min.time())
-        today_activities = UserActivity.query.filter(UserActivity.created_at >= today_start).count()
-        today_visitors = Visitor.query.filter(Visitor.last_visit >= today_start).count()
-        
-        # Source breakdown
-        instagram_visitors = Visitor.query.filter_by(source='instagram').count()
-        direct_visitors = Visitor.query.filter_by(source='direct').count()
-        
-        return render_template('admin.html', 
-                             total_users=total_users,
-                             total_poems=total_poems,
-                             total_comments=total_comments,
-                             users=all_users,
-                             poems=recent_poems,
-                             total_visitors=total_visitors,
-                             recent_visitors=recent_visitors,
-                             recent_activities=recent_activities,
-                             today_activities=today_activities,
-                             today_visitors=today_visitors,
-                             instagram_visitors=instagram_visitors,
-                             direct_visitors=direct_visitors)
+        try:
+            if not current_user.is_admin:
+                abort(403)
+            
+            from models import UserActivity, Visitor
+            from datetime import datetime, timedelta
+            
+            total_users = User.query.count()
+            total_poems = Poem.query.count()
+            total_comments = Comment.query.count()
+            all_users = User.query.order_by(User.created_at.desc()).limit(100).all()  # Limit for performance
+            recent_poems = Poem.query.order_by(Poem.created_at.desc()).limit(10).all()
+            
+            # Analytics data
+            total_visitors = Visitor.query.count()
+            recent_visitors = Visitor.query.order_by(Visitor.last_visit.desc()).limit(20).all()
+            recent_activities = UserActivity.query.order_by(UserActivity.created_at.desc()).limit(50).all()
+            
+            # Today's stats
+            today = datetime.utcnow().date()
+            today_start = datetime.combine(today, datetime.min.time())
+            today_activities = UserActivity.query.filter(UserActivity.created_at >= today_start).count()
+            today_visitors = Visitor.query.filter(Visitor.last_visit >= today_start).count()
+            
+            # Source breakdown
+            instagram_visitors = Visitor.query.filter_by(source='instagram').count()
+            direct_visitors = Visitor.query.filter_by(source='direct').count()
+            
+            return render_template('admin.html', 
+                                 total_users=total_users,
+                                 total_poems=total_poems,
+                                 total_comments=total_comments,
+                                 users=all_users,
+                                 poems=recent_poems,
+                                 total_visitors=total_visitors,
+                                 recent_visitors=recent_visitors,
+                                 recent_activities=recent_activities,
+                                 today_activities=today_activities,
+                                 today_visitors=today_visitors,
+                                 instagram_visitors=instagram_visitors,
+                                 direct_visitors=direct_visitors)
+        except Exception as e:
+            logger.error(f"Error in admin route: {str(e)}")
+            abort(500)
     
     @app.route('/admin/delete-user/<int:user_id>', methods=['POST'])
     @login_required
@@ -654,79 +827,127 @@ def create_app():
     @app.route('/poem/<int:poem_id>', methods=['GET', 'POST'])
     @login_required
     def poem_detail(poem_id):
-        from models import Notification, SavedPoem
-        poem = Poem.query.get_or_404(poem_id)
-        
-        if request.method == 'POST':
-            comment_text = request.form['comment']
-            comment = Comment(content=comment_text, user_id=current_user.id, poem_id=poem_id)
-            db.session.add(comment)
+        try:
+            from models import Notification, SavedPoem
+            poem = Poem.query.get_or_404(poem_id)
             
-            # Create notification for poem author
-            if poem.user_id != current_user.id:
-                notif = Notification(
-                    user_id=poem.user_id,
-                    type='comment',
-                    message=f'{current_user.username} commented on your poem "{poem.title}"',
-                    poem_id=poem_id
-                )
-                db.session.add(notif)
+            if request.method == 'POST':
+                comment_text = request.form.get('comment', '').strip()
+                
+                # Validate comment
+                comment_valid, comment_msg = Comment.validate_content(comment_text)
+                if not comment_valid:
+                    is_saved = SavedPoem.query.filter_by(user_id=current_user.id, poem_id=poem_id).first() is not None
+                    return render_template('poem_detail.html', poem=poem, is_saved=is_saved, error=comment_msg)
+                
+                comment = Comment(content=comment_text, user_id=current_user.id, poem_id=poem_id)
+                db.session.add(comment)
+                
+                # Create notification for poem author
+                if poem.user_id != current_user.id:
+                    notif = Notification.create_notification(
+                        user_id=poem.user_id,
+                        notif_type='comment',
+                        message=f'{current_user.username} commented on your poem "{poem.title}"',
+                        poem_id=poem_id
+                    )
+                    if notif:
+                        db.session.add(notif)
+                
+                db.session.commit()
+                logger.info(f"Comment added by {current_user.username} on poem {poem_id}")
+                return redirect(url_for('poem_detail', poem_id=poem_id))
             
-            db.session.commit()
-            return redirect(url_for('poem_detail', poem_id=poem_id))
-        
-        # Check if poem is saved by current user
-        is_saved = SavedPoem.query.filter_by(user_id=current_user.id, poem_id=poem_id).first() is not None
-        
-        return render_template('poem_detail.html', poem=poem, is_saved=is_saved)
+            # Check if poem is saved by current user
+            is_saved = SavedPoem.query.filter_by(user_id=current_user.id, poem_id=poem_id).first() is not None
+            
+            return render_template('poem_detail.html', poem=poem, is_saved=is_saved)
+        except Exception as e:
+            logger.error(f"Error in poem_detail route: {str(e)}")
+            if request.method == 'POST':
+                db.session.rollback()
+            abort(500)
     
     @app.route('/poem/<int:poem_id>/edit', methods=['GET', 'POST'])
     @login_required
     def edit_poem(poem_id):
-        poem = Poem.query.get_or_404(poem_id)
-        
-        # Check permissions
-        if poem.user_id != current_user.id and not current_user.is_admin:
-            abort(403)
-        
-        if request.method == 'POST':
-            poem.title = request.form['title']
-            poem.content = request.form['content']
-            db.session.commit()
-            return redirect(url_for('poem_detail', poem_id=poem_id))
-        
-        return render_template('edit_poem.html', poem=poem)
+        try:
+            poem = Poem.query.get_or_404(poem_id)
+            
+            # Check permissions
+            if poem.user_id != current_user.id and not current_user.is_admin:
+                abort(403)
+            
+            if request.method == 'POST':
+                title = request.form.get('title', '').strip()
+                content = request.form.get('content', '').strip()
+                
+                # Validate inputs
+                title_valid, title_msg = Poem.validate_title(title)
+                if not title_valid:
+                    return render_template('edit_poem.html', poem=poem, error=title_msg)
+                
+                content_valid, content_msg = Poem.validate_content(content)
+                if not content_valid:
+                    return render_template('edit_poem.html', poem=poem, error=content_msg)
+                
+                poem.title = title
+                poem.content = content
+                db.session.commit()
+                
+                logger.info(f"Poem {poem_id} edited by {current_user.username}")
+                return redirect(url_for('poem_detail', poem_id=poem_id))
+            
+            return render_template('edit_poem.html', poem=poem)
+        except Exception as e:
+            logger.error(f"Error in edit_poem route: {str(e)}")
+            if request.method == 'POST':
+                db.session.rollback()
+            abort(500)
     
     @app.route('/poem/<int:poem_id>/delete', methods=['POST'])
     @login_required
     def delete_poem(poem_id):
-        poem = Poem.query.get_or_404(poem_id)
-        
-        # Check permissions
-        if poem.user_id != current_user.id and not current_user.is_admin:
-            abort(403)
-        
-        db.session.delete(poem)
-        db.session.commit()
-        return redirect(url_for('home'))
+        try:
+            poem = Poem.query.get_or_404(poem_id)
+            
+            # Check permissions
+            if poem.user_id != current_user.id and not current_user.is_admin:
+                abort(403)
+            
+            poem_title = poem.title
+            db.session.delete(poem)
+            db.session.commit()
+            
+            logger.info(f"Poem {poem_id} ({poem_title}) deleted by {current_user.username}")
+            return redirect(url_for('home'))
+        except Exception as e:
+            logger.error(f"Error in delete_poem route: {str(e)}")
+            db.session.rollback()
+            abort(500)
     
     @app.route('/poem/<int:poem_id>/save', methods=['POST'])
     @login_required
     def toggle_save_poem(poem_id):
-        from models import SavedPoem
-        poem = Poem.query.get_or_404(poem_id)
-        saved = SavedPoem.query.filter_by(user_id=current_user.id, poem_id=poem_id).first()
-        
-        if saved:
-            db.session.delete(saved)
-            action = 'unsaved'
-        else:
-            new_save = SavedPoem(user_id=current_user.id, poem_id=poem_id)
-            db.session.add(new_save)
-            action = 'saved'
-        
-        db.session.commit()
-        return jsonify({'status': 'success', 'action': action})
+        try:
+            from models import SavedPoem
+            poem = Poem.query.get_or_404(poem_id)
+            saved = SavedPoem.query.filter_by(user_id=current_user.id, poem_id=poem_id).first()
+            
+            if saved:
+                db.session.delete(saved)
+                action = 'unsaved'
+            else:
+                new_save = SavedPoem(user_id=current_user.id, poem_id=poem_id)
+                db.session.add(new_save)
+                action = 'saved'
+            
+            db.session.commit()
+            return jsonify({'status': 'success', 'action': action})
+        except Exception as e:
+            logger.error(f"Error in toggle_save_poem route: {str(e)}")
+            db.session.rollback()
+            return jsonify({'status': 'error', 'message': 'Failed to toggle save'}), 500
     
     @app.route('/saved-poems')
     @login_required
@@ -735,34 +956,132 @@ def create_app():
         saved = SavedPoem.query.filter_by(user_id=current_user.id).order_by(SavedPoem.saved_at.desc()).all()
         poems = [s.poem for s in saved]
         return render_template('saved_poems.html', poems=poems)
+    
+    @app.route('/collections')
+    @login_required
+    def collections():
+        try:
+            from models import Collection
+            user_collections = Collection.query.filter_by(user_id=current_user.id).order_by(Collection.created_at.desc()).all()
+            return render_template('collections.html', collections=user_collections)
+        except Exception as e:
+            logger.error(f"Error in collections route: {str(e)}")
+            return render_template('collections.html', collections=[], error='Failed to load collections')
+    
+    @app.route('/collections/new', methods=['GET', 'POST'])
+    @login_required
+    def new_collection():
+        try:
+            if request.method == 'POST':
+                name = request.form.get('name', '').strip()
+                description = request.form.get('description', '').strip()
+                is_private = request.form.get('private') == 'on'
+                
+                if not name:
+                    return render_template('new_collection.html', error='Collection name is required')
+                
+                if len(name) > 100:
+                    return render_template('new_collection.html', error='Collection name must be less than 100 characters')
+                
+                from models import Collection
+                collection = Collection(
+                    name=name,
+                    description=description if description else None,
+                    user_id=current_user.id,
+                    is_private=is_private
+                )
+                db.session.add(collection)
+                db.session.commit()
+                
+                logger.info(f"New collection created by {current_user.username}: {name}")
+                return redirect(url_for('collections'))
+            
+            return render_template('new_collection.html')
+        except Exception as e:
+            logger.error(f"Error in new_collection route: {str(e)}")
+            db.session.rollback()
+            return render_template('new_collection.html', error='Failed to create collection')
+    
+    @app.route('/collections/<int:collection_id>')
+    @login_required
+    def view_collection(collection_id):
+        try:
+            from models import Collection, CollectionPoem
+            collection = Collection.query.get_or_404(collection_id)
+            
+            # Check permissions
+            if collection.is_private and collection.user_id != current_user.id:
+                abort(403)
+            
+            # Get poems in collection
+            collection_poems = CollectionPoem.query.filter_by(collection_id=collection_id).order_by(CollectionPoem.added_at.desc()).all()
+            poems = [cp.poem for cp in collection_poems]
+            
+            return render_template('view_collection.html', collection=collection, poems=poems)
+        except Exception as e:
+            logger.error(f"Error in view_collection route: {str(e)}")
+            abort(500)
+    
+    @app.route('/collections/<int:collection_id>/add-poem/<int:poem_id>', methods=['POST'])
+    @login_required
+    def add_poem_to_collection(collection_id, poem_id):
+        try:
+            from models import Collection, CollectionPoem
+            collection = Collection.query.get_or_404(collection_id)
+            
+            # Check permissions
+            if collection.user_id != current_user.id:
+                return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
+            
+            # Check if poem already in collection
+            existing = CollectionPoem.query.filter_by(collection_id=collection_id, poem_id=poem_id).first()
+            if existing:
+                return jsonify({'status': 'error', 'message': 'Poem already in collection'})
+            
+            # Add poem to collection
+            collection_poem = CollectionPoem(collection_id=collection_id, poem_id=poem_id)
+            db.session.add(collection_poem)
+            db.session.commit()
+            
+            return jsonify({'status': 'success', 'message': 'Poem added to collection'})
+        except Exception as e:
+            logger.error(f"Error adding poem to collection: {str(e)}")
+            db.session.rollback()
+            return jsonify({'status': 'error', 'message': 'Failed to add poem'}), 500
     @app.route('/poem/<int:poem_id>/like', methods=['POST'])
     @login_required
     def toggle_like_poem(poem_id):
-        from models import Like, Notification
-        poem = Poem.query.get_or_404(poem_id)
-        like = Like.query.filter_by(user_id=current_user.id, poem_id=poem_id).first()
-        
-        if like:
-            db.session.delete(like)
-            action = 'unliked'
-        else:
-            new_like = Like(user_id=current_user.id, poem_id=poem_id)
-            db.session.add(new_like)
-            action = 'liked'
+        try:
+            from models import Like, Notification
+            poem = Poem.query.get_or_404(poem_id)
+            like = Like.query.filter_by(user_id=current_user.id, poem_id=poem_id).first()
             
-            # Create notification for poem author
-            if poem.user_id != current_user.id:
-                notif = Notification(
-                    user_id=poem.user_id,
-                    type='like',
-                    message=f'{current_user.username} liked your poem "{poem.title}"',
-                    poem_id=poem_id
-                )
-                db.session.add(notif)
-        
-        db.session.commit()
-        like_count = Like.query.filter_by(poem_id=poem_id).count()
-        return jsonify({'status': 'success', 'action': action, 'count': like_count})
+            if like:
+                db.session.delete(like)
+                action = 'unliked'
+            else:
+                new_like = Like(user_id=current_user.id, poem_id=poem_id)
+                db.session.add(new_like)
+                action = 'liked'
+                
+                # Create notification for poem author
+                if poem.user_id != current_user.id:
+                    notif = Notification.create_notification(
+                        user_id=poem.user_id,
+                        notif_type='like',
+                        message=f'{current_user.username} liked your poem "{poem.title}"',
+                        poem_id=poem_id
+                    )
+                    if notif:
+                        db.session.add(notif)
+            
+            db.session.commit()
+            like_count = Like.query.filter_by(poem_id=poem_id).count()
+            return jsonify({'status': 'success', 'action': action, 'count': like_count})
+        except Exception as e:
+            logger.error(f"Error in toggle_like_poem route: {str(e)}")
+            db.session.rollback()
+            return jsonify({'status': 'error', 'message': 'Failed to toggle like'}), 500
 
     @app.route('/api/search-poets', methods=['GET'])
     @login_required
@@ -781,6 +1100,80 @@ def create_app():
     @login_required
     def my_profile():
         return redirect(url_for('user_profile', user_id=current_user.id))
+    
+    @app.route('/analytics')
+    @login_required
+    def user_analytics():
+        """User analytics dashboard - Premium feature"""
+        try:
+            # Check subscription tier
+            if current_user.subscription_tier == 'free':
+                return render_template('analytics.html', 
+                                     error='Analytics are available for Poetry Plus and Pro subscribers only',
+                                     is_premium_feature=True)
+            
+            from models import Like, Comment, SavedPoem
+            from datetime import datetime, timedelta
+            
+            # Get user's poems
+            user_poems = Poem.query.filter_by(user_id=current_user.id, is_classic=False).all()
+            poem_ids = [p.id for p in user_poems]
+            
+            if not poem_ids:
+                return render_template('analytics.html', 
+                                     total_poems=0,
+                                     total_likes=0,
+                                     total_comments=0,
+                                     total_saves=0,
+                                     poems=[])
+            
+            # Calculate totals
+            total_poems = len(user_poems)
+            total_likes = Like.query.filter(Like.poem_id.in_(poem_ids)).count()
+            total_comments = Comment.query.filter(Comment.poem_id.in_(poem_ids)).count()
+            total_saves = SavedPoem.query.filter(SavedPoem.poem_id.in_(poem_ids)).count()
+            
+            # Get poem performance
+            poem_stats = []
+            for poem in user_poems:
+                likes = Like.query.filter_by(poem_id=poem.id).count()
+                comments = Comment.query.filter_by(poem_id=poem.id).count()
+                saves = SavedPoem.query.filter_by(poem_id=poem.id).count()
+                
+                poem_stats.append({
+                    'poem': poem,
+                    'likes': likes,
+                    'comments': comments,
+                    'saves': saves,
+                    'total_engagement': likes + comments + saves
+                })
+            
+            # Sort by engagement
+            poem_stats.sort(key=lambda x: x['total_engagement'], reverse=True)
+            
+            # Recent activity (last 30 days)
+            thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+            recent_likes = Like.query.filter(
+                Like.poem_id.in_(poem_ids),
+                Like.created_at >= thirty_days_ago
+            ).count()
+            
+            recent_comments = Comment.query.filter(
+                Comment.poem_id.in_(poem_ids),
+                Comment.created_at >= thirty_days_ago
+            ).count()
+            
+            return render_template('analytics.html',
+                                 total_poems=total_poems,
+                                 total_likes=total_likes,
+                                 total_comments=total_comments,
+                                 total_saves=total_saves,
+                                 recent_likes=recent_likes,
+                                 recent_comments=recent_comments,
+                                 poem_stats=poem_stats[:10])  # Top 10 poems
+        except Exception as e:
+            logger.error(f"Error in user_analytics route: {str(e)}")
+            return render_template('analytics.html', error='Failed to load analytics')
     
     @app.route('/user/<int:user_id>')
     @login_required
@@ -805,33 +1198,40 @@ def create_app():
     @app.route('/user/<int:user_id>/follow', methods=['POST'])
     @login_required
     def toggle_follow(user_id):
-        from models import Follow, Notification
-        
-        if user_id == current_user.id:
-            return jsonify({'status': 'error', 'message': 'Cannot follow yourself'}), 400
-        
-        user = User.query.get_or_404(user_id)
-        follow = Follow.query.filter_by(follower_id=current_user.id, followed_id=user_id).first()
-        
-        if follow:
-            db.session.delete(follow)
-            action = 'unfollowed'
-        else:
-            new_follow = Follow(follower_id=current_user.id, followed_id=user_id)
-            db.session.add(new_follow)
-            action = 'followed'
+        try:
+            from models import Follow, Notification
             
-            # Create notification
-            notif = Notification(
-                user_id=user_id,
-                type='follow',
-                message=f'{current_user.username} started following you'
-            )
-            db.session.add(notif)
-        
-        db.session.commit()
-        followers_count = Follow.query.filter_by(followed_id=user_id).count()
-        return jsonify({'status': 'success', 'action': action, 'followers_count': followers_count})
+            if user_id == current_user.id:
+                return jsonify({'status': 'error', 'message': 'Cannot follow yourself'}), 400
+            
+            user = User.query.get_or_404(user_id)
+            follow = Follow.query.filter_by(follower_id=current_user.id, followed_id=user_id).first()
+            
+            if follow:
+                db.session.delete(follow)
+                action = 'unfollowed'
+            else:
+                new_follow = Follow(follower_id=current_user.id, followed_id=user_id)
+                db.session.add(new_follow)
+                action = 'followed'
+                
+                # Create notification
+                notif = Notification.create_notification(
+                    user_id=user_id,
+                    notif_type='follow',
+                    message=f'{current_user.username} started following you'
+                )
+                if notif:
+                    db.session.add(notif)
+            
+            db.session.commit()
+            followers_count = Follow.query.filter_by(followed_id=user_id).count()
+            logger.info(f"User {current_user.username} {action} user {user.username}")
+            return jsonify({'status': 'success', 'action': action, 'followers_count': followers_count})
+        except Exception as e:
+            logger.error(f"Error in toggle_follow route: {str(e)}")
+            db.session.rollback()
+            return jsonify({'status': 'error', 'message': 'Failed to toggle follow'}), 500
     
     @app.route('/user/<int:user_id>/followers')
     @login_required
@@ -868,18 +1268,89 @@ def create_app():
     @app.route('/search', methods=['GET'])
     @login_required
     def search():
-        query = request.args.get('q', '').strip()
-        poems = []
-        if query:
-            # Search in title, content, AND author username
-            poems = Poem.query.join(User).filter(
-                db.or_(
-                    Poem.title.ilike(f'%{query}%'),
-                    Poem.content.ilike(f'%{query}%'),
-                    User.username.ilike(f'%{query}%')
-                )
-            ).order_by(Poem.created_at.desc()).all()
-        return render_template('search.html', poems=poems, query=query)
+        try:
+            query = request.args.get('q', '').strip()
+            mood_filter = request.args.get('mood', '').strip()
+            theme_filter = request.args.get('theme', '').strip()
+            category_filter = request.args.get('category', '').strip()
+            poet_filter = request.args.get('poet', '').strip()
+            sort_by = request.args.get('sort', 'recent')  # recent, popular, oldest
+            
+            poems = []
+            
+            if query or mood_filter or theme_filter or category_filter or poet_filter:
+                # Build query
+                search_query = Poem.query.join(User)
+                
+                # Text search
+                if query:
+                    if len(query) > 200:
+                        query = query[:200]
+                    search_query = search_query.filter(
+                        db.or_(
+                            Poem.title.ilike(f'%{query}%'),
+                            Poem.content.ilike(f'%{query}%'),
+                            User.username.ilike(f'%{query}%')
+                        )
+                    )
+                
+                # Mood filter
+                if mood_filter:
+                    search_query = search_query.filter(Poem.mood.ilike(f'%{mood_filter}%'))
+                
+                # Theme filter
+                if theme_filter:
+                    search_query = search_query.filter(Poem.theme.ilike(f'%{theme_filter}%'))
+                
+                # Category filter
+                if category_filter:
+                    search_query = search_query.filter(Poem.category.ilike(f'%{category_filter}%'))
+                
+                # Poet filter
+                if poet_filter:
+                    search_query = search_query.filter(User.username.ilike(f'%{poet_filter}%'))
+                
+                # Sorting
+                if sort_by == 'popular':
+                    # Sort by like count (requires subquery)
+                    from models import Like
+                    like_counts = db.session.query(
+                        Like.poem_id,
+                        db.func.count(Like.id).label('like_count')
+                    ).group_by(Like.poem_id).subquery()
+                    
+                    search_query = search_query.outerjoin(like_counts, Poem.id == like_counts.c.poem_id)
+                    search_query = search_query.order_by(db.desc(like_counts.c.like_count))
+                elif sort_by == 'oldest':
+                    search_query = search_query.order_by(Poem.created_at.asc())
+                else:  # recent
+                    search_query = search_query.order_by(Poem.created_at.desc())
+                
+                poems = search_query.limit(100).all()
+            
+            # Get available filter options
+            moods = db.session.query(Poem.mood).filter(Poem.mood.isnot(None)).distinct().all()
+            themes = db.session.query(Poem.theme).filter(Poem.theme.isnot(None)).distinct().all()
+            categories = db.session.query(Poem.category).filter(Poem.category.isnot(None)).distinct().all()
+            
+            moods = [m[0] for m in moods if m[0]]
+            themes = [t[0] for t in themes if t[0]]
+            categories = [c[0] for c in categories if c[0]]
+            
+            return render_template('search.html', 
+                                 poems=poems, 
+                                 query=query,
+                                 mood_filter=mood_filter,
+                                 theme_filter=theme_filter,
+                                 category_filter=category_filter,
+                                 poet_filter=poet_filter,
+                                 sort_by=sort_by,
+                                 moods=moods,
+                                 themes=themes,
+                                 categories=categories)
+        except Exception as e:
+            logger.error(f"Error in search route: {str(e)}")
+            return render_template('search.html', poems=[], query='', error='Search failed')
     
     @app.route('/discover')
     @login_required
@@ -887,6 +1358,20 @@ def create_app():
         from models import Follow
         import random
         
+        mood = request.args.get('mood', '')
+        
+        if mood:
+            # Mood-based discovery
+            poems = Poem.query.filter(
+                Poem.mood.ilike(f'%{mood}%')
+            ).order_by(Poem.created_at.desc()).limit(50).all()
+            
+            # Shuffle for variety
+            random.shuffle(poems)
+            
+            return render_template('discover.html', poems=poems[:20], selected_mood=mood, is_mood_discovery=True)
+        
+        # Regular user discovery
         # Get users current user already follows
         following_ids = [f.followed_id for f in Follow.query.filter_by(follower_id=current_user.id).all()]
         following_ids.append(current_user.id)  # Exclude self
@@ -911,18 +1396,53 @@ def create_app():
         for user in suggested_users[:10]:  # Limit to 10 suggestions
             user.recent_poems = Poem.query.filter_by(user_id=user.id, is_classic=False).order_by(Poem.created_at.desc()).limit(3).all()
         
-        return render_template('discover.html', suggested_users=suggested_users[:10])
+        # Get available moods for mood discovery
+        moods = db.session.query(Poem.mood).filter(Poem.mood.isnot(None)).distinct().all()
+        available_moods = [m[0] for m in moods if m[0]]
+        
+        return render_template('discover.html', suggested_users=suggested_users[:10], available_moods=available_moods)
+    
+    @app.route('/themes')
+    @login_required
+    def themes():
+        """Thematic channels - browse poems by theme"""
+        try:
+            theme = request.args.get('theme', '')
+            
+            # Get all available themes
+            themes = db.session.query(Poem.theme).filter(Poem.theme.isnot(None)).distinct().all()
+            available_themes = [t[0] for t in themes if t[0]]
+            
+            poems = []
+            if theme:
+                poems = Poem.query.filter(
+                    Poem.theme.ilike(f'%{theme}%')
+                ).order_by(Poem.created_at.desc()).limit(50).all()
+            
+            return render_template('themes.html', poems=poems, available_themes=available_themes, selected_theme=theme)
+        except Exception as e:
+            logger.error(f"Error in themes route: {str(e)}")
+            return render_template('themes.html', poems=[], available_themes=[], selected_theme='', error='Failed to load themes')
     
     @app.route('/notifications')
     @login_required
     def notifications():
-        from models import Notification
-        notifs = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.created_at.desc()).all()
-        # Mark as read
-        for notif in notifs:
-            notif.is_read = True
-        db.session.commit()
-        return render_template('notifications.html', notifications=notifs)
+        try:
+            from models import Notification
+            notifs = Notification.query.filter_by(
+                user_id=current_user.id
+            ).order_by(Notification.created_at.desc()).limit(100).all()  # Limit for performance
+            
+            # Mark as read
+            for notif in notifs:
+                notif.is_read = True
+            db.session.commit()
+            
+            return render_template('notifications.html', notifications=notifs)
+        except Exception as e:
+            logger.error(f"Error in notifications route: {str(e)}")
+            db.session.rollback()
+            return render_template('notifications.html', notifications=[], error='Failed to load notifications')
     
     @app.route('/notifications/unread-count')
     @login_required
@@ -939,10 +1459,13 @@ def create_app():
             from datetime import datetime
             
             data = request.get_json()
+            if not data:
+                return jsonify({'status': 'error', 'message': 'Invalid request'}), 400
+            
             ip_address = request.remote_addr
             user_agent = data.get('userAgent', '')[:255]
             referrer = data.get('referrer', '')[:255]
-            nickname = data.get('nickname', '')  # Get nickname from URL parameter
+            nickname = data.get('nickname', '')[:100] if data.get('nickname') else None
             source = 'instagram'
             
             # Check if visitor exists
@@ -959,7 +1482,7 @@ def create_app():
             else:
                 # Create new visitor
                 visitor = Visitor(
-                    nickname=nickname if nickname else None,
+                    nickname=nickname,
                     source=source,
                     ip_address=ip_address,
                     user_agent=user_agent,
@@ -970,39 +1493,49 @@ def create_app():
             db.session.commit()
             return jsonify({'status': 'success'})
         except Exception as e:
-            print(f"Error tracking Instagram visitor: {e}")
+            logger.error(f"Error tracking Instagram visitor: {str(e)}")
             db.session.rollback()
-            return jsonify({'status': 'error'}), 500
+            return jsonify({'status': 'error', 'message': 'Tracking failed'}), 500
     
     @app.route('/api/check-new-notifications')
     @login_required
     def check_new_notifications():
         """API endpoint for desktop notifications - returns unread notifications"""
-        from models import Notification
-        
-        # Get unread notifications
-        notifications = Notification.query.filter_by(
-            user_id=current_user.id,
-            is_read=False
-        ).order_by(Notification.created_at.desc()).limit(5).all()
-        
-        # Convert to JSON
-        notif_list = [{
-            'id': n.id,
-            'type': n.type,
-            'message': n.message,
-            'created_at': n.created_at.isoformat()
-        } for n in notifications]
-        
-        return jsonify({'notifications': notif_list})
+        try:
+            from models import Notification
+            
+            # Get unread notifications
+            notifications = Notification.query.filter_by(
+                user_id=current_user.id,
+                is_read=False
+            ).order_by(Notification.created_at.desc()).limit(5).all()
+            
+            # Convert to JSON
+            notif_list = [{
+                'id': n.id,
+                'type': n.type,
+                'message': n.message,
+                'created_at': n.created_at.isoformat()
+            } for n in notifications]
+            
+            return jsonify({'notifications': notif_list})
+        except Exception as e:
+            logger.error(f"Error in check_new_notifications route: {str(e)}")
+            return jsonify({'notifications': []}), 500
     
     @app.route('/mark-tutorial-seen', methods=['POST'])
     @login_required
     def mark_tutorial_seen():
         """Mark that user has seen the onboarding tutorial"""
-        current_user.has_seen_tutorial = True
-        db.session.commit()
-        return jsonify({'status': 'success'})
+        try:
+            current_user.has_seen_tutorial = True
+            db.session.commit()
+            logger.info(f"Tutorial marked as seen for user: {current_user.username}")
+            return jsonify({'status': 'success'})
+        except Exception as e:
+            logger.error(f"Error in mark_tutorial_seen route: {str(e)}")
+            db.session.rollback()
+            return jsonify({'status': 'error', 'message': 'Failed to update tutorial status'}), 500
     
     @app.route('/chat-with-poet')
     @login_required
@@ -1012,12 +1545,27 @@ def create_app():
     @app.route('/chat', methods=['POST'])
     @login_required
     def chat():
-        data = request.get_json()
-        user_message = data.get('message', '')
-        poet = current_user.favorite_poet
-        
-        # Poet personalities - Keep responses SHORT and ANSWER THE QUESTION DIRECTLY
-        poet_prompts = {
+        try:
+            data = request.get_json()
+            if not data:
+                return jsonify({'response': 'Invalid request'}), 400
+            
+            user_message = data.get('message', '').strip()
+            
+            if not user_message:
+                return jsonify({'response': 'Please enter a message'})
+            
+            # Limit message length
+            if len(user_message) > 500:
+                return jsonify({'response': 'Message too long. Please keep it under 500 characters.'})
+            
+            poet = current_user.favorite_poet
+            
+            if not poet:
+                return jsonify({'response': 'Please set your favorite poet in settings first.'})
+            
+            # Poet personalities - Keep responses SHORT and ANSWER THE QUESTION DIRECTLY
+            poet_prompts = {
             'Shakespeare': f"You are William Shakespeare (1564-1616). Answer questions DIRECTLY and FACTUALLY first, then add personality. Keep it SHORT (2-3 sentences). User asks: '{user_message}'",
             'Rumi': f"You are Rumi (1207-1273), Persian Sufi mystic. Answer questions DIRECTLY and FACTUALLY first, then add wisdom. Keep it SHORT (2-3 sentences). User asks: '{user_message}'",
             'Emily Dickinson': f"You are Emily Dickinson (1830-1886) in an educational historical conversation. Answer questions DIRECTLY and FACTUALLY about your life. You were reclusive, never married, had a close relationship with Susan Gilbert (your sister-in-law). You wrote passionate letters to her. Died 1886 in Amherst. Keep it SHORT (2-3 sentences). User asks: '{user_message}'",
@@ -1028,62 +1576,87 @@ def create_app():
             'John Keats': f"You are John Keats (1795-1821). Answer questions DIRECTLY and FACTUALLY first. You loved Fanny Brawne, died of tuberculosis at 25 in Rome, 1821. Keep it SHORT (2-3 sentences). User asks: '{user_message}'",
             'Percy Shelley': f"You are Percy Bysshe Shelley (1792-1822). Answer questions DIRECTLY and FACTUALLY first. You married Mary Shelley (Frankenstein author), drowned in sailing accident 1822. Keep it SHORT (2-3 sentences). User asks: '{user_message}'",
             'Robert Burns': f"You are Robert Burns (1759-1796). Answer questions DIRECTLY and FACTUALLY first. You were a Scottish farmer-poet, had many loves and children, died 1796. Keep it SHORT (2-3 sentences). User asks: '{user_message}'"
-        }
-        
-        prompt = poet_prompts.get(poet, f"You are a wise poet. Respond thoughtfully to: {user_message}")
-        
-        try:
-            # Call Ollama API
-            response = requests.post('http://localhost:11434/api/generate',
-                json={
-                    'model': 'llama3.2:1b',
-                    'prompt': prompt,
-                    'stream': False
-                })
+            }
             
-            if response.status_code == 200:
-                ai_response = response.json()['response']
-                return jsonify({'response': ai_response})
-            else:
-                return jsonify({'response': 'Alas, I seem to have lost my voice momentarily. Please try again.'})
+            prompt = poet_prompts.get(poet, f"You are a wise poet. Respond thoughtfully to: {user_message}")
+            
+            try:
+                # Call Ollama API
+                response = requests.post('http://localhost:11434/api/generate',
+                    json={
+                        'model': 'llama3.2:1b',
+                        'prompt': prompt,
+                        'stream': False
+                    },
+                    timeout=30)
+                
+                if response.status_code == 200:
+                    ai_response = response.json()['response']
+                    return jsonify({'response': ai_response})
+                else:
+                    logger.warning(f"Ollama API returned status {response.status_code}")
+                    return jsonify({'response': 'Alas, I seem to have lost my voice momentarily. Please try again.'})
+            except requests.exceptions.Timeout:
+                logger.error("Ollama API timeout")
+                return jsonify({'response': 'The poet is taking too long to respond. Please try again.'})
+            except requests.exceptions.ConnectionError:
+                logger.error("Cannot connect to Ollama")
+                return jsonify({'response': 'My connection to the muse has been interrupted. Ensure Ollama is running.'})
+            except Exception as e:
+                logger.error(f"Error calling Ollama API: {str(e)}")
+                return jsonify({'response': 'An error occurred while connecting to the poet.'})
         except Exception as e:
-            return jsonify({'response': 'My connection to the muse has been interrupted. Ensure Ollama is running.'})
+            logger.error(f"Error in chat route: {str(e)}")
+            return jsonify({'response': 'An unexpected error occurred'}), 500
     
     with app.app_context():
-        db.create_all()
-        
-        # Auto-seed database if empty
-        if Poem.query.count() == 0:
-            from seed_poems import FAMOUS_POEMS
-            from werkzeug.security import generate_password_hash
+        try:
+            db.create_all()
             
-            for poet_name, poems in FAMOUS_POEMS.items():
-                poet_user = User.query.filter_by(username=poet_name).first()
+            # Auto-seed database if empty
+            if Poem.query.count() == 0:
+                logger.info("Database is empty. Auto-seeding with classic poems...")
+                from seed_poems import FAMOUS_POEMS
+                from werkzeug.security import generate_password_hash
                 
-                if not poet_user:
-                    poet_user = User(
-                        username=poet_name,
-                        email=f'{poet_name.lower().replace(" ", "")}@poetryvault.com',
-                        password_hash=generate_password_hash('classic_poet_2024'),
-                        age=None,
-                        favorite_poet=poet_name,
-                        is_admin=False
-                    )
-                    db.session.add(poet_user)
-                    db.session.flush()
+                for poet_name, poems in FAMOUS_POEMS.items():
+                    try:
+                        poet_user = User.query.filter_by(username=poet_name).first()
+                        
+                        if not poet_user:
+                            poet_user = User(
+                                username=poet_name,
+                                email=f'{poet_name.lower().replace(" ", "")}@poetryvault.com',
+                                password_hash=generate_password_hash('classic_poet_2024'),
+                                age=None,
+                                favorite_poet=poet_name,
+                                is_admin=False
+                            )
+                            db.session.add(poet_user)
+                            db.session.flush()
+                        
+                        for poem_data in poems:
+                            try:
+                                poem = Poem(
+                                    title=poem_data['title'][:200],
+                                    content=poem_data['content'][:50000],
+                                    category=poem_data.get('category', 'general'),
+                                    user_id=poet_user.id,
+                                    is_classic=True
+                                )
+                                db.session.add(poem)
+                            except Exception as e:
+                                logger.error(f"Error adding poem {poem_data.get('title', 'Unknown')}: {str(e)}")
+                                continue
+                    except Exception as e:
+                        logger.error(f"Error processing poet {poet_name}: {str(e)}")
+                        continue
                 
-                for poem_data in poems:
-                    poem = Poem(
-                        title=poem_data['title'],
-                        content=poem_data['content'],
-                        category=poem_data.get('category', 'general'),
-                        user_id=poet_user.id,
-                        is_classic=True
-                    )
-                    db.session.add(poem)
-            
-            db.session.commit()
-            print("✅ Database auto-seeded with classic poems!")
+                db.session.commit()
+                logger.info("✅ Database auto-seeded with classic poems!")
+        except Exception as e:
+            logger.error(f"Error during database initialization: {str(e)}")
+            db.session.rollback()
     
     return app
 
