@@ -1879,6 +1879,76 @@ Try registering now at: /register
             db.session.rollback()
             return f"<pre>Cleanup Error: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
     
+    # Recreate poet accounts route
+    @app.route('/recreate-poet-accounts')
+    def recreate_poet_accounts():
+        """Recreate poet accounts for search functionality but hide them from user lists"""
+        try:
+            classic_poet_names = [
+                'Shakespeare', 'Rumi', 'Emily Dickinson', 'Edgar Allan Poe', 
+                'Walt Whitman', 'Lord Byron', 'William Wordsworth', 
+                'John Keats', 'Percy Shelley', 'Robert Burns',
+                'Robert Frost', 'Maya Angelou', 'Langston Hughes',
+                'المتنبي', 'قيس بن الملوح'
+            ]
+            
+            created_poets = []
+            
+            for poet_name in classic_poet_names:
+                # Check if poet already exists
+                existing_poet = User.query.filter_by(username=poet_name).first()
+                if not existing_poet:
+                    # Create poet account
+                    poet = User(
+                        username=poet_name,
+                        email=f"{poet_name.lower().replace(' ', '').replace('المتنبي', 'almutanabbi').replace('قيس بن الملوح', 'majnunlayla')}@poetryvault.com",
+                        is_admin=False
+                    )
+                    poet.set_password('poet123')
+                    db.session.add(poet)
+                    created_poets.append(poet_name)
+            
+            db.session.commit()
+            
+            # Update poems to use correct poet user_ids
+            updated_poems = 0
+            from seed_poems import FAMOUS_POEMS
+            
+            for poet_name, poems in FAMOUS_POEMS.items():
+                poet_user = User.query.filter_by(username=poet_name).first()
+                if poet_user:
+                    # Update poems by this poet
+                    poet_poems = Poem.query.filter_by(is_classic=True).all()
+                    for poem in poet_poems:
+                        # Match poem to poet by checking if title exists in poet's poems
+                        for poem_data in poems:
+                            if poem.title == poem_data['title']:
+                                poem.user_id = poet_user.id
+                                updated_poems += 1
+                                break
+            
+            db.session.commit()
+            
+            return f"""<pre>
+POET ACCOUNTS RECREATED
+
+Created Poets: {len(created_poets)}
+{chr(10).join(f"- {poet}" for poet in created_poets)}
+
+Updated Poems: {updated_poems}
+
+Note: These poet accounts are hidden from user lists
+but allow search functionality to work properly.
+
+Search should now work for poet names!
+Try searching at: /search
+</pre>"""
+            
+        except Exception as e:
+            import traceback
+            db.session.rollback()
+            return f"<pre>Error recreating poets: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
+    
     return app
 
 app = create_app()

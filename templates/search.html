@@ -31,7 +31,7 @@
         .btn-filter:hover { background: #b8956a; }
         .btn-clear { padding: 8px 16px; background: transparent; color: #d4af37; border: 1px solid #d4af37; border-radius: 6px; cursor: pointer; font-size: 14px; text-decoration: none; }
         .btn-clear:hover { background: rgba(212, 175, 55, 0.1); }
-        .btn-back { padding: 8px 16px; background: transparent; color: #d4af37; border: 1px solid #d4af37; border-radius: 6px; text-decoration: none; font-size: 12px; black-space: nowrap; }
+        .btn-back { padding: 8px 16px; background: transparent; color: #d4af37; border: 1px solid #d4af37; border-radius: 6px; text-decoration: none; font-size: 12px; white-space: nowrap; }
         .btn-back:hover { background: rgba(212, 175, 55, 0.1); }
         .container { max-width: 700px; margin: 40px auto; padding: 0 20px; }
         .search-prompt { text-align: center; padding: 80px 30px; color: #8e7a5a; }
@@ -69,6 +69,12 @@
         <!-- Advanced Filters -->
         <div class="filters">
             <h3>Advanced Search</h3>
+            <div class="filter-help" style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px; font-size: 13px; color: #8e7a5a;">
+                <strong style="color: #d4af37;">Filter Guide:</strong><br>
+                <strong>Category:</strong> Main subject (Love, Nature, Death, etc.) <br>
+                <strong>Theme:</strong> Deeper meaning (Hope, Loss, Rebellion, etc.) <br>
+                <strong>Mood:</strong> Emotional feeling (Happy, Sad, Contemplative, etc.)
+            </div>
             <form action="/search" method="GET" id="advancedSearchForm">
                 <input type="hidden" name="q" value="{{ query }}">
                 <div class="filter-row">
