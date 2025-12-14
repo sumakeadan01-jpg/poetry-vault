@@ -1743,6 +1743,54 @@ Try registering at: /register
             db.session.rollback()
             return f"<pre>❌ Schema Fix Error: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
     
+    # Cleanup route to delete specific emails
+    @app.route('/cleanup-emails-sumakeadan')
+    def cleanup_emails():
+        """Delete sumakeadan01 and sumakeadan10 email accounts"""
+        try:
+            from sqlalchemy import text
+            
+            # Delete users with these specific emails
+            emails_to_delete = ['sumakeadan01@gmail.com', 'sumakeadan10@gmail.com']
+            deleted_users = []
+            
+            for email in emails_to_delete:
+                user = User.query.filter_by(email=email).first()
+                if user:
+                    deleted_users.append(f"Deleted: {user.username} ({user.email})")
+                    db.session.delete(user)
+                else:
+                    deleted_users.append(f"Not found: {email}")
+            
+            db.session.commit()
+            
+            # Also check for similar usernames
+            usernames_to_check = ['sumakeadan', 'sumakeadan01', 'sumakeadan10']
+            for username in usernames_to_check:
+                user = User.query.filter_by(username=username).first()
+                if user:
+                    deleted_users.append(f"Deleted username: {user.username} ({user.email})")
+                    db.session.delete(user)
+            
+            db.session.commit()
+            
+            return f"""<pre>
+🧹 EMAIL CLEANUP COMPLETED
+
+{chr(10).join(deleted_users)}
+
+✅ Both sumakeadan01@gmail.com and sumakeadan10@gmail.com accounts removed
+✅ Related usernames also cleaned up
+
+🎉 You can now register with sumakeadan01@gmail.com!
+Try registering at: /register
+</pre>"""
+            
+        except Exception as e:
+            import traceback
+            db.session.rollback()
+            return f"<pre>❌ Cleanup Error: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
+    
     return app
 
 app = create_app()
