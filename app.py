@@ -1785,20 +1785,20 @@ Try registering at: /register
             db.session.commit()
             
             return f"""<pre>
-🔄 COMPLETE DATABASE RESET COMPLETED!
+COMPLETE DATABASE RESET COMPLETED
 
-✅ Dropped old database (deleted everything)
-✅ Created fresh database with correct schema
-✅ Created system user for poems
-✅ Added {poems_added} classic poems
-✅ Ready for your registration
+- Dropped old database (deleted everything)
+- Created fresh database with correct schema
+- Created system user for poems
+- Added {poems_added} classic poems
+- Ready for your registration
 
-📊 Database Status:
+Database Status:
 - Users: 1 (system user only)
 - Poems: {poems_added} (all classic poets)
-- Schema: ✅ Latest version with all features
+- Schema: Latest version with all features
 
-🎉 READY FOR REGISTRATION!
+READY FOR REGISTRATION
 - No email conflicts
 - No old users
 - Fresh start
