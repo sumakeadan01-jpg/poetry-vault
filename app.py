@@ -1743,48 +1743,68 @@ Try registering at: /register
             db.session.rollback()
             return f"<pre>❌ Schema Fix Error: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
     
-    # Cleanup route to delete specific emails
-    @app.route('/cleanup-emails-sumakeadan')
-    def cleanup_emails():
-        """Delete sumakeadan01 and sumakeadan10 email accounts"""
+    # Complete user cleanup route
+    @app.route('/complete-user-cleanup')
+    def complete_user_cleanup():
+        """Show all users and delete all real users (keep only poets)"""
         try:
-            from sqlalchemy import text
+            # List of classic poet names to keep
+            classic_poet_names = [
+                'Shakespeare', 'Rumi', 'Emily Dickinson', 'Edgar Allan Poe', 
+                'Walt Whitman', 'Lord Byron', 'William Wordsworth', 
+                'John Keats', 'Percy Shelley', 'Robert Burns',
+                'Robert Frost', 'Maya Angelou', 'Langston Hughes',
+                'المتنبي', 'قيس بن الملوح'
+            ]
             
-            # Delete users with these specific emails
-            emails_to_delete = ['sumakeadan01@gmail.com', 'sumakeadan10@gmail.com']
-            deleted_users = []
+            # Get all users
+            all_users = User.query.all()
             
-            for email in emails_to_delete:
-                user = User.query.filter_by(email=email).first()
-                if user:
-                    deleted_users.append(f"Deleted: {user.username} ({user.email})")
-                    db.session.delete(user)
+            # Separate real users from poets
+            real_users = []
+            poets = []
+            
+            for user in all_users:
+                if user.username in classic_poet_names:
+                    poets.append(user)
                 else:
-                    deleted_users.append(f"Not found: {email}")
+                    real_users.append(user)
+            
+            # Show what we found
+            user_list = []
+            user_list.append(f"📊 FOUND {len(all_users)} TOTAL USERS:")
+            user_list.append("")
+            
+            if real_users:
+                user_list.append(f"👤 REAL USERS TO DELETE ({len(real_users)}):")
+                for user in real_users:
+                    user_list.append(f"  • {user.username} - {user.email}")
+                user_list.append("")
+            
+            user_list.append(f"🎭 CLASSIC POETS TO KEEP ({len(poets)}):")
+            for poet in poets:
+                user_list.append(f"  • {poet.username}")
+            
+            # Delete all real users
+            deleted_count = 0
+            for user in real_users:
+                user_list.append(f"🗑️ Deleting: {user.username} ({user.email})")
+                db.session.delete(user)
+                deleted_count += 1
             
             db.session.commit()
             
-            # Also check for similar usernames
-            usernames_to_check = ['sumakeadan', 'sumakeadan01', 'sumakeadan10']
-            for username in usernames_to_check:
-                user = User.query.filter_by(username=username).first()
-                if user:
-                    deleted_users.append(f"Deleted username: {user.username} ({user.email})")
-                    db.session.delete(user)
+            user_list.append("")
+            user_list.append(f"✅ CLEANUP COMPLETED!")
+            user_list.append(f"✅ Deleted {deleted_count} real users")
+            user_list.append(f"✅ Kept {len(poets)} classic poets")
+            user_list.append("")
+            user_list.append("🎉 Database is now clean!")
+            user_list.append("🎉 You can register with ANY email now!")
+            user_list.append("")
+            user_list.append("Try registering at: /register")
             
-            db.session.commit()
-            
-            return f"""<pre>
-🧹 EMAIL CLEANUP COMPLETED
-
-{chr(10).join(deleted_users)}
-
-✅ Both sumakeadan01@gmail.com and sumakeadan10@gmail.com accounts removed
-✅ Related usernames also cleaned up
-
-🎉 You can now register with sumakeadan01@gmail.com!
-Try registering at: /register
-</pre>"""
+            return f"<pre>{chr(10).join(user_list)}</pre>"
             
         except Exception as e:
             import traceback
