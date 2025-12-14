@@ -1754,6 +1754,16 @@ Try registering at: /register
             # Create all tables with correct schema
             db.create_all()
             
+            # Create a system user for poems
+            system_user = User(
+                username='System',
+                email='system@poetryvault.com',
+                is_admin=True
+            )
+            system_user.set_password('system123')
+            db.session.add(system_user)
+            db.session.commit()  # Commit user first to get ID
+            
             # Import and seed poems
             from seed_poems import FAMOUS_POEMS
             
@@ -1766,7 +1776,7 @@ Try registering at: /register
                         category=poem_data.get('category', 'general'),
                         mood=poem_data.get('mood'),
                         theme=poem_data.get('theme'),
-                        user_id=1,  # Temporary, will be updated when users register
+                        user_id=system_user.id,  # Use system user ID
                         is_classic=True
                     )
                     db.session.add(poem)
@@ -1779,11 +1789,12 @@ Try registering at: /register
 
 ✅ Dropped old database (deleted everything)
 ✅ Created fresh database with correct schema
+✅ Created system user for poems
 ✅ Added {poems_added} classic poems
-✅ Zero users (fresh start)
+✅ Ready for your registration
 
 📊 Database Status:
-- Users: 0 (ready for your registration)
+- Users: 1 (system user only)
 - Poems: {poems_added} (all classic poets)
 - Schema: ✅ Latest version with all features
 
@@ -1845,19 +1856,19 @@ Try registering now at: /register
             # Delete all real users
             deleted_count = 0
             for user in real_users:
-                user_list.append(f"🗑️ Deleting: {user.username} ({user.email})")
+                user_list.append(f" Deleting: {user.username} ({user.email})")
                 db.session.delete(user)
                 deleted_count += 1
             
             db.session.commit()
             
             user_list.append("")
-            user_list.append(f"✅ CLEANUP COMPLETED!")
-            user_list.append(f"✅ Deleted {deleted_count} real users")
-            user_list.append(f"✅ Kept {len(poets)} classic poets")
+            user_list.append(f"CLEANUP COMPLETED!")
+            user_list.append(f"Deleted {deleted_count} real users")
+            user_list.append(f"Kept {len(poets)} classic poets")
             user_list.append("")
-            user_list.append("🎉 Database is now clean!")
-            user_list.append("🎉 You can register with ANY email now!")
+            user_list.append("Database is now clean!")
+            user_list.append("You can register with ANY email now!")
             user_list.append("")
             user_list.append("Try registering at: /register")
             
@@ -1866,7 +1877,7 @@ Try registering now at: /register
         except Exception as e:
             import traceback
             db.session.rollback()
-            return f"<pre>❌ Cleanup Error: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
+            return f"<pre>Cleanup Error: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
     
     return app
 
