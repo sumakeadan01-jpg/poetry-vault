@@ -120,31 +120,31 @@ def import_from_poetrydb(our_poet_name, api_poet_name, max_poems=50):
         # Find poet in database
         poet = User.query.filter_by(username=our_poet_name).first()
         if not poet:
-            print(f"❌ Poet '{our_poet_name}' not found in database!")
+            print(f" Poet '{our_poet_name}' not found in database!")
             return 0
         
         # Fetch from API with retry logic
-        print(f"🔍 Fetching poems for {our_poet_name}...")
+        print(f" Fetching poems for {our_poet_name}...")
         url = f"https://poetrydb.org/author/{api_poet_name}"
         
         response = fetch_with_retry(url)
         if not response:
-            print(f"❌ Failed to fetch data after {MAX_RETRIES} attempts")
+            print(f" Failed to fetch data after {MAX_RETRIES} attempts")
             return 0
         
         try:
             poems_data = response.json()
         except ValueError as e:
-            print(f"❌ Invalid JSON response: {str(e)}")
+            print(f" Invalid JSON response: {str(e)}")
             return 0
         
         # Check for error response
         if isinstance(poems_data, dict) and 'status' in poems_data:
-            print(f"❌ No poems found for {our_poet_name}")
+            print(f" No poems found for {our_poet_name}")
             return 0
         
         if not isinstance(poems_data, list):
-            print(f"❌ Unexpected response format")
+            print(f" Unexpected response format")
             return 0
         
         added = 0
@@ -208,12 +208,12 @@ def import_from_poetrydb(our_poet_name, api_poet_name, max_poems=50):
                     try:
                         db.session.commit()
                     except Exception as e:
-                        print(f"  ❌ Commit error: {str(e)}")
+                        print(f"  Commit error: {str(e)}")
                         db.session.rollback()
                         errors += 1
                 
             except Exception as e:
-                print(f"  ❌ Error processing poem #{i}: {str(e)}")
+                print(f"  Error processing poem #{i}: {str(e)}")
                 errors += 1
                 continue
         
@@ -221,7 +221,7 @@ def import_from_poetrydb(our_poet_name, api_poet_name, max_poems=50):
         try:
             db.session.commit()
         except Exception as e:
-            print(f"❌ Final commit error: {str(e)}")
+            print(f" Final commit error: {str(e)}")
             db.session.rollback()
         
         print(f"\n🎉 Complete for {our_poet_name}!")
@@ -286,5 +286,5 @@ if __name__ == '__main__':
         print("\n\n⚠️  Import interrupted by user")
         sys.exit(1)
     except Exception as e:
-        print(f"\n\n❌ Fatal error: {str(e)}")
+        print(f"\n\n Fatal error: {str(e)}")
         sys.exit(1)
