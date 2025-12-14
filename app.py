@@ -1695,6 +1695,20 @@ Sitemap: {request.url_root}sitemap.xml"""
             logger.error(f"Error during database initialization: {str(e)}")
             db.session.rollback()
     
+    # Migration route for Render (remove after first deployment)
+    @app.route('/migrate-db-render-setup')
+    def migrate_db():
+        """One-time migration for Render deployment"""
+        try:
+            from migrate_render_db import migrate_render_database
+            success = migrate_render_database()
+            if success:
+                return "✅ Database migration completed! Registration should work now."
+            else:
+                return "❌ Migration failed. Check logs."
+        except Exception as e:
+            return f"❌ Migration error: {str(e)}"
+    
     return app
 
 app = create_app()
