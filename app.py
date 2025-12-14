@@ -1949,6 +1949,85 @@ Try searching at: /search
             db.session.rollback()
             return f"<pre>Error recreating poets: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
     
+    # Add themes and moods to classic poems
+    @app.route('/add-themes-to-poems')
+    def add_themes_to_poems():
+        """Add theme and mood fields to existing classic poems"""
+        try:
+            # Define theme and mood mappings based on categories and content
+            theme_mappings = {
+                'love': ['love', 'romance', 'beauty'],
+                'nature': ['beauty', 'freedom', 'peace'],
+                'death': ['mortality', 'loss', 'grief'],
+                'spirituality': ['wisdom', 'hope', 'faith'],
+                'war': ['conflict', 'sacrifice', 'honor'],
+                'aging': ['mortality', 'wisdom', 'reflection'],
+                'general': ['life', 'wisdom', 'reflection'],
+                'wisdom': ['wisdom', 'knowledge', 'truth'],
+                'pride': ['honor', 'strength', 'identity']
+            }
+            
+            mood_mappings = {
+                'love': ['romantic', 'passionate', 'tender'],
+                'nature': ['peaceful', 'contemplative', 'serene'],
+                'death': ['melancholic', 'somber', 'reflective'],
+                'spirituality': ['hopeful', 'peaceful', 'contemplative'],
+                'war': ['intense', 'dramatic', 'heroic'],
+                'aging': ['nostalgic', 'reflective', 'wise'],
+                'general': ['contemplative', 'thoughtful', 'reflective'],
+                'wisdom': ['contemplative', 'wise', 'thoughtful'],
+                'pride': ['confident', 'strong', 'dignified']
+            }
+            
+            updated_count = 0
+            poems = Poem.query.filter_by(is_classic=True).all()
+            
+            for poem in poems:
+                if not poem.theme and not poem.mood:
+                    category = poem.category or 'general'
+                    
+                    # Assign theme based on category
+                    if category in theme_mappings:
+                        poem.theme = theme_mappings[category][0]  # Use first theme
+                    
+                    # Assign mood based on category
+                    if category in mood_mappings:
+                        poem.mood = mood_mappings[category][0]  # Use first mood
+                    
+                    updated_count += 1
+            
+            db.session.commit()
+            
+            # Get counts for display
+            theme_counts = {}
+            mood_counts = {}
+            
+            for poem in Poem.query.filter_by(is_classic=True).all():
+                if poem.theme:
+                    theme_counts[poem.theme] = theme_counts.get(poem.theme, 0) + 1
+                if poem.mood:
+                    mood_counts[poem.mood] = mood_counts.get(poem.mood, 0) + 1
+            
+            return f"""<pre>
+THEMES AND MOODS ADDED TO CLASSIC POEMS
+
+Updated {updated_count} poems with themes and moods
+
+THEMES AVAILABLE:
+{chr(10).join(f"- {theme}: {count} poems" for theme, count in sorted(theme_counts.items()))}
+
+MOODS AVAILABLE:
+{chr(10).join(f"- {mood}: {count} poems" for mood, count in sorted(mood_counts.items()))}
+
+Thematic Channels should now work!
+Visit: /themes
+</pre>"""
+            
+        except Exception as e:
+            import traceback
+            db.session.rollback()
+            return f"<pre>Error adding themes: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
+    
     return app
 
 app = create_app()
