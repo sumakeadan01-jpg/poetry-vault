@@ -8,7 +8,7 @@ import os
 import sys
 from app import create_app
 from models import db, User, Poem
-from seed_poems import POEMS_DATA
+from seed_poems import FAMOUS_POEMS
 
 def migrate_render_database():
     """Migrate database for Render deployment"""
@@ -26,24 +26,8 @@ def migrate_render_database():
             poem_count = Poem.query.count()
             print(f"📊 Current poems in database: {poem_count}")
             
-            if poem_count == 0:
-                print("📚 Seeding poems...")
-                # Add poems from seed data
-                for poet_name, poems in POEMS_DATA.items():
-                    for poem_data in poems:
-                        poem = Poem(
-                            title=poem_data['title'],
-                            content=poem_data['content'],
-                            category=poem_data.get('category', 'general'),
-                            mood=poem_data.get('mood'),
-                            theme=poem_data.get('theme'),
-                            user_id=1,  # Will be updated when we have users
-                            is_classic=True
-                        )
-                        db.session.add(poem)
-                
-                db.session.commit()
-                print(f"✅ Added {len([p for poems in POEMS_DATA.values() for p in poems])} poems")
+            # The app will auto-seed poems when first user registers
+            print("📚 Poems will be auto-seeded by the app")
             
             # Check users
             user_count = User.query.count()
