@@ -1870,194 +1870,485 @@ It's a happy beat?'''
     ],
     'المتنبي': [
         {
-            'title': 'على قدر أهل العزم',
-            'category': 'wisdom',
-            'content': '''على قدر أهل العزم تأتي العزائم
-وتأتي على قدر الكرام المكارم'''
+            'title': 'أفاعل بي فعال الموكس الزاري',
+            'category': 'satire',
+            'content': '''أفاعِلٌ بي فعالَ الموكِسِ الزاري
+ونحنُ نُسألُ فيما كان من عارِ
+قُل لي بحُرمَةِ من ضيَّعتَ حُرمَتَهُ
+أكان قدرَكَ ذا أم كان مقداري
+لا عشتُ إن رضيَت نفسي ولا رَكِبَت
+رجلٌ سعَيتُ بها في مثلِ دينارِ
+وَليُّكَ اللَهُ لِمْ صيَّرتَني مَثَلاً
+كالمُستَجيرِ من الرمضاءِ بالنارِ''',
+            'translation': '''Do you act upon me as the coward acts
+While we are questioned about what was shameful
+Tell me by the sanctity of one whose sanctity you wasted
+Was this your worth or was it my measure
+I shall not live if my soul is pleased, nor shall I ride
+A man I sought with her for the like of a dinar
+Your guardian is God, why did you make me an example
+Like one seeking refuge from burning heat in fire'''
         },
         {
-            'title': 'الخيل والليل والبيداء',
-            'category': 'pride',
-            'content': '''الخيل والليل والبيداء تعرفني
-والسيف والرمح والقرطاس والقلم'''
+            'title': 'ذي الأرض عما أتاها الأمس غانية',
+            'category': 'nature',
+            'content': '''ذي الأرضُ عمّا أتاها الأمسَ غانِيَةٌ
+وغيرُها كان محتاجاً إلى المَطَرِ
+شقَّ النباتَ عنِ البتسانِ ريِّقُهُمُ
+حَيّياً جارَهُ الميدانَ بالشجرِ
+كأنَّما مُطِرَت فيه صوالجةٌ
+تُطَرِّحُ السدرَ فيه موضِعَ الأُكَرِ''',
+            'translation': '''This earth, what came to it yesterday was beautiful
+While others were in need of rain
+The plants split from the gardens, their saliva
+Greeting their neighbor the field with trees
+As if maces rained upon it
+Throwing the lotus trees in place of the hills'''
         },
         {
-            'title': 'واحر قلباه',
+            'title': 'من الشوق والوجد المبرح أنني',
             'category': 'love',
-            'content': '''واحر قلباه ممن قلبه شبم
-ومن بجسمي وحالي عنده سقم'''
+            'content': '''منَ الشوقِ والوجدِ المُبَرِّحِ أنَّني
+يُمَثَّلُ لي من بعدِ لُقياكَ لُقياكا
+سأسلوا لَذيذَ العيشِ بعدك دائماً
+وأنسى حياةَ النفسِ من قبلِ أنساكا''',
+            'translation': '''From longing and tormenting passion that
+Your meeting is imagined to me after meeting you
+I shall forget the sweetness of life after you forever
+And forget the life of the soul before I forget you'''
         },
         {
-            'title': 'أعز مكان في الدنى سرج سابح',
-            'category': 'pride',
-            'content': '''أعز مكان في الدنى سرج سابح
-وخير جليس في الزمان كتاب'''
+            'title': 'هينا فقدت من الرجال بليدا',
+            'category': 'satire',
+            'content': '''هيناً فقدتُ من الرجال بليدا
+من كان عندَ وجوده مَفقودا
+غلَبَ التبَسُّمُ يومَ ماتَ تفجُّعي
+وغدا به رأي الحمامِ سديدا
+يا صاحبَ الجَدَثِ الذي شمَلَ البرييةَ جودُهُ لو كان لؤمُكَ جودا
+قد كنتَ أنتَنَ منه يوم دخولهِ
+ريحاً وأكثرَ في الحياة صديدا''',
+            'translation': '''Easily I lost from men a dull one
+Who was lost even when present
+Smiling overcame my grief the day he died
+And death's judgment became sound
+O owner of the grave whose generosity encompassed creation
+If only your meanness were generosity
+You were more putrid than it on the day of entering it
+In scent and more festering in life'''
         },
         {
-            'title': 'لكل امرئ من دهره شاهدان',
-            'category': 'wisdom',
-            'content': '''لكل امرئ من دهره شاهدان
-فمبلغ عمر ومنتهى أجل'''
+            'title': 'أرى الشطرنج لو كانت رجالا',
+            'category': 'war',
+            'content': '''أرى الشطرنج لو كانت رجالا
+تهزُّ صفائحاً وقناً طِوالا
+لغادرت الثواكل معولاتٍ
+بساحتنا وأطولت القتالا
+ولكني أرى خشباً ضعيفاً
+إذا شهد الوغى لم يَدع آلا
+ولم يُصدِرن حُمراً كُنَّ بيضاً
+ولم يغشين من موت ظلالا
+فلو كنا نحارب مثل هذا
+لباقينا مع الدهر الجبالا''',
+            'translation': '''I see chess, if its pieces were men
+Shaking shields and long spears
+It would leave the bereaved wailing
+In our courtyard and prolong the battle
+But I see weak wood
+When it witnesses war, it leaves no trace
+It does not return red what was white
+Nor does it cover with shadows of death
+If we fought like this
+We would remain with time like mountains'''
         },
         {
-            'title': 'أنا الذي نظر الأعمى إلى أدبي',
-            'category': 'pride',
-            'content': '''أنا الذي نظر الأعمى إلى أدبي
-وأسمعت كلماتي من به صمم'''
+            'title': 'أريك الرضا لو أخفت النفس خافيا',
+            'category': 'satire',
+            'content': '''أُريكَ الرِضا لَو أَخفَتِ النَفسُ خافِيا
+وَما أَنا عَن نَفسي وَلا عَنكَ راضِيا
+أَمَيناً وَإِخلافاً وَغَدراً وَخِسَّةً
+وَجُبناً أَشَخصاً لُحتَ لي أَم مَخازِيا
+تَظُنُّ اِبتِساماتي رَجاءً وَغِبطَةً
+وَما أَنا إِلّا ضاحِكٌ مِن رَجائِيا''',
+            'translation': '''I show you contentment if the soul hid what is hidden
+But I am neither pleased with myself nor with you
+Trustworthiness and betrayal, treachery and baseness
+And cowardice - are these persons you showed me or disgraces?
+You think my smiles are hope and joy
+But I am only laughing at my hopes'''
         },
         {
-            'title': 'إذا غامرت في شرف مروم',
-            'category': 'wisdom',
-            'content': '''إذا غامرت في شرف مروم
-فلا تقنع بما دون النجوم'''
+            'title': 'أحق دار بأن تسمى مباركة',
+            'category': 'praise',
+            'content': '''أَحَقُّ دارٍ بِأَن تُسمى مُبارَكَةً
+دارٌ مُبارَكَةُ المَلكِ الَّذي فيها
+وَأَجدَرُ الدورِ أَن تُسقى بِساكِنِها
+دارٌ غَدا الناسُ يَستَسقونَ أَهليها
+هَذي مَنازِلُكَ الأُخرى نُهَنِّئُها
+فَمَن يَمُرُّ عَلى الأولى يُسَلّيها''',
+            'translation': '''Most deserving house to be called blessed
+Is a house blessed by the king who is in it
+And most worthy of houses to be watered by its inhabitant
+Is a house whose people others seek rain from
+These are your other dwellings we congratulate
+Whoever passes by the first ones consoles them'''
         },
         {
-            'title': 'ومن نكد الدنيا على الحر',
-            'category': 'wisdom',
-            'content': '''ومن نكد الدنيا على الحر أن يرى
-عدوا له ما من صداقته بد'''
+            'title': 'أنا منك بين فضائل ومكارم',
+            'category': 'praise',
+            'content': '''أَنا مِنكَ بَينَ فَضائِلٍ وَمَكارِمٍ
+وَمِنِ اِرتِياحِكَ في غَمامٍ دائِمِ
+وَمِنِ اِحتِقارِكَ كُلَّ ما تَحبو بِهِ
+فيما أُلاحِظُهُ بِعَينَي حالِمِ
+إِنَّ الخَليفَةَ لَم يُسَمِّكَ سَيفَها
+حَتّى بَلاكَ فَكُنتَ عَينَ الصارِمِ''',
+            'translation': '''I am from you among virtues and noble deeds
+And from your comfort in perpetual clouds
+And from your disdain for all you bestow
+In what I observe with a dreamer's eyes
+The Caliph did not name you his sword
+Until he tested you and you became the eye of the blade'''
         },
         {
-            'title': 'أريد من زمان السوء أن يدعني',
-            'category': 'general',
-            'content': '''أريد من زمان السوء أن يدعني
-وكيف يتركني الزمان وما تركته'''
+            'title': 'أما ترى ما أراه أيها الملك',
+            'category': 'praise',
+            'content': '''أَما تَرى ما أَراهُ أَيُّها المَلِكُ
+كَأَنَّنا في سَماءِ مالَها حُبُكُ
+الفَرقَدُ اِبنُكَ وَالمِصباحُ صاحِبُهُ
+وَأَنتَ بَدرُ الدُجى وَالمَجلِسُ الفَلَكُ''',
+            'translation': '''Do you not see what I see, O King
+As if we are in a sky that has no texture
+The Pole Star is your son and the lamp his companion
+And you are the full moon of darkness and the assembly is the sphere'''
         },
         {
-            'title': 'ذو العقل يشقى في النعيم بعقله',
-            'category': 'wisdom',
-            'content': '''ذو العقل يشقى في النعيم بعقله
-وأخو الجهالة في الشقاوة ينعم'''
+            'title': 'لام أناس أبا العشائر في',
+            'category': 'praise',
+            'content': '''لامَ أُناسٌ أَبا العَشائِرِ في
+جودِ يَدَيهِ بِالعَينِ وَالوَرَقِ
+وَإِنَّما قيلَ لِم خُلِقتَ كَذا
+وَخالِقُ الخَلقِ خالِقُ الخُلُقِ
+قالوا أَلَم تَكفِهِ سَماحَتُهُ
+حَتّى بَنى بَيتَهُ عَلى الطُرُقِ''',
+            'translation': '''People blamed Abu Al-Ashair for
+The generosity of his hands with gold and silver
+But it was only said: why were you created thus
+And the Creator of creation is the Creator of character
+They said: was his generosity not enough for him
+That he built his house upon the roads'''
         },
         {
-            'title': 'المجد عوفي إذ عوفيت والكرم',
-            'category': 'pride',
-            'content': '''المجد عوفي إذ عوفيت والكرم
-وزال عنك إلى أعدائك الألم'''
+            'title': 'الصوم والفطر والأعياد والعصر',
+            'category': 'praise',
+            'content': '''الصَومُ وَالفِطرُ وَالأَعيادُ وَالعَصرُ
+مُنيرَةٌ بِكَ حَتّى الشَمسُ وَالقَمَرُ
+تُري الأَهِلَّةَ وَجهاً عَمَّ نائِلُهُ
+فَما يُخَصُّ بِهِ مِن دونِها البَشَرُ
+ما الدَهرُ عِندَكَ إِلّا رَوضَةٌ أُنُفٌ
+يا مَن شَمائِلُهُ في دَهرِهِ زَهَرُ''',
+            'translation': '''Fasting and breaking fast, holidays and afternoon
+Are illuminated by you, even the sun and moon
+You show the crescents a face whose bounty is general
+So humans are not specially favored over them
+Time to you is nothing but a fragrant garden
+O you whose qualities in his time are flowers'''
         },
         {
-            'title': 'لا تشتر العبد إلا والعصا معه',
-            'category': 'wisdom',
-            'content': '''لا تشتر العبد إلا والعصا معه
-إن العبيد لأنجاس مناكيد'''
+            'title': 'بكتب الأنام كتاب ورد',
+            'category': 'praise',
+            'content': '''بِكُتبِ الأَنامِ كِتابٌ وَرَد
+فَدَت يَدَ كاتِبِهِ كُلُّ يَدِ
+يُعَبِّرُ عَمّا لَهُ عِندَنا
+وَيَذكُرُ مِن شَوقِهِ ما نَجِد
+فَأَخرَقَ رائِيَهُ ما رَأى
+وَأَبرَقَ ناقِدَهُ ما اِنتَقَد''',
+            'translation': '''Among the books of people came a book
+May every hand ransom the hand of its writer
+It expresses what he has with us
+And mentions of his longing what we find
+It amazed its reader with what he saw
+And dazzled its critic with what he criticized'''
         },
         {
-            'title': 'وما انتفاع أخي الدنيا بناظره',
-            'category': 'wisdom',
-            'content': '''وما انتفاع أخي الدنيا بناظره
-إذا استوت عنده الأنوار والظلم'''
+            'title': 'وطائرة تتبعها المنايا',
+            'category': 'war',
+            'content': '''وَطائِرَةٍ تَتَبَّعُها المَنايا
+عَلى آثارِها زَجِلُ الجَناحِ
+كَأَنَّ الريشَ مِنهُ في سِهامٍ
+عَلى جَسَدٍ تَجَسَّمَ مِن رِياحِ
+كَأَنَّ رُؤوسَ أَقلامٍ غِلاظٍ
+مُسِحنَ بِريشِ جُؤجُؤَةِ الصِحاحِ''',
+            'translation': '''And a bird that deaths follow
+In its tracks with swift wing
+As if its feathers were in arrows
+Upon a body embodied from winds
+As if thick pen heads
+Were wiped with the feathers of a sound breast'''
         },
         {
-            'title': 'أولى الأسود بأسود السباع',
-            'category': 'pride',
-            'content': '''أولى الأسود بأسود السباع
-وأولى الرجال بذي اللب الرجال'''
-        },
-        {
-            'title': 'يا أعدل الناس إلا في معاملتي',
+            'title': 'واحر قلباه ممن قلبه شبم',
             'category': 'love',
-            'content': '''يا أعدل الناس إلا في معاملتي
-فيك الخصام وأنت الخصم والحكم'''
+            'content': '''وَاحَـرّ قَلْبـاهُ مـمّنْ قَلْبُـهُ شَبِـمُ
+وَمَنْ بجِسْمـي وَحالي عِنـدَهُ سَقَـمُ
+ما لي أُكَتِّمُ حُبًّا قَدْ بَـرَى جَسَـدي
+وَتَدّعي حُبّ سَيفِ الدّوْلـةِ الأُمَـمُ
+إنْ كَـانَ يَجْمَعُنَـا حُـبٌّ لِغُرّتِـهِ
+فَلَيْتَ أنّـا بِقَـدْرِ الحُـبّ نَقْتَسِـمُ''',
+            'translation': '''How burning is my heart for one whose heart is cold
+And my body and condition are sickness to him
+Why do I conceal a love that has worn away my body
+While nations claim to love Sayf al-Dawla
+If love for his noble face unites us
+Would that we could divide according to the measure of love'''
+        },
+        {
+            'title': 'بم التعلل لا أهل ولا وطن',
+            'category': 'wisdom',
+            'content': '''بِمَ التَعَلُّلُ لا أَهلٌ وَلا وَطَنُ
+وَلا نَديمٌ وَلا كَأسٌ وَلا سَكَنُ
+أُريدُ مِن زَمَني ذا أَن يُبَلِّغَني
+ما لَيسَ يَبلُغُهُ مِن نَفسِهِ الزَمَنُ
+لا تَلقَ دَهرَكَ إِلّا غَيرَ مُكتَرِثٍ
+مادامَ يَصحَبُ فيهِ روحَكَ البَدَنُ''',
+            'translation': '''With what consolation - no family and no homeland
+No companion, no cup, and no dwelling
+I want from my time to deliver me
+What time cannot deliver from itself
+Do not meet your fate except unconcerned
+As long as the soul accompanies your body in it'''
         }
-    ],
+    ]
     'قيس بن الملوح': [
         {
-            'title': 'أمر على الديار',
+            'title': 'لو كان لي قلبان',
             'category': 'love',
-            'content': '''أمر على الديار ديار ليلى
-أقبل ذا الجدار وذا الجدارا'''
+            'content': '''لو كانَ لي قلبان لعشت بواحدٍ
+وأفردتُ قلباً في هواكَ يُعذَّبُ
+لكنَّ لي قلباً تّمَلكَهُ الهَوى
+لا العَيشُ يحلُو لَهُ ولا الموتُ يَقْرَبُ
+كَعُصفُورةٍ في كفِّ طفلٍ يُهِينُها
+تُعَانِي عَذابَ المَوتِ والطِفلُ يلعبُ
+فلا الطفل ذو عقلٍ يرِقُّ لِحالِها
+ولا الطّيرُ مَطلُوقُ الجنَاحَينِ فيذهبُ''',
+            'translation': '''If I had two hearts, I would live with one
+And dedicate a heart to suffer in your love
+But I have one heart that passion has possessed
+Neither sweet life pleases it, nor does death approach
+Like a little bird in a child's hand who mistreats it
+It suffers the torment of death while the child plays
+The child has no mind to pity its condition
+Nor is the bird free-winged to fly away'''
         },
         {
-            'title': 'تعلقت ليلى',
+            'title': 'فواكبدا من حب من لا يحبني',
             'category': 'love',
-            'content': '''تعلقت ليلى وهي ذات ذوائب
-ولم يبد للأتراب من ثديها حجم'''
+            'content': '''فَواكَبِدا مِن حُبِّ مَن لا يَحُبُّني
+وَمِن زَفَراتٍ ما لَهُنَّ فَناءُ
+أَرَيتِكِ إِن لَم أُعطِكَ الحُبَّ عَن يَدِ
+وَلَم يَكُ عِندي إِذ أَبَيتِ إِباءُ
+أَتارِكَتي لِلمَوتُ إِنّي لَمَيِّتٌ
+وَما لِلنُفوسِ الهالِكاتِ بَقاءُ''',
+            'translation': '''Oh my liver aches from loving one who loves me not
+And from sighs that have no end
+Do you see if I don't give you love willingly
+And I had no refusal when you refused
+Will you leave me to death? I am dying
+And perishing souls have no survival'''
         },
         {
-            'title': 'وإني لأستحيي من الله',
+            'title': 'إذ هي أمست منبت الربع دونها',
             'category': 'love',
-            'content': '''وإني لأستحيي من الله أن أرى
-بليلى وأن تبدو لعيني مقاتلي'''
+            'content': '''إِذ هِيَ أَمسَت مَنبِتُ الرَبعِ دونَها
+وَدونَكِ أَرطىً مُسهِلٌ وَأَلاءُ
+فَلا وَصلَ إِلّا أَن يُقارِبَ بَينَنا
+قَلائِصُ في أَذنابِهِنَّ صَفاءُ
+يَجُبنَ بِنا عُرضَ الفَلاةِ وَما لَنا
+عَليهِنَّ إِلّا وَحدَهُنَّ شِفاءُ''',
+            'translation': '''When she became the dwelling place beyond her
+And beyond you are tamarisk and desert shrubs
+No union except that camels bring us together
+She-camels with purity in their tails
+They cross with us the width of the desert
+And we have no cure upon them except them alone'''
         },
         {
-            'title': 'ألا ليت شعري هل أبيتن ليلة',
+            'title': 'وقالوا لو تشاء سلوت عنها',
             'category': 'love',
-            'content': '''ألا ليت شعري هل أبيتن ليلة
-بوادي القرى إني إذن لسعيد'''
+            'content': '''وقالوا لَو تَشاءُ سَلَوتَ عَنها
+فَقُلتَ لَهُم فَإِنّي لا أَشاءُ
+وَكَيفَ وَحُبُّها عَلِقٌ بِقَلبي
+كَما عَلِقَت بِأَرشِيَةٍ دِلاءُ
+لَها حُبٌّ تَنَشَّأَ في فُؤادي
+فَلَيسَ لَهُ وَإِن زُجِرَ اِنتِهاءُ''',
+            'translation': '''They said if you wish, you could forget her
+I said to them: I do not wish to
+How can I, when her love clings to my heart
+Like buckets clinging to well-ropes
+She has a love that grew in my heart
+It has no end even if rebuked'''
         },
         {
-            'title': 'وما بي من جن ولكن حبها',
+            'title': 'أمن أجل خيمات على مدرج الصبا',
             'category': 'love',
-            'content': '''وما بي من جن ولكن حبها
-وبرق إذا ما اشتد بي الشوق يلمع'''
+            'content': '''أَمِن أَجلِ خَيماتٍ عَلى مَدرَجِ الصَبا
+بِجَرعاءَ تَعفوها الصَبا وَالجَنائِبُ
+أَلا قاتَلَ اللَهُ الرَكائِبَ إِنَّما
+تُفَرِّقُ بَينَ العاشِقينَ الرَكائِبُ
+بَكَرنَ بُكوراً وَاِجتَمَعنَ لِمَوعِدٍ
+وَسارَ بِقَلبي بَينَهُنَّ النَجائِبُ''',
+            'translation': '''Is it for tents on the path of youth
+In a valley that morning winds and south winds erase
+May God curse the mounts, for indeed
+The mounts separate between lovers
+They departed early and gathered for an appointment
+And the noble camels traveled with my heart among them'''
         },
         {
-            'title': 'يقولون ليلى في العراق مريضة',
+            'title': 'يقولون لي يوما وقد جئت حيهم',
             'category': 'love',
-            'content': '''يقولون ليلى في العراق مريضة
-فيا ليتني كنت الطبيب المداوي'''
+            'content': '''يَقولونَ لي يَوماً وَقَد جِئتُ حَيَّهُم
+وَفي باطِني نارٌ يُشَبُّ لَهيبُها
+أَما تَختَشي مِن أُسدِنا فَأَجَبتُهُم
+هَوى كُلَّ نَفسٍ أَينَ حَلَّ حَبيبُها''',
+            'translation': '''They say to me one day when I came to their tribe
+While in my heart burns a fire whose flame is kindled
+Do you not fear our lions? I answered them:
+Every soul's passion is where its beloved dwells'''
         },
         {
-            'title': 'أليلى إن الحب دين',
+            'title': 'أصور صورة في التراب منها',
             'category': 'love',
-            'content': '''أليلى إن الحب دين فإن أمت
-فقد قضيت منه الذي كان واجبا'''
+            'content': '''أُصَوِّرُ صورَةً في التُربِ مِنها
+وَأَبكي إِنَّ قَلبي في عَذابِ
+وَأَشكو هَجرَها مِنها إِلَيها
+شِكايَةَ مُدنِفٍ عَظِمِ المُصابِ
+وَأَشكو ما لَقيتُ وَكُلَّ وَجدٍ
+غَراماً بِالشِكايَةِ لِلتُرابِ''',
+            'translation': '''I draw her image in the dust
+And weep for my heart is in torment
+I complain of her abandonment from her to her
+The complaint of one gravely afflicted
+I complain what I met and every passion
+Lovingly complaining to the dust'''
         },
         {
-            'title': 'وقالوا جننت بمن تهوى',
+            'title': 'عفا الله عن ليلى وإن سفكت دمي',
             'category': 'love',
-            'content': '''وقالوا جننت بمن تهوى فقلت لهم
-العشق أعظم مما بالمجانين'''
+            'content': '''عَفا اللَهُ عَن لَيلى وَإِن سَفَكَت دَمي
+فَإِنّي وَإِن لَم تَحزِني غَيرُ عاتِبِ
+عَلَيها وَلا مُبدٍ لِلَيلى شِكايَةً
+وَقَد يَشتَكي المُشكى إِلى كُلَّ صاحِبِ
+يَقولونَ تُب عَن ذِكرِ لَيلى وَحُبِّها
+وَما خَلِدي عَن حُبِّ لَيلى بِتائِبِ''',
+            'translation': '''May God forgive Layla even if she shed my blood
+For I, even if you don't grieve me, am not reproachful
+Towards her, nor showing Layla any complaint
+Though the complainant may complain to every companion
+They say repent from mentioning Layla and her love
+But my heart from Layla's love is not repentant'''
         },
         {
-            'title': 'خليلي فيما عشتما هل رأيتما',
+            'title': 'أحبك يا ليلى وأفرط في حبي',
             'category': 'love',
-            'content': '''خليلي فيما عشتما هل رأيتما
-قتيلا بكى من حب قاتله قبلي'''
+            'content': '''أُحُبُّكِ يا لَيلى وَأُفرِطُ في حُبّي
+وَتُبدينَ لي هَجراً عَلى البُعدِ وَالقُربِ
+وَأَهواكِ يا لَيلى هَوىً لَو تَنَسَّمَت
+نُفوسُ الوَرى أَدناهُ صِحنَ مِنَ الكَربِ
+شَكَوتُ إِلَيها الشَوقُ سِرّاً وَجَهرَةً
+وَبُحتُ بِما أَلقاهُ مِن شِدَّةِ الحُبِّ''',
+            'translation': '''I love you O Layla and exceed in my love
+While you show me abandonment in distance and nearness
+I desire you O Layla with a desire that if
+The souls of people breathed its least, they would cry from distress
+I complained to her of longing secretly and openly
+And revealed what I suffer from the intensity of love'''
         },
         {
-            'title': 'أفاطم مهلا بعض هذا التدلل',
+            'title': 'وأحببتها حبا يقر بعينها',
             'category': 'love',
-            'content': '''أفاطم مهلا بعض هذا التدلل
-وإن كنت قد أزمعت صرمي فأجملي'''
+            'content': '''وَأَحبَبتُها حُبّاً يَقَرُّ بِعَينِها
+وَحُبّي إِذا أَحبَبتُ لا يُشبِهُ الحُبّا
+وَلَو تَفَلَت في البَحرِ وَالبَحرُ مالِحٌ
+لَأَصبَحَ ماءُ البَحرِ مِن ريقِها عَذبا''',
+            'translation': '''I loved her with a love that delights her eye
+And my love when I love is unlike any love
+If she spat in the sea while the sea is salty
+The sea water would become sweet from her saliva'''
         },
         {
-            'title': 'لقد زادني حبا لنفسي أنني',
+            'title': 'ألا قاتل الله الهوى ما أشده',
             'category': 'love',
-            'content': '''لقد زادني حبا لنفسي أنني
-بغيض إلى كل امرئ غير طائل'''
-        },
-        {
-            'title': 'وما هو إلا أن أراها فجاءة',
-            'category': 'love',
-            'content': '''وما هو إلا أن أراها فجاءة
-فأبهت حتى ما أكاد أجيب'''
-        },
-        {
-            'title': 'ألا يا حمام الأيك إلفك حاضر',
-            'category': 'love',
-            'content': '''ألا يا حمام الأيك إلفك حاضر
-وغصنك مياد ففيم تنوح'''
-        },
-        {
-            'title': 'وإن الذي بيني وبين بني أبي',
-            'category': 'love',
-            'content': '''وإن الذي بيني وبين بني أبي
-وبين بني عمي لمختلف جدا'''
-        },
-        {
-            'title': 'ألا قل لليلى إن سرت',
-            'category': 'love',
-            'content': '''ألا قل لليلى إن سرت بأرضها
-مجنون ليلى قد برا من جنونه'''
+            'content': '''أَلا قاتَلَ اللَهُ الهَوى ما أَشَدَّهُ
+وَأَسرَعَهُ لِلمَرءِ وَهوَ جَليدُ
+دَعاني الهَوى مِن نَحوِها فَأَجَبتُهُ
+فَأَصبَحَ بي يَستَنُّ حَيثُ يُريدُ''',
+            'translation': '''May God curse passion, how intense it is
+And how swift it is to man while he is steadfast
+Passion called me from her direction so I answered it
+And it became leading me wherever it wishes'''
         },
         {
             'title': 'ولما تلاقينا على سفح رامة',
             'category': 'love',
             'content': '''ولما تلاقينا على سفح رامة
-وقد جنح الليل علينا بظلمة
-تعانقنا حتى إذا ما تعانقنا
-بكينا معا من فرط ما بي وما بها'''
+وجدتُ بنان العامرية أحمرا
+فقلت خضبت الكف بعد فراقنا؟
+فقالت معاذ الله ذلك ما جرى
+ولكنني لما رأيتك راحلاً
+بكيت دماً حتى بللت به الثرى
+مسحت بأطراف البنان مدامعي
+فصار خضاباً بالأكف كما ترى''',
+            'translation': '''When we met on the slope of Ramah
+I found the fingers of Al-Amiriya red
+I said: Did you henna your hands after our separation?
+She said: God forbid, that did not happen
+But when I saw you departing
+I wept blood until I moistened the earth with it
+I wiped my tears with my fingertips
+So it became henna on the palms as you see'''
+        },
+        {
+            'title': 'فوالله ما أبكي على يوم ميتتي',
+            'category': 'love',
+            'content': '''فَوَاللَهِ ما أَبكي عَلى يَومِ ميتَتي
+وَلَكِنَّني مِن وَشكِ بَينِكِ أَجزَعُ
+فَصَبراً لِأَمرِ اللَهِ إِن حانَ يَومُنا
+فَلَيسَ لِأَمرٍ حَمَّهُ اللَهُ مَدفَعُ''',
+            'translation': '''By God, I do not weep for the day of my death
+But I am terrified of the nearness of separation from you
+So patience for God's command if our day comes
+For there is no preventing what God has decreed'''
+        },
+        {
+            'title': 'أيا مهديا نفي الحبيب صبيحة',
+            'category': 'love',
+            'content': '''أَيا مُهدِياً نَفيَ الحَبيبِ صَبيحَةً
+بِمَن وَإِلى مَن جِئتُما تَشِيانِ
+بِمَن لَو أَراهُ عانِياً لَفَدَيتُهُ
+وَمَن لَو رَآني عانِياً لَفَدانِ
+فَمَن مُبلِغٌ عَنّي الحَبيبَ رِسالَةً
+بِأَنَّ فُؤادي دائِمُ الخَفَقانِ''',
+            'translation': '''O you who brought news of the beloved's exile at dawn
+With whom and to whom did you two come walking
+With one whom if I saw him captive I would ransom him
+And who if he saw me captive would ransom me
+Who will convey from me to the beloved a message
+That my heart is in constant palpitation'''
+        },
+        {
+            'title': 'لقد طفت سبعا قلت لما قضيتها',
+            'category': 'love',
+            'content': '''لَقَد طُفتُ سَبعاً قُلتُ لَمّا قَضَيتُها
+أَلا لَيتَ هَذا لا عَلَيَّ وَلا لِيا
+يُسائِلُني صَحبي فَما أَعقَلُ الَّذي
+يَقولونَ مِن ذِكرٍ لِلَيلى اِعتَرانِيا
+إِذا جِئتَ بابَ الشِعبِ شِعبَ اِبنِ عامِرٍ
+فَأَقرِ غَزالَ الشِعبِ مِنّي سَلامِيا''',
+            'translation': '''I circumambulated seven times, when I finished I said
+Would that this were neither for me nor against me
+My companions ask me but I cannot comprehend what
+They say about mentioning Layla that came over me
+When you come to the gate of the valley, Ibn Amer's valley
+Give the gazelle of the valley my greetings'''
         }
     ]
 }
