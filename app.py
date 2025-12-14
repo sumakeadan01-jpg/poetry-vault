@@ -128,8 +128,11 @@ def create_app():
             return render_template('register.html')
         except Exception as e:
             logger.error(f"Error in register route: {str(e)}")
+            import traceback
+            logger.error(f"Full traceback: {traceback.format_exc()}")
             db.session.rollback()
-            return render_template('register.html', error='Registration failed. Please try again.')
+            # Show actual error for debugging
+            return render_template('register.html', error=f'Registration error: {str(e)}')
     
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -1695,19 +1698,66 @@ Sitemap: {request.url_root}sitemap.xml"""
             logger.error(f"Error during database initialization: {str(e)}")
             db.session.rollback()
     
-    # Migration route for Render (remove after first deployment)
-    @app.route('/migrate-db-render-setup')
-    def migrate_db():
-        """One-time migration for Render deployment"""
+    # Debug route to test registration
+    @app.route('/debug-registration')
+    def debug_registration():
+        """Debug registration issues"""
         try:
-            from migrate_render_db import migrate_render_database
-            success = migrate_render_database()
-            if success:
-                return "✅ Database migration completed! Registration should work now."
-            else:
-                return "❌ Migration failed. Check logs."
+            # Test database connection
+            user_count = User.query.count()
+            
+            # Test user creation
+            test_data = {
+                'username': 'debugtest',
+                'email': 'debug@test.com',
+                'password': 'test123',
+                'age': 25,
+                'favorite_poet': 'Shakespeare'
+            }
+            
+            # Validate each field
+            username_valid, username_msg = User.validate_username(test_data['username'])
+            email_valid, email_msg = User.validate_email(test_data['email'])
+            
+            # Check for existing users
+            existing_user = User.query.filter_by(username=test_data['username']).first()
+            existing_email = User.query.filter_by(email=test_data['email']).first()
+            
+            debug_info = f"""
+🔍 REGISTRATION DEBUG INFO:
+
+📊 Database Status:
+- Total users: {user_count}
+- Database connection: ✅ Working
+
+🧪 Validation Tests:
+- Username '{test_data['username']}': {username_valid} - {username_msg}
+- Email '{test_data['email']}': {email_valid} - {email_msg}
+
+🔍 Conflict Check:
+- Username exists: {existing_user is not None}
+- Email exists: {existing_email is not None}
+
+📝 Form Requirements:
+- Username: 3+ chars, letters/numbers/spaces/_
+- Email: Valid email format
+- Password: 6+ characters
+- Age: 13-120
+- Favorite Poet: Must select one
+
+💡 Try registering with:
+- Any unique username (3+ chars)
+- Any valid email format
+- Password 6+ characters
+- Age between 13-120
+- Select a favorite poet from dropdown
+            """
+            
+            return f"<pre>{debug_info}</pre>"
+            
         except Exception as e:
-            return f"❌ Migration error: {str(e)}"
+            import traceback
+            return f"<pre>❌ Debug Error: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
     
     return app
 
