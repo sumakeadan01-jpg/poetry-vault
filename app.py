@@ -1743,7 +1743,64 @@ Try registering at: /register
             db.session.rollback()
             return f"<pre>❌ Schema Fix Error: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
     
-    # Complete user cleanup route
+    # Complete database reset route
+    @app.route('/reset-database-fresh')
+    def reset_database_fresh():
+        """Delete everything and recreate fresh database with poems only"""
+        try:
+            # Drop all tables
+            db.drop_all()
+            
+            # Create all tables with correct schema
+            db.create_all()
+            
+            # Import and seed poems
+            from seed_poems import FAMOUS_POEMS
+            
+            poems_added = 0
+            for poet_name, poems in FAMOUS_POEMS.items():
+                for poem_data in poems:
+                    poem = Poem(
+                        title=poem_data['title'],
+                        content=poem_data['content'],
+                        category=poem_data.get('category', 'general'),
+                        mood=poem_data.get('mood'),
+                        theme=poem_data.get('theme'),
+                        user_id=1,  # Temporary, will be updated when users register
+                        is_classic=True
+                    )
+                    db.session.add(poem)
+                    poems_added += 1
+            
+            db.session.commit()
+            
+            return f"""<pre>
+🔄 COMPLETE DATABASE RESET COMPLETED!
+
+✅ Dropped old database (deleted everything)
+✅ Created fresh database with correct schema
+✅ Added {poems_added} classic poems
+✅ Zero users (fresh start)
+
+📊 Database Status:
+- Users: 0 (ready for your registration)
+- Poems: {poems_added} (all classic poets)
+- Schema: ✅ Latest version with all features
+
+🎉 READY FOR REGISTRATION!
+- No email conflicts
+- No old users
+- Fresh start
+
+Try registering now at: /register
+</pre>"""
+            
+        except Exception as e:
+            import traceback
+            db.session.rollback()
+            return f"<pre>❌ Reset Error: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
+    
+    # Complete user cleanup route (backup method)
     @app.route('/complete-user-cleanup')
     def complete_user_cleanup():
         """Show all users and delete all real users (keep only poets)"""
