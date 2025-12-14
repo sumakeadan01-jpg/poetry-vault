@@ -1509,7 +1509,75 @@ Try registering at: /register
             db.session.rollback()
             return f"<pre>❌ Schema Fix Error: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
     
-    # Complete database reset route
+    # Update poems while keeping users (recommended)
+    @app.route('/update-poems-keep-users')
+    def update_poems_keep_users():
+        """Update poems while keeping existing users logged in"""
+        try:
+            # Delete only classic poems, keep users and their poems
+            classic_poems = Poem.query.filter_by(is_classic=True).all()
+            for poem in classic_poems:
+                db.session.delete(poem)
+            db.session.commit()
+            
+            # Create system user if doesn't exist
+            system_user = User.query.filter_by(username='System').first()
+            if not system_user:
+                system_user = User(
+                    username='System',
+                    email='system@poetryvault.com',
+                    is_admin=True
+                )
+                system_user.set_password('system123')
+                db.session.add(system_user)
+                db.session.commit()
+            
+            # Import and seed new poems
+            from seed_poems import FAMOUS_POEMS
+            
+            poems_added = 0
+            for poet_name, poems in FAMOUS_POEMS.items():
+                for poem_data in poems:
+                    poem = Poem(
+                        title=poem_data['title'],
+                        content=poem_data['content'],
+                        category=poem_data.get('category', 'general'),
+                        mood=poem_data.get('mood'),
+                        theme=poem_data.get('theme'),
+                        user_id=system_user.id,
+                        is_classic=True
+                    )
+                    db.session.add(poem)
+                    poems_added += 1
+            
+            db.session.commit()
+            
+            # Count current users
+            user_count = User.query.count()
+            
+            return f"""<pre>
+POEMS UPDATED - USERS PRESERVED
+
+- Removed old classic poems only
+- Added {poems_added} new classic poems including 15 each for المتنبي and قيس بن الملوح
+- All existing users kept (stay logged in)
+- User poems and data preserved
+
+Database Status:
+- Users: {user_count} (all preserved)
+- Classic Poems: {poems_added} (updated with authentic Arabic poems)
+- Schema: Latest version
+
+No need to register again!
+Your login session is preserved.
+</pre>"""
+            
+        except Exception as e:
+            import traceback
+            db.session.rollback()
+            return f"<pre>Error updating poems: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
+    
+    # Complete database reset route (backup method)
     @app.route('/reset-database-fresh')
     def reset_database_fresh():
         """Delete everything and recreate fresh database with poems only"""
