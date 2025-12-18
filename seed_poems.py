@@ -9,6 +9,8 @@ FAMOUS_POEMS = {
         {
             'title': 'Sonnet 29: When in Disgrace with Fortune',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''When, in disgrace with fortune and men's eyes,
 I all alone beweep my outcast state,
 And trouble deaf heaven with my bootless cries,
@@ -27,6 +29,8 @@ That then I scorn to change my state with kings.'''
         {
             'title': 'Sonnet 130: My Mistress\' Eyes',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''My mistress' eyes are nothing like the sun;
 Coral is far more red than her lips' red;
 If snow be white, why then her breasts are dun;
@@ -45,6 +49,8 @@ As any she belied with false compare.'''
         {
             'title': 'Sonnet 73: That Time of Year',
             'category': 'aging',
+            'mood': 'melancholic',
+            'theme': 'mortality',
             'content': '''That time of year thou mayst in me behold
 When yellow leaves, or none, or few, do hang
 Upon those boughs which shake against the cold,
@@ -80,6 +86,8 @@ So long lives this, and this gives life to thee.'''
         {
             'title': 'Sonnet 116: Let Me Not to the Marriage of True Minds',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''Let me not to the marriage of true minds
 Admit impediments. Love is not love
 Which alters when it alteration finds,
@@ -116,6 +124,8 @@ Even in the cannon's mouth.'''
         {
             'title': 'Sonnet 55: Not Marble, Nor the Gilded Monuments',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''Not marble, nor the gilded monuments
 Of princes, shall outlive this powerful rhyme;
 But you shall shine more bright in these contents
@@ -134,6 +144,8 @@ You live in this, and dwell in lover's eyes.'''
         {
             'title': 'Sonnet 60: Like as the Waves',
             'category': 'time',
+            'mood': 'nostalgic',
+            'theme': 'passage',
             'content': '''Like as the waves make towards the pebbled shore,
 So do our minutes hasten to their end;
 Each changing place with that which goes before,
@@ -152,6 +164,8 @@ Praising thy worth, despite his cruel hand.'''
         {
             'title': 'Sonnet 106: When in the Chronicle of Wasted Time',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''When in the chronicle of wasted time
 I see descriptions of the fairest wights,
 And beauty making beautiful old rhyme
@@ -170,6 +184,8 @@ Had eyes to wonder, but lack tongues to praise.'''
         {
             'title': 'Sonnet 71: No Longer Mourn for Me',
             'category': 'death',
+            'mood': 'somber',
+            'theme': 'mortality',
             'content': '''No longer mourn for me when I am dead
 Than you shall hear the surly sullen bell
 Give warning to the world that I am fled
@@ -211,6 +227,8 @@ is fire, not wind. Be that empty."'''
         {
             'title': 'Only Breath',
             'category': 'spirituality',
+            'mood': 'contemplative',
+            'theme': 'divine',
             'content': '''Not Christian or Jew or Muslim, not Hindu,
 Buddhist, sufi, or zen. Not any religion
 or cultural system. I am not from the East
@@ -229,6 +247,8 @@ breath breathing human being.'''
         {
             'title': 'The Guest House',
             'category': 'spirituality',
+            'mood': 'contemplative',
+            'theme': 'divine',
             'content': '''This being human is a guest house.
 Every morning a new arrival.
 A joy, a depression, a meanness,
@@ -251,6 +271,8 @@ as a guide from beyond.'''
         {
             'title': 'Love Dogs',
             'category': 'spirituality',
+            'mood': 'contemplative',
+            'theme': 'divine',
             'content': '''One night a man was crying,
 Allah! Allah!
 His lips grew sweet with the praising,
@@ -268,6 +290,8 @@ in a thick, green foliage.
         {
             'title': 'The Breeze at Dawn',
             'category': 'spirituality',
+            'mood': 'contemplative',
+            'theme': 'divine',
             'content': '''The breeze at dawn has secrets to tell you.
 Don't go back to sleep.
 You must ask for what you really want.
@@ -280,6 +304,8 @@ Don't go back to sleep.'''
         {
             'title': 'The Minute I Heard My First Love Story',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''The minute I heard my first love story,
 I started looking for you, not knowing
 how blind that was.
@@ -289,6 +315,8 @@ They're in each other all along.'''
         {
             'title': 'Out Beyond Ideas',
             'category': 'spirituality',
+            'mood': 'contemplative',
+            'theme': 'divine',
             'content': '''Out beyond ideas of wrongdoing and rightdoing,
 there is a field. I'll meet you there.
 When the soul lies down in that grass,
@@ -299,6 +327,8 @@ doesn't make any sense.'''
         {
             'title': 'Let Yourself Be Silently Drawn',
             'category': 'spirituality',
+            'mood': 'contemplative',
+            'theme': 'divine',
             'content': '''Let yourself be silently drawn
 by the strange pull of what you really love.
 It will not lead you astray.'''
@@ -306,6 +336,8 @@ It will not lead you astray.'''
         {
             'title': 'The Wound is the Place',
             'category': 'spirituality',
+            'mood': 'contemplative',
+            'theme': 'divine',
             'content': '''The wound is the place where the Light enters you.
 Don't grieve. Anything you lose comes round
 in another form.'''
@@ -313,6 +345,8 @@ in another form.'''
         {
             'title': 'Forget Your Life',
             'category': 'spirituality',
+            'mood': 'contemplative',
+            'theme': 'divine',
             'content': '''Forget your life. Say God is Great. Get up.
 You think you know what time it is. It's time to pray.
 You've carved so many little figurines, too many.
@@ -327,6 +361,8 @@ and no one says How aren't you?'''
         {
             'title': 'She rose to his requirement',
             'category': 'life',
+            'mood': 'philosophical',
+            'theme': 'existence',
             'content': '''She rose to his requirement, dropped
 The playthings of her life,
 To the honorable work
@@ -343,6 +379,8 @@ The fathoms they abide.'''
         {
             'title': 'Wild Nights - Wild Nights!',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''Wild nights - Wild nights!
 Were I with thee
 Wild nights should be
@@ -359,6 +397,8 @@ In thee!'''
         {
             'title': 'Hope is the Thing with Feathers',
             'category': 'hope',
+            'mood': 'optimistic',
+            'theme': 'faith',
             'content': '''Hope is the thing with feathers
 That perches in the soul,
 And sings the tune without the words,
@@ -375,6 +415,8 @@ It asked a crumb of me.'''
         {
             'title': 'Because I Could Not Stop for Death',
             'category': 'death',
+            'mood': 'somber',
+            'theme': 'mortality',
             'content': '''Because I could not stop for Death –
 He kindly stopped for me –
 The Carriage held but just Ourselves –
@@ -414,6 +456,8 @@ To an admiring Bog!'''
         {
             'title': 'Tell All the Truth but Tell It Slant',
             'category': 'truth',
+            'mood': 'honest',
+            'theme': 'reality',
             'content': '''Tell all the truth but tell it slant —
 Success in Circuit lies
 Too bright for our infirm Delight
@@ -426,6 +470,8 @@ Or every man be blind —'''
         {
             'title': 'The Soul Selects Her Own Society',
             'category': 'solitude',
+            'mood': 'reflective',
+            'theme': 'isolation',
             'content': '''The Soul selects her own Society —
 Then — shuts the Door —
 To her divine Majority —
@@ -442,6 +488,8 @@ Like Stone —'''
         {
             'title': 'A Bird Came Down the Walk',
             'category': 'nature',
+            'mood': 'peaceful',
+            'theme': 'beauty',
             'content': '''A Bird came down the Walk —
 He did not know I saw —
 He bit an Angleworm in halves
@@ -485,6 +533,8 @@ On the look of Death —'''
         {
             'title': 'I Heard a Fly Buzz When I Died',
             'category': 'death',
+            'mood': 'somber',
+            'theme': 'mortality',
             'content': '''I heard a Fly buzz — when I died —
 The Stillness in the Room
 Was like the Stillness in the Air —
@@ -505,6 +555,8 @@ I could not see to see —'''
         {
             'title': 'Success is Counted Sweetest',
             'category': 'life',
+            'mood': 'philosophical',
+            'theme': 'existence',
             'content': '''Success is counted sweetest
 By those who ne'er succeed.
 To comprehend a nectar
@@ -523,6 +575,8 @@ Burst agonized and clear!'''
         {
             'title': 'Alone',
             'category': 'solitude',
+            'mood': 'reflective',
+            'theme': 'isolation',
             'content': '''From childhood's hour I have not been
 As others were—I have not seen
 As others saw—I could not bring
@@ -549,6 +603,8 @@ Of a demon in my view—'''
         {
             'title': 'Eldorado',
             'category': 'quest',
+            'mood': 'determined',
+            'theme': 'seeking',
             'content': '''Gaily bedight,
 A gallant knight,
 In sunshine and in shadow,
@@ -577,6 +633,8 @@ The shade replied,—
         {
             'title': 'The Raven',
             'category': 'grief',
+            'mood': 'sorrowful',
+            'theme': 'loss',
             'content': '''Once upon a midnight dreary, while I pondered, weak and weary,
 Over many a quaint and curious volume of forgotten lore—
 While I nodded, nearly napping, suddenly there came a tapping,
@@ -593,6 +651,8 @@ Nameless here for evermore.'''
         {
             'title': 'Annabel Lee',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''It was many and many a year ago,
 In a kingdom by the sea,
 That a maiden there lived whom you may know
@@ -609,6 +669,8 @@ Coveted her and me.'''
         {
             'title': 'A Dream Within a Dream',
             'category': 'reality',
+            'mood': 'serious',
+            'theme': 'truth',
             'content': '''Take this kiss upon the brow!
 And, in parting from you now,
 Thus much let me avow —
@@ -624,6 +686,8 @@ Is but a dream within a dream.'''
         {
             'title': 'The Bells',
             'category': 'life',
+            'mood': 'philosophical',
+            'theme': 'existence',
             'content': '''Hear the sledges with the bells—
 Silver bells!
 What a world of merriment their melody foretells!
@@ -642,6 +706,8 @@ From the jingling and the tinkling of the bells.'''
         {
             'title': 'To Helen',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''Helen, thy beauty is to me
 Like those Nicéan barks of yore,
 That gently, o'er a perfumed sea,
@@ -656,6 +722,8 @@ And the grandeur that was Rome.'''
         {
             'title': 'The Haunted Palace',
             'category': 'decay',
+            'mood': 'melancholic',
+            'theme': 'decline',
             'content': '''In the greenest of our valleys
 By good angels tenanted,
 Once a fair and stately palace—
@@ -668,6 +736,8 @@ Over fabric half so fair!'''
         {
             'title': 'A Dream',
             'category': 'melancholy',
+            'mood': 'sad',
+            'theme': 'sorrow',
             'content': '''In visions of the dark night
 I have dreamed of joy departed—
 But a waking dream of life and light
@@ -680,6 +750,8 @@ Turned back upon the past?'''
         {
             'title': 'Spirits of the Dead',
             'category': 'death',
+            'mood': 'somber',
+            'theme': 'mortality',
             'content': '''Thy soul shall find itself alone
 'Mid dark thoughts of the grey tomb-stone;
 Not one, of all the crowd, to pry
@@ -696,6 +768,8 @@ Shall overshadow thee; be still.'''
         {
             'title': 'Song of Myself (Excerpt)',
             'category': 'self',
+            'mood': 'introspective',
+            'theme': 'identity',
             'content': '''I celebrate myself, and sing myself,
 And what I assume you shall assume,
 For every atom belonging to me as good belongs to you.
@@ -709,6 +783,8 @@ Hoping to cease not till death.'''
         {
             'title': 'A Noiseless Patient Spider',
             'category': 'solitude',
+            'mood': 'reflective',
+            'theme': 'isolation',
             'content': '''A noiseless patient spider,
 I mark'd where on a little promontory it stood isolated,
 Mark'd how to explore the vacant vast surrounding,
@@ -723,6 +799,8 @@ Till the gossamer thread you fling catch somewhere, O my soul.'''
         {
             'title': 'O Captain! My Captain!',
             'category': 'grief',
+            'mood': 'sorrowful',
+            'theme': 'loss',
             'content': '''O Captain! my Captain! our fearful trip is done,
 The ship has weather'd every rack, the prize we sought is won,
 The port is near, the bells I hear, the people all exulting,
@@ -735,6 +813,8 @@ Fallen cold and dead.'''
         {
             'title': 'I Hear America Singing',
             'category': 'celebration',
+            'mood': 'joyful',
+            'theme': 'festivity',
             'content': '''I hear America singing, the varied carols I hear,
 Those of mechanics, each one singing his as it should be blithe and strong,
 The carpenter singing his as he measures his plank or beam,
@@ -761,6 +841,8 @@ Look'd up in perfect silence at the stars.'''
         {
             'title': 'For You O Democracy',
             'category': 'patriotism',
+            'mood': 'proud',
+            'theme': 'loyalty',
             'content': '''Come, I will make the continent indissoluble,
 I will make the most splendid race the sun ever shone upon,
 I will make divine magnetic lands,
@@ -775,6 +857,8 @@ By the manly love of comrades.'''
         {
             'title': 'Miracles',
             'category': 'wonder',
+            'mood': 'amazed',
+            'theme': 'mystery',
             'content': '''Why, who makes much of a miracle?
 As to me I know of nothing else but miracles,
 Whether I walk the streets of Manhattan,
@@ -790,6 +874,8 @@ Or watch honey-bees busy around the hive of a summer forenoon.'''
         {
             'title': 'The Wound-Dresser',
             'category': 'war',
+            'mood': 'intense',
+            'theme': 'conflict',
             'content': '''Bearing the bandages, water and sponge,
 Straight and swift to my wounded I go,
 Where they lie on the ground after the battle brought in,
@@ -803,6 +889,8 @@ Soon to be fill'd with clotted rags and blood, emptied, and fill'd again.'''
         {
             'title': 'Crossing Brooklyn Ferry',
             'category': 'time',
+            'mood': 'nostalgic',
+            'theme': 'passage',
             'content': '''Flood-tide below me! I see you face to face!
 Clouds of the west—sun there half an hour high—I see you also face to face.
 Crowds of men and women attired in the usual costumes, how curious you are to me!
@@ -814,6 +902,8 @@ And you that shall cross from shore to shore years hence are more to me, and mor
         {
             'title': 'Darkness',
             'category': 'apocalypse',
+            'mood': 'ominous',
+            'theme': 'destruction',
             'content': '''I had a dream, which was not all a dream.
 The bright sun was extinguish'd, and the stars
 Did wander darkling in the eternal space,
@@ -842,6 +932,8 @@ By the light of the moon.'''
         {
             'title': 'She Walks in Beauty',
             'category': 'beauty',
+            'mood': 'admiring',
+            'theme': 'aesthetics',
             'content': '''She walks in beauty, like the night
 Of cloudless climes and starry skies;
 And all that's best of dark and bright
@@ -858,6 +950,8 @@ How pure, how dear their dwelling-place.'''
         {
             'title': 'When We Two Parted',
             'category': 'heartbreak',
+            'mood': 'devastated',
+            'theme': 'loss',
             'content': '''When we two parted
 In silence and tears,
 Half broken-hearted
@@ -870,6 +964,8 @@ Sorrow to this.'''
         {
             'title': 'The Destruction of Sennacherib',
             'category': 'war',
+            'mood': 'intense',
+            'theme': 'conflict',
             'content': '''The Assyrian came down like the wolf on the fold,
 And his cohorts were gleaming in purple and gold;
 And the sheen of their spears was like stars on the sea,
@@ -882,6 +978,8 @@ That host on the morrow lay withered and strown.'''
         {
             'title': 'Stanzas for Music',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''There be none of Beauty's daughters
 With a magic like thee;
 And like music on the waters
@@ -894,6 +992,8 @@ And the lull'd winds seem dreaming.'''
         {
             'title': 'The Ocean',
             'category': 'nature',
+            'mood': 'peaceful',
+            'theme': 'beauty',
             'content': '''Roll on, thou deep and dark blue Ocean—roll!
 Ten thousand fleets sweep over thee in vain;
 Man marks the earth with ruin—his control
@@ -907,6 +1007,8 @@ Without a grave, unknell'd, uncoffin'd, and unknown.'''
         {
             'title': 'To Thomas Moore',
             'category': 'friendship',
+            'mood': 'warm',
+            'theme': 'companionship',
             'content': '''My boat is on the shore,
 And my bark is on the sea;
 But, before I go, Tom Moore,
@@ -919,6 +1021,8 @@ Here's a heart for every fate.'''
         {
             'title': 'Remember Thee',
             'category': 'betrayal',
+            'mood': 'bitter',
+            'theme': 'deception',
             'content': '''Remember thee! remember thee!
 Till Lethe quench life's burning stream
 Remorse and shame shall cling to thee,
@@ -933,6 +1037,8 @@ Thou false to him, thou fiend to me!'''
         {
             'title': 'Lines Written in Early Spring',
             'category': 'nature',
+            'mood': 'peaceful',
+            'theme': 'beauty',
             'content': '''I heard a thousand blended notes,
 While in a grove I sate reclined,
 In that sweet mood when pleasant thoughts
@@ -949,6 +1055,8 @@ Enjoys the air it breathes.'''
         {
             'title': 'My Heart Leaps Up',
             'category': 'joy',
+            'mood': 'happy',
+            'theme': 'celebration',
             'content': '''My heart leaps up when I behold
 A rainbow in the sky:
 So was it when my life began;
@@ -962,6 +1070,8 @@ Bound each to each by natural piety.'''
         {
             'title': 'I Wandered Lonely as a Cloud',
             'category': 'nature',
+            'mood': 'peaceful',
+            'theme': 'beauty',
             'content': '''I wandered lonely as a cloud
 That floats on high o'er vales and hills,
 When all at once I saw a crowd,
@@ -978,6 +1088,8 @@ Tossing their heads in sprightly dance.'''
         {
             'title': 'The World Is Too Much with Us',
             'category': 'nature',
+            'mood': 'peaceful',
+            'theme': 'beauty',
             'content': '''The world is too much with us; late and soon,
 Getting and spending, we lay waste our powers;—
 Little we see in Nature that is ours;
@@ -996,6 +1108,8 @@ Or hear old Triton blow his wreathèd horn.'''
         {
             'title': 'Composed Upon Westminster Bridge',
             'category': 'beauty',
+            'mood': 'admiring',
+            'theme': 'aesthetics',
             'content': '''Earth has not anything to show more fair:
 Dull would he be of soul who could pass by
 A sight so touching in its majesty:
@@ -1008,6 +1122,8 @@ All bright and glittering in the smokeless air.'''
         {
             'title': 'She Dwelt Among the Untrodden Ways',
             'category': 'loss',
+            'mood': 'sorrowful',
+            'theme': 'grief',
             'content': '''She dwelt among the untrodden ways
 Beside the springs of Dove,
 A Maid whom there were none to praise
@@ -1024,6 +1140,8 @@ The difference to me!'''
         {
             'title': 'A Slumber Did My Spirit Seal',
             'category': 'death',
+            'mood': 'somber',
+            'theme': 'mortality',
             'content': '''A slumber did my spirit seal;
 I had no human fears:
 She seemed a thing that could not feel
@@ -1036,6 +1154,8 @@ With rocks, and stones, and trees.'''
         {
             'title': 'The Solitary Reaper',
             'category': 'nature',
+            'mood': 'peaceful',
+            'theme': 'beauty',
             'content': '''Behold her, single in the field,
 Yon solitary Highland Lass!
 Reaping and singing by herself;
@@ -1048,6 +1168,8 @@ Is overflowing with the sound.'''
         {
             'title': 'Tintern Abbey (Excerpt)',
             'category': 'nature',
+            'mood': 'peaceful',
+            'theme': 'beauty',
             'content': '''Five years have past; five summers, with the length
 Of five long winters! and again I hear
 These waters, rolling from their mountain-springs
@@ -1062,6 +1184,8 @@ The landscape with the quiet of the sky.'''
         {
             'title': 'When I Have Fears That I May Cease to Be',
             'category': 'mortality',
+            'mood': 'somber',
+            'theme': 'death',
             'content': '''When I have fears that I may cease to be
 Before my pen has gleaned my teeming brain,
 Before high-pilèd books, in charactery,
@@ -1080,6 +1204,8 @@ Till love and fame to nothingness do sink.'''
         {
             'title': 'La Belle Dame sans Merci',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''O what can ail thee, knight-at-arms,
 Alone and palely loitering?
 The sedge has withered from the lake,
@@ -1096,6 +1222,8 @@ Fast withereth too.'''
         {
             'title': 'Ode to a Nightingale',
             'category': 'mortality',
+            'mood': 'somber',
+            'theme': 'death',
             'content': '''My heart aches, and a drowsy numbness pains
 My sense, as though of hemlock I had drunk,
 Or emptied some dull opiate to the drains
@@ -1110,6 +1238,8 @@ Singest of summer in full-throated ease.'''
         {
             'title': 'Bright Star',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''Bright star, would I were stedfast as thou art—
 Not in lone splendour hung aloft the night
 And watching, with eternal lids apart,
@@ -1128,6 +1258,8 @@ And so live ever—or else swoon to death.'''
         {
             'title': 'Ode on a Grecian Urn',
             'category': 'art',
+            'mood': 'creative',
+            'theme': 'expression',
             'content': '''Thou still unravish'd bride of quietness,
 Thou foster-child of silence and slow time,
 Sylvan historian, who canst thus express
@@ -1142,6 +1274,8 @@ What pipes and timbrels? What wild ecstasy?'''
         {
             'title': 'Ode on Melancholy',
             'category': 'melancholy',
+            'mood': 'sad',
+            'theme': 'sorrow',
             'content': '''No, no, go not to Lethe, neither twist
 Wolf's-bane, tight-rooted, for its poisonous wine;
 Nor suffer thy pale forehead to be kiss'd
@@ -1156,6 +1290,8 @@ And drown the wakeful anguish of the soul.'''
         {
             'title': 'To Autumn',
             'category': 'autumn',
+            'mood': 'melancholic',
+            'theme': 'change',
             'content': '''Season of mists and mellow fruitfulness,
 Close bosom-friend of the maturing sun;
 Conspiring with him how to load and bless
@@ -1188,6 +1324,8 @@ Silent, upon a peak in Darien.'''
         {
             'title': 'The Eve of St. Agnes (Excerpt)',
             'category': 'winter',
+            'mood': 'cold',
+            'theme': 'season',
             'content': '''St. Agnes' Eve—Ah, bitter chill it was!
 The owl, for all his feathers, was a-cold;
 The hare limp'd trembling through the frozen grass,
@@ -1203,6 +1341,8 @@ Past the sweet Virgin's picture, while his prayer he saith.'''
         {
             'title': 'Ode to the West Wind',
             'category': 'nature',
+            'mood': 'peaceful',
+            'theme': 'beauty',
             'content': '''O wild West Wind, thou breath of Autumn's being,
 Thou, from whose unseen presence the leaves dead
 Are driven, like ghosts from an enchanter fleeing,
@@ -1221,6 +1361,8 @@ Destroyer and preserver; hear, oh hear!'''
         {
             'title': 'To a Skylark',
             'category': 'nature',
+            'mood': 'peaceful',
+            'theme': 'beauty',
             'content': '''Hail to thee, blithe Spirit!
 Bird thou never wert,
 That from Heaven, or near it,
@@ -1235,6 +1377,8 @@ And singing still dost soar, and soaring ever singest.'''
         {
             'title': 'Ozymandias',
             'category': 'power',
+            'mood': 'confident',
+            'theme': 'strength',
             'content': '''I met a traveller from an antique land,
 Who said—"Two vast and trunkless legs of stone
 Stand in the desert. . . . Near them, on the sand,
@@ -1272,6 +1416,8 @@ If thou kiss not me?'''
         {
             'title': 'Music, When Soft Voices Die',
             'category': 'memory',
+            'mood': 'nostalgic',
+            'theme': 'remembrance',
             'content': '''Music, when soft voices die,
 Vibrates in the memory—
 Odours, when sweet violets sicken,
@@ -1284,6 +1430,8 @@ Love itself shall slumber on.'''
         {
             'title': 'The Cloud',
             'category': 'nature',
+            'mood': 'peaceful',
+            'theme': 'beauty',
             'content': '''I bring fresh showers for the thirsting flowers,
 From the seas and the streams;
 I bear light shade for the leaves when laid
@@ -1296,6 +1444,8 @@ As she dances about the sun.'''
         {
             'title': 'Mutability',
             'category': 'change',
+            'mood': 'uncertain',
+            'theme': 'transformation',
             'content': '''We are as clouds that veil the midnight moon;
 How restlessly they speed, and gleam, and quiver,
 Streaking the darkness radiantly!—yet soon
@@ -1308,6 +1458,8 @@ One mood or modulation like the last.'''
         {
             'title': 'To Night',
             'category': 'night',
+            'mood': 'mysterious',
+            'theme': 'darkness',
             'content': '''Swiftly walk o'er the western wave,
 Spirit of Night!
 Out of the misty eastern cave,
@@ -1319,6 +1471,8 @@ Swift be thy flight!'''
         {
             'title': 'Hymn to Intellectual Beauty',
             'category': 'beauty',
+            'mood': 'admiring',
+            'theme': 'aesthetics',
             'content': '''The awful shadow of some unseen Power
 Floats though unseen among us; visiting
 This various world with as inconstant wing
@@ -1337,6 +1491,8 @@ Dear, and yet dearer for its mystery.'''
         {
             'title': 'Auld Lang Syne',
             'category': 'friendship',
+            'mood': 'warm',
+            'theme': 'companionship',
             'content': '''Should auld acquaintance be forgot,
 And never brought to mind?
 Should auld acquaintance be forgot,
@@ -1353,6 +1509,8 @@ For auld lang syne.'''
         {
             'title': 'Ae Fond Kiss',
             'category': 'heartbreak',
+            'mood': 'devastated',
+            'theme': 'loss',
             'content': '''Ae fond kiss, and then we sever;
 Ae fareweel, alas, for ever!
 Deep in heart-wrung tears I'll pledge thee,
@@ -1365,6 +1523,8 @@ Dark despair around benights me.'''
         {
             'title': 'A Red, Red Rose',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''O my Luve is like a red, red rose
 That's newly sprung in June;
 O my Luve is like the melody
@@ -1381,6 +1541,8 @@ While the sands o' life shall run.'''
         {
             'title': 'To a Mouse',
             'category': 'nature',
+            'mood': 'peaceful',
+            'theme': 'beauty',
             'content': '''Wee, sleekit, cowrin, tim'rous beastie,
 O, what a panic's in thy breastie!
 Thou need na start awa sae hasty,
@@ -1412,6 +1574,8 @@ Nursing her wrath to keep it warm.'''
         {
             'title': 'To a Louse',
             'category': 'humor',
+            'mood': 'playful',
+            'theme': 'comedy',
             'content': '''Ha! whare ye gaun, ye crowlin ferlie?
 Your impudence protects you sairly;
 I canna say but ye strunt rarely,
@@ -1428,6 +1592,8 @@ On some poor body.'''
         {
             'title': 'Address to the Deil',
             'category': 'humor',
+            'mood': 'playful',
+            'theme': 'comedy',
             'content': '''O Thou! whatever title suit thee,
 Auld Hornie, Satan, Nick, or Clootie!
 Wha in yon cavern, grim an' sootie,
@@ -1455,6 +1621,8 @@ Departed never to return.'''
         {
             'title': 'John Anderson, My Jo',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''John Anderson, my jo, John,
 When we were first acquent,
 Your locks were like the raven,
@@ -1467,6 +1635,8 @@ John Anderson, my jo!'''
         {
             'title': 'Scots Wha Hae',
             'category': 'patriotism',
+            'mood': 'proud',
+            'theme': 'loyalty',
             'content': '''Scots, wha hae wi' Wallace bled,
 Scots, wham Bruce has aften led,
 Welcome to your gory bed
@@ -1651,6 +1821,8 @@ so he opens his throat to sing.'''
         {
             'title': 'Alone',
             'category': 'solitude',
+            'mood': 'reflective',
+            'theme': 'isolation',
             'content': '''Lying, thinking
 Last night
 How to find my soul a home
@@ -1872,6 +2044,8 @@ It's a happy beat?'''
         {
             'title': 'أفاعل بي فعال الموكس الزاري',
             'category': 'satire',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''أفاعِلٌ بي فعالَ الموكِسِ الزاري
 ونحنُ نُسألُ فيما كان من عارِ
 قُل لي بحُرمَةِ من ضيَّعتَ حُرمَتَهُ
@@ -1892,6 +2066,8 @@ Like one seeking refuge from burning heat in fire'''
         {
             'title': 'ذي الأرض عما أتاها الأمس غانية',
             'category': 'nature',
+            'mood': 'peaceful',
+            'theme': 'beauty',
             'content': '''ذي الأرضُ عمّا أتاها الأمسَ غانِيَةٌ
 وغيرُها كان محتاجاً إلى المَطَرِ
 شقَّ النباتَ عنِ البتسانِ ريِّقُهُمُ
@@ -1908,6 +2084,8 @@ Throwing the lotus trees in place of the hills'''
         {
             'title': 'من الشوق والوجد المبرح أنني',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''منَ الشوقِ والوجدِ المُبَرِّحِ أنَّني
 يُمَثَّلُ لي من بعدِ لُقياكَ لُقياكا
 سأسلوا لَذيذَ العيشِ بعدك دائماً
@@ -1920,6 +2098,8 @@ And forget the life of the soul before I forget you'''
         {
             'title': 'هينا فقدت من الرجال بليدا',
             'category': 'satire',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''هيناً فقدتُ من الرجال بليدا
 من كان عندَ وجوده مَفقودا
 غلَبَ التبَسُّمُ يومَ ماتَ تفجُّعي
@@ -1939,6 +2119,8 @@ In scent and more festering in life'''
         {
             'title': 'أرى الشطرنج لو كانت رجالا',
             'category': 'war',
+            'mood': 'intense',
+            'theme': 'conflict',
             'content': '''أرى الشطرنج لو كانت رجالا
 تهزُّ صفائحاً وقناً طِوالا
 لغادرت الثواكل معولاتٍ
@@ -1963,6 +2145,8 @@ We would remain with time like mountains'''
         {
             'title': 'أريك الرضا لو أخفت النفس خافيا',
             'category': 'satire',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''أُريكَ الرِضا لَو أَخفَتِ النَفسُ خافِيا
 وَما أَنا عَن نَفسي وَلا عَنكَ راضِيا
 أَمَيناً وَإِخلافاً وَغَدراً وَخِسَّةً
@@ -1979,6 +2163,8 @@ But I am only laughing at my hopes'''
         {
             'title': 'أحق دار بأن تسمى مباركة',
             'category': 'praise',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''أَحَقُّ دارٍ بِأَن تُسمى مُبارَكَةً
 دارٌ مُبارَكَةُ المَلكِ الَّذي فيها
 وَأَجدَرُ الدورِ أَن تُسقى بِساكِنِها
@@ -1995,6 +2181,8 @@ Whoever passes by the first ones consoles them'''
         {
             'title': 'أنا منك بين فضائل ومكارم',
             'category': 'praise',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''أَنا مِنكَ بَينَ فَضائِلٍ وَمَكارِمٍ
 وَمِنِ اِرتِياحِكَ في غَمامٍ دائِمِ
 وَمِنِ اِحتِقارِكَ كُلَّ ما تَحبو بِهِ
@@ -2011,6 +2199,8 @@ Until he tested you and you became the eye of the blade'''
         {
             'title': 'أما ترى ما أراه أيها الملك',
             'category': 'praise',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''أَما تَرى ما أَراهُ أَيُّها المَلِكُ
 كَأَنَّنا في سَماءِ مالَها حُبُكُ
 الفَرقَدُ اِبنُكَ وَالمِصباحُ صاحِبُهُ
@@ -2023,6 +2213,8 @@ And you are the full moon of darkness and the assembly is the sphere'''
         {
             'title': 'لام أناس أبا العشائر في',
             'category': 'praise',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''لامَ أُناسٌ أَبا العَشائِرِ في
 جودِ يَدَيهِ بِالعَينِ وَالوَرَقِ
 وَإِنَّما قيلَ لِم خُلِقتَ كَذا
@@ -2039,6 +2231,8 @@ That he built his house upon the roads'''
         {
             'title': 'الصوم والفطر والأعياد والعصر',
             'category': 'praise',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''الصَومُ وَالفِطرُ وَالأَعيادُ وَالعَصرُ
 مُنيرَةٌ بِكَ حَتّى الشَمسُ وَالقَمَرُ
 تُري الأَهِلَّةَ وَجهاً عَمَّ نائِلُهُ
@@ -2055,6 +2249,8 @@ O you whose qualities in his time are flowers'''
         {
             'title': 'بكتب الأنام كتاب ورد',
             'category': 'praise',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''بِكُتبِ الأَنامِ كِتابٌ وَرَد
 فَدَت يَدَ كاتِبِهِ كُلُّ يَدِ
 يُعَبِّرُ عَمّا لَهُ عِندَنا
@@ -2071,6 +2267,8 @@ And dazzled its critic with what he criticized'''
         {
             'title': 'وطائرة تتبعها المنايا',
             'category': 'war',
+            'mood': 'intense',
+            'theme': 'conflict',
             'content': '''وَطائِرَةٍ تَتَبَّعُها المَنايا
 عَلى آثارِها زَجِلُ الجَناحِ
 كَأَنَّ الريشَ مِنهُ في سِهامٍ
@@ -2087,6 +2285,8 @@ Were wiped with the feathers of a sound breast'''
         {
             'title': 'واحر قلباه ممن قلبه شبم',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''وَاحَـرّ قَلْبـاهُ مـمّنْ قَلْبُـهُ شَبِـمُ
 وَمَنْ بجِسْمـي وَحالي عِنـدَهُ سَقَـمُ
 ما لي أُكَتِّمُ حُبًّا قَدْ بَـرَى جَسَـدي
@@ -2103,6 +2303,8 @@ Would that we could divide according to the measure of love'''
         {
             'title': 'بم التعلل لا أهل ولا وطن',
             'category': 'wisdom',
+            'mood': 'thoughtful',
+            'theme': 'knowledge',
             'content': '''بِمَ التَعَلُّلُ لا أَهلٌ وَلا وَطَنُ
 وَلا نَديمٌ وَلا كَأسٌ وَلا سَكَنُ
 أُريدُ مِن زَمَني ذا أَن يُبَلِّغَني
@@ -2121,6 +2323,8 @@ As long as the soul accompanies your body in it'''
         {
             'title': 'لو كان لي قلبان',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''لو كانَ لي قلبان لعشت بواحدٍ
 وأفردتُ قلباً في هواكَ يُعذَّبُ
 لكنَّ لي قلباً تّمَلكَهُ الهَوى
@@ -2141,6 +2345,8 @@ Nor is the bird free-winged to fly away'''
         {
             'title': 'فواكبدا من حب من لا يحبني',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''فَواكَبِدا مِن حُبِّ مَن لا يَحُبُّني
 وَمِن زَفَراتٍ ما لَهُنَّ فَناءُ
 أَرَيتِكِ إِن لَم أُعطِكَ الحُبَّ عَن يَدِ
@@ -2157,6 +2363,8 @@ And perishing souls have no survival'''
         {
             'title': 'إذ هي أمست منبت الربع دونها',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''إِذ هِيَ أَمسَت مَنبِتُ الرَبعِ دونَها
 وَدونَكِ أَرطىً مُسهِلٌ وَأَلاءُ
 فَلا وَصلَ إِلّا أَن يُقارِبَ بَينَنا
@@ -2173,6 +2381,8 @@ And we have no cure upon them except them alone'''
         {
             'title': 'وقالوا لو تشاء سلوت عنها',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''وقالوا لَو تَشاءُ سَلَوتَ عَنها
 فَقُلتَ لَهُم فَإِنّي لا أَشاءُ
 وَكَيفَ وَحُبُّها عَلِقٌ بِقَلبي
@@ -2189,6 +2399,8 @@ It has no end even if rebuked'''
         {
             'title': 'أمن أجل خيمات على مدرج الصبا',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''أَمِن أَجلِ خَيماتٍ عَلى مَدرَجِ الصَبا
 بِجَرعاءَ تَعفوها الصَبا وَالجَنائِبُ
 أَلا قاتَلَ اللَهُ الرَكائِبَ إِنَّما
@@ -2205,6 +2417,8 @@ And the noble camels traveled with my heart among them'''
         {
             'title': 'يقولون لي يوما وقد جئت حيهم',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''يَقولونَ لي يَوماً وَقَد جِئتُ حَيَّهُم
 وَفي باطِني نارٌ يُشَبُّ لَهيبُها
 أَما تَختَشي مِن أُسدِنا فَأَجَبتُهُم
@@ -2217,6 +2431,8 @@ Every soul's passion is where its beloved dwells'''
         {
             'title': 'أصور صورة في التراب منها',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''أُصَوِّرُ صورَةً في التُربِ مِنها
 وَأَبكي إِنَّ قَلبي في عَذابِ
 وَأَشكو هَجرَها مِنها إِلَيها
@@ -2233,6 +2449,8 @@ Lovingly complaining to the dust'''
         {
             'title': 'عفا الله عن ليلى وإن سفكت دمي',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''عَفا اللَهُ عَن لَيلى وَإِن سَفَكَت دَمي
 فَإِنّي وَإِن لَم تَحزِني غَيرُ عاتِبِ
 عَلَيها وَلا مُبدٍ لِلَيلى شِكايَةً
@@ -2249,6 +2467,8 @@ But my heart from Layla's love is not repentant'''
         {
             'title': 'أحبك يا ليلى وأفرط في حبي',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''أُحُبُّكِ يا لَيلى وَأُفرِطُ في حُبّي
 وَتُبدينَ لي هَجراً عَلى البُعدِ وَالقُربِ
 وَأَهواكِ يا لَيلى هَوىً لَو تَنَسَّمَت
@@ -2265,6 +2485,8 @@ And revealed what I suffer from the intensity of love'''
         {
             'title': 'وأحببتها حبا يقر بعينها',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''وَأَحبَبتُها حُبّاً يَقَرُّ بِعَينِها
 وَحُبّي إِذا أَحبَبتُ لا يُشبِهُ الحُبّا
 وَلَو تَفَلَت في البَحرِ وَالبَحرُ مالِحٌ
@@ -2277,6 +2499,8 @@ The sea water would become sweet from her saliva'''
         {
             'title': 'ألا قاتل الله الهوى ما أشده',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''أَلا قاتَلَ اللَهُ الهَوى ما أَشَدَّهُ
 وَأَسرَعَهُ لِلمَرءِ وَهوَ جَليدُ
 دَعاني الهَوى مِن نَحوِها فَأَجَبتُهُ
@@ -2289,6 +2513,8 @@ And it became leading me wherever it wishes'''
         {
             'title': 'ولما تلاقينا على سفح رامة',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''ولما تلاقينا على سفح رامة
 وجدتُ بنان العامرية أحمرا
 فقلت خضبت الكف بعد فراقنا؟
@@ -2309,6 +2535,8 @@ So it became henna on the palms as you see'''
         {
             'title': 'فوالله ما أبكي على يوم ميتتي',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''فَوَاللَهِ ما أَبكي عَلى يَومِ ميتَتي
 وَلَكِنَّني مِن وَشكِ بَينِكِ أَجزَعُ
 فَصَبراً لِأَمرِ اللَهِ إِن حانَ يَومُنا
@@ -2321,6 +2549,8 @@ For there is no preventing what God has decreed'''
         {
             'title': 'أيا مهديا نفي الحبيب صبيحة',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''أَيا مُهدِياً نَفيَ الحَبيبِ صَبيحَةً
 بِمَن وَإِلى مَن جِئتُما تَشِيانِ
 بِمَن لَو أَراهُ عانِياً لَفَدَيتُهُ
@@ -2337,6 +2567,8 @@ That my heart is in constant palpitation'''
         {
             'title': 'لقد طفت سبعا قلت لما قضيتها',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''لَقَد طُفتُ سَبعاً قُلتُ لَمّا قَضَيتُها
 أَلا لَيتَ هَذا لا عَلَيَّ وَلا لِيا
 يُسائِلُني صَحبي فَما أَعقَلُ الَّذي

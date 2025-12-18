@@ -1447,6 +1447,8 @@ Sitemap: {request.url_root}sitemap.xml"""
                                     title=poem_data['title'][:200],
                                     content=poem_data['content'][:50000],
                                     category=poem_data.get('category', 'general'),
+                                    mood=poem_data.get('mood', 'contemplative'),
+                                    theme=poem_data.get('theme', 'reflection'),
                                     user_id=poet_user.id,
                                     is_classic=True
                                 )
@@ -1460,6 +1462,20 @@ Sitemap: {request.url_root}sitemap.xml"""
                 
                 db.session.commit()
                 logger.info("✅ Database auto-seeded with classic poems!")
+                
+                # Create default admin user for deployment
+                admin_user = User.query.filter_by(email='admin@poetryvault.com').first()
+                if not admin_user:
+                    admin_user = User(
+                        username='autumn',
+                        email='admin@poetryvault.com',
+                        password_hash=generate_password_hash('autumn2024'),
+                        is_admin=True,
+                        subscription_tier='pro'
+                    )
+                    db.session.add(admin_user)
+                    db.session.commit()
+                    logger.info("✅ Created default admin user: autumn")
         except Exception as e:
             logger.error(f"Error during database initialization: {str(e)}")
             db.session.rollback()

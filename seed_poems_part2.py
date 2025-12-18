@@ -9,6 +9,8 @@ ADDITIONAL_FAMOUS_POEMS = {
         {
             'title': 'I Felt a Funeral in My Brain',
             'category': 'mental state',
+            'mood': 'psychological',
+            'theme': 'mind',
             'content': '''I felt a Funeral, in my Brain,
 And Mourners to and fro
 Kept treading - treading - till it seemed
@@ -37,6 +39,8 @@ And Finished knowing - then -'''
         {
             'title': 'After Great Pain, a Formal Feeling Comes',
             'category': 'grief',
+            'mood': 'sorrowful',
+            'theme': 'loss',
             'content': '''After great pain, a formal feeling comes –
 The Nerves sit ceremonious, like Tombs –
 The stiff Heart questions 'was it He, that bore,'
@@ -56,6 +60,8 @@ First – Chill – then Stupor – then the letting go –'''
         {
             'title': 'My Life Had Stood a Loaded Gun',
             'category': 'power',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''My Life had stood - a Loaded Gun -
 In Corners - till a Day
 The Owner passed - identified -
@@ -89,6 +95,8 @@ Without - the power to die -'''
         {
             'title': 'I Taste a Liquor Never Brewed',
             'category': 'nature',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''I taste a liquor never brewed –
 From Tankards scooped in Pearl –
 Not all the Vats upon the Rhine
@@ -112,6 +120,8 @@ Leaning against the – Sun –'''
         {
             'title': 'The Brain Is Wider Than the Sky',
             'category': 'mind',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''The Brain – is wider than the Sky –
 For – put them side by side –
 The one the other will contain
@@ -130,6 +140,8 @@ As Syllable from Sound –'''
         {
             'title': 'I Heard a Fly Buzz When I Died',
             'category': 'death',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''I heard a Fly buzz - when I died -
 The Stillness in the Room
 Was like the Stillness in the Air -
@@ -153,6 +165,8 @@ I could not see to see -'''
         {
             'title': 'This Is My Letter to the World',
             'category': 'communication',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''This is my letter to the World
 That never wrote to Me –
 The simple News that Nature told –
@@ -166,6 +180,8 @@ Judge tenderly – of Me'''
         {
             'title': 'I Dwell in Possibility',
             'category': 'poetry',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''I dwell in Possibility –
 A fairer House than Prose –
 More numerous of Windows –
@@ -184,6 +200,8 @@ To gather Paradise –'''
         {
             'title': 'A Narrow Fellow in the Grass',
             'category': 'nature',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''A narrow Fellow in the Grass
 Occasionally rides –
 You may have met Him – did you not
@@ -216,6 +234,8 @@ And Zero at the Bone –'''
         {
             'title': 'I Cannot Live with You',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''I cannot live with You –
 It would be Life –
 And Life is over there –
@@ -281,6 +301,8 @@ Despair –'''
         {
             'title': 'The Soul Selects Her Own Society',
             'category': 'solitude',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''The Soul selects her own Society –
 Then – shuts the Door –
 To her divine Majority –
@@ -299,6 +321,8 @@ Like Stone –'''
         {
             'title': 'Some Keep the Sabbath Going to Church',
             'category': 'spirituality',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''Some keep the Sabbath going to Church –
 I keep it, staying at Home –
 With a Bobolink for a Chorister –
@@ -317,6 +341,8 @@ I'm going, all along.'''
         {
             'title': 'Much Madness Is Divinest Sense',
             'category': 'society',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''Much Madness is divinest Sense –
 To a discerning Eye –
 Much Sense – the starkest Madness –
@@ -329,6 +355,8 @@ And handled with a Chain –'''
         {
             'title': 'I Like to See It Lap the Miles',
             'category': 'modern life',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''I like to see it lap the Miles –
 And lick the Valleys up –
 And stop to feed itself at Tanks –
@@ -353,6 +381,8 @@ At its own stable door –'''
         {
             'title': 'The Bustle in a House',
             'category': 'grief',
+            'mood': 'sorrowful',
+            'theme': 'loss',
             'content': '''The Bustle in a House
 The Morning after Death
 Is solemnest of industries
@@ -366,6 +396,8 @@ Until Eternity.'''
         {
             'title': 'I Started Early, Took My Dog',
             'category': 'nature',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''I started Early – Took my Dog –
 And visited the Sea –
 The Mermaids in the Basement
@@ -399,6 +431,8 @@ At me – The Sea withdrew –'''
         {
             'title': 'One Need Not Be a Chamber to Be Haunted',
             'category': 'fear',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''One need not be a Chamber – to be Haunted –
 One need not be a House –
 The Brain has Corridors – surpassing
@@ -427,6 +461,8 @@ Or More –'''
         {
             'title': 'Publication Is the Auction',
             'category': 'poetry',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''Publication – is the Auction
 Of the Mind of Man –
 Poverty – be justifying
@@ -450,6 +486,8 @@ To Disgrace of Price –'''
         {
             'title': 'Safe in Their Alabaster Chambers',
             'category': 'death',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''Safe in their Alabaster Chambers –
 Untouched by Morning –
 And untouched by noon –
@@ -468,6 +506,8 @@ On a Disc of Snow.'''
         {
             'title': 'A Clock Stopped',
             'category': 'death',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''A Clock stopped –
 Not the Mantel's –
 Geneva's farthest skill
@@ -493,6 +533,8 @@ And Him –'''
         {
             'title': 'The Last Night That She Lived',
             'category': 'death',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''The last Night that She lived
 It was a Common Night
 Except the Dying – this to Us
@@ -531,6 +573,8 @@ Belief to regulate –'''
         {
             'title': 'I Felt a Cleaving in My Mind',
             'category': 'mental state',
+            'mood': 'psychological',
+            'theme': 'mind',
             'content': '''I felt a Cleaving in my Mind –
 As if my Brain had split –
 I tried to match it – Seam by Seam –
@@ -544,6 +588,8 @@ Like Balls – upon a Floor.'''
         {
             'title': 'The Heart Asks Pleasure First',
             'category': 'desire',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''The Heart asks Pleasure – first –
 And then – Excuse from Pain –
 And then – those little Anodynes
@@ -557,6 +603,8 @@ The privilege to die –'''
         {
             'title': 'I Measure Every Grief I Meet',
             'category': 'empathy',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''I measure every Grief I meet
 With narrow, probing, Eyes –
 I wonder if It weighs like Mine –
@@ -610,6 +658,8 @@ That Some – are like My Own –'''
         {
             'title': 'I Years Had Been from Home',
             'category': 'return',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''I Years had been from Home
 And now before the Door
 I dared not enter, lest a Face
@@ -643,6 +693,8 @@ Fled gasping from the House –'''
         {
             'title': 'There Came a Wind Like a Bugle',
             'category': 'nature',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''There came a Wind like a Bugle –
 It quivered through the Grass
 And a Green Chill upon the Heat
@@ -664,6 +716,8 @@ And yet abide the World!'''
         {
             'title': 'It Was Not Death, for I Stood Up',
             'category': 'despair',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''It was not Death, for I stood up,
 And all the Dead, lie down –
 It was not Night, for all the Bells
@@ -697,6 +751,8 @@ To justify – Despair.'''
         {
             'title': 'A Word Is Dead',
             'category': 'language',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''A word is dead
 When it is said,
 Some say.
@@ -707,6 +763,8 @@ That day.'''
         {
             'title': 'Forever Is Composed of Nows',
             'category': 'time',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''Forever – is composed of Nows –
 'Tis not a different time –
 Except for Infiniteness –
@@ -725,6 +783,8 @@ From Anno Domini's –'''
         {
             'title': 'The Poets Light but Lamps',
             'category': 'poetry',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''The Poets light but Lamps –
 Themselves – go out –
 The Wicks they stimulate –
@@ -738,6 +798,8 @@ Circumference –'''
         {
             'title': 'To Make a Prairie',
             'category': 'imagination',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''To make a prairie it takes a clover and one bee,
 One clover, and a bee.
 And revery.
@@ -747,6 +809,8 @@ If bees are few.'''
         {
             'title': 'If I Can Stop One Heart from Breaking',
             'category': 'compassion',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''If I can stop one heart from breaking,
 I shall not live in vain;
 If I can ease one life the aching,
@@ -758,6 +822,8 @@ I shall not live in vain.'''
         {
             'title': 'Not Knowing When the Dawn Will Come',
             'category': 'hope',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''Not knowing when the Dawn will come,
 I open every Door,
 Or has it Feathers, like a Bird,
@@ -770,6 +836,8 @@ Or Billows, like a Shore –'''
         {
             'title': 'يقولون ليلى',
             'category': 'love',
+            'mood': 'romantic',
+            'theme': 'passion',
             'content': '''يقولون ليلى بالعراق مريضة
 فيا ليتني كنت الطبيب المداويا
 أداوي بما أبديت من حسن وجهها
@@ -789,6 +857,8 @@ And heal with the gleam of her mouth my eyes'''
         {
             'title': 'أجد بليلى',
             'category': 'longing',
+            'mood': 'melancholic',
+            'theme': 'desire',
             'content': '''أجد بليلى إذا ما جئت أطلبها
 وأجدها حين لا ألقاها أبدا
 كأنما هي في قلبي وفي كبدي
@@ -812,6 +882,8 @@ Nor do I see any other shelter for it in my heart'''
         {
             'title': 'لو أن الباكين',
             'category': 'tears',
+            'mood': 'sad',
+            'theme': 'sorrow',
             'content': '''لو أن الباكين يبكون دما
 لكنت أول من يبكي دما
 ولو أن الحزن يقتل صاحبه
@@ -831,6 +903,8 @@ My heart would melt from longing certainly'''
         {
             'title': 'أراك بعيني',
             'category': 'vision',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''أراك بعيني كل يوم ومشهد
 وإن كنت عني نائي الدار شاسعا
 وأسمع صوتك في الرياح إذا سرت
@@ -850,6 +924,8 @@ And I think all the earth is Layla when it expands'''
         {
             'title': 'ألا يا ليل',
             'category': 'night',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''ألا يا ليل كم من ليلة
 قضيتها بذكر من أحب
 أحدث نفسي عنها وأبكي
@@ -869,6 +945,8 @@ See that morning is closer to us'''
         {
             'title': 'وما بي من سقم',
             'category': 'illness',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''وما بي من سقم ولا بي جنون
 ولكن هوى ليلى أصابني فنون
 فمن قال مجنون فإني عاشق
@@ -888,6 +966,8 @@ And weep and reveal what is hidden in your heart'''
         {
             'title': 'سلام على الدنيا إذا ما فقدتها',
             'category': 'farewell',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''سلام على الدنيا إذا ما فقدتها
 وليس لها بعد الفراق سلام
 سلام على ليلى وإن كان بيننا
@@ -911,6 +991,8 @@ And it suffices me from the days that I am loved'''
         {
             'title': 'أحن إلى ليلى',
             'category': 'yearning',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''أحن إلى ليلى وأهوى لقاءها
 كما يشتهي الظمآن ورد المناهل
 وأذكرها والليل داج كأنما
@@ -930,6 +1012,8 @@ In the valley of villages, for then I would be happy'''
         {
             'title': 'خليلي إن الشوق',
             'category': 'friendship',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''خليلي إن الشوق يقتل صاحبه
 فهل لكما في أن تزورا سبيل
 أريد لقاء الحي حي بني عامر
@@ -949,6 +1033,8 @@ Will a resting place one day gather me and Layla?'''
         {
             'title': 'وإني لأستغشي',
             'category': 'dreams',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''وإني لأستغشي وما بي نعسة
 لعل خيالا منك يلقى خياليا
 فيا ليت هذا الليل يدوم دائما
@@ -968,6 +1054,8 @@ And evening would come with you and time consecutively'''
         {
             'title': 'تذكرت ليلى والسنين الخوالي',
             'category': 'memory',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''تذكرت ليلى والسنين الخوالي
 وأيام كنا في الهوى أمثالي
 وكنا نرى الدنيا جميعا بأعيننا
@@ -987,6 +1075,8 @@ And nights separated me from the beloved'''
         {
             'title': 'أموت ولم أقض اللبانة',
             'category': 'unfulfilled',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''أموت ولم أقض اللبانة من هوى
 ولم أشف نفسي من حبيب أحبه
 ولم ألق ليلى في المنام ولا على
@@ -1006,6 +1096,8 @@ The face of the one I love and adore being near'''
         {
             'title': 'ألا ليت ريعان الشباب',
             'category': 'youth',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''ألا ليت ريعان الشباب يعود يوما
 فأخبره بما فعل المشيب
 وليت الذي بيني وبين أحبتي
@@ -1025,6 +1117,8 @@ All that I hope from you is near'''
         {
             'title': 'وقالوا تناس',
             'category': 'persistence',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''وقالوا تناس ليلى فقلت لهم
 أتنسى النفوس ما تحب وتهوى
 وهل ينسى المحب حبيبه
@@ -1044,6 +1138,8 @@ And does the patient one have strength over love?'''
         {
             'title': 'أحبك يا ليلى',
             'category': 'declaration',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''أحبك يا ليلى بكل جوارحي
 وأهواك حتى يشهد الله ما بيا
 وأعشق فيك الروح قبل جمالها
@@ -1063,6 +1159,8 @@ It would be heavier than the mountains of the world'''
         {
             'title': 'وما أنا بالباغي',
             'category': 'devotion',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''وما أنا بالباغي على الحب بدلا
 ولا أنا ممن يبتغي الحب أبدالا
 وما أنا ممن يشتري الحب بالهوى
@@ -1082,6 +1180,8 @@ Nor is love and affection bought with money'''
         {
             'title': 'يا من يلوم',
             'category': 'blame',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''يا من يلوم على هوى ليلى دعه
 فالقلب لا يملك الهوى ولا يدعه
 إن كان ذنبي أنني أهوى الهوى
@@ -1101,6 +1201,8 @@ Is sweeter than the life I do not obey'''
         {
             'title': 'لو كان قلبي',
             'category': 'heart',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''لو كان قلبي معي ما كنت أشكو الهوى
 لكنه ذهب مع من أحب وهوى
 وتركني وحدي أعاني من الألم
@@ -1120,6 +1222,8 @@ Without you in the world am like a dead without a soul'''
         {
             'title': 'أعيش على ذكراك',
             'category': 'remembrance',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''أعيش على ذكراك في كل لحظة
 وأحيا بحبك في الصباح وفي المسا
 وأذكر أيام اللقاء وما جرى
@@ -1139,6 +1243,8 @@ So I could live with them a new life with passion'''
         {
             'title': 'وإن كنت بعيدا',
             'category': 'distance',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''وإن كنت بعيدا عن عيوني
 فأنت قريب من قلبي ووجداني
 وإن غبت عن ناظري سنين
@@ -1158,6 +1264,8 @@ And you are my companion in all my moments'''
         {
             'title': 'أنا المجنون',
             'category': 'madness',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''أنا المجنون في حب الهوى
 وأنا العاشق في دنيا الجوى
 وأنا الذي ضاع في بحر الغرام
@@ -1177,6 +1285,8 @@ Then I am the happiest madman in the world'''
         {
             'title': 'كل الطرق',
             'category': 'journey',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''كل الطرق تؤدي إليك
 وكل السبل تنتهي عندك
 وكل الأماني تتمنى لقاك
@@ -1196,6 +1306,8 @@ And you are the hope and the expectation'''
         {
             'title': 'لو أن الحب',
             'category': 'if only',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''لو أن الحب يشترى بالمال
 لاشتريت حبك بكل ما أملك
 ولو أن الحب يكتسب بالجهد
@@ -1215,6 +1327,8 @@ It is not bought nor earned with work'''
         {
             'title': 'في كل نجم',
             'category': 'everywhere',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''في كل نجم في السماء أراك
 وفي كل زهرة في الحقول أشمك
 وفي كل نسمة من الهواء أحسك
@@ -1234,6 +1348,8 @@ And you are in every beat of my heart'''
         {
             'title': 'أنت السبب',
             'category': 'reason',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''أنت السبب في كل دمعة أذرفها
 وأنت السبب في كل ابتسامة أرسمها
 وأنت السبب في كل نبضة قلب أحسها
@@ -1253,6 +1369,8 @@ And you are my joy and my sorrow'''
         {
             'title': 'حبك في قلبي',
             'category': 'eternal',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''حبك في قلبي كالنقش على الحجر
 لا يمحوه الزمان ولا تغيره السنين
 وحبك في روحي كالروح في الجسد
@@ -1272,6 +1390,8 @@ And you are in my heart until the Day of Judgment'''
         {
             'title': 'آخر القصيد',
             'category': 'conclusion',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''وفي النهاية أقول لك يا ليلى
 إن حبي لك لا ينتهي
 وإن شوقي إليك لا يتوقف
@@ -1293,6 +1413,8 @@ And you are everything in my life'''
         {
             'title': 'وداعا يا ليلى',
             'category': 'farewell',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''وداعا يا ليلى إن كان لا بد من الوداع
 وداعا يا حبيبتي إن كان لا بد من الفراق
 ولكن اعلمي أن قلبي معك
@@ -1312,6 +1434,8 @@ Even after death and in the hereafter'''
         {
             'title': 'صبرت على الهجر',
             'category': 'patience',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''صبرت على الهجر والبعد والفراق
 وصبرت على الألم والشوق والاشتياق
 ولكن لم أصبر على نسيانك
@@ -1331,6 +1455,8 @@ And you are in everything in my life'''
         {
             'title': 'أنت نور عيني',
             'category': 'light',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''أنت نور عيني في الظلام
 وأنت أمل قلبي في اليأس
 وأنت سعادتي في الحزن
@@ -1350,6 +1476,8 @@ And how can I leave you when you are my soul'''
         {
             'title': 'ولما تلاقينا على سفح رامة',
             'category': 'meeting',
+            'mood': 'contemplative',
+            'theme': 'reflection',
             'content': '''ولما تلاقينا على سفح رامة
 وقد غاب عنا كل واش وحاسد
 تعانقت الأرواح من قبل أن نرى
