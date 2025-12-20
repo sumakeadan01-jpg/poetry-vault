@@ -7,6 +7,7 @@ from analytics import track_visitor, log_activity
 from datetime import datetime
 import logging
 import traceback
+import os
 
 # Import security middleware
 from security_middleware import security_manager, require_permission, validate_content_input, protect_user_data
