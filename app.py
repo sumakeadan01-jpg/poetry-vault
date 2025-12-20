@@ -1545,6 +1545,64 @@ Sitemap: {request.url_root}sitemap.xml"""
             db.session.rollback()
     
     # Database migration route for Render
+    @app.route('/migrate-database')
+    def migrate_database():
+        """Run database migration for new security features"""
+        try:
+            # Check if we're in production (Render)
+            if not os.environ.get('DATABASE_URL'):
+                return jsonify({'error': 'Migration only available in production'}), 403
+            
+            logger.info("Running database migration...")
+            
+            # PostgreSQL-specific column additions
+            migrations = [
+                # Users table
+                "ALTER TABLE users ADD COLUMN IF NOT EXISTS last_login TIMESTAMP",
+                "ALTER TABLE users ADD COLUMN IF NOT EXISTS privacy_settings TEXT",
+                "ALTER TABLE users ADD COLUMN IF NOT EXISTS is_banned BOOLEAN DEFAULT FALSE",
+                "ALTER TABLE users ADD COLUMN IF NOT EXISTS ban_reason VARCHAR(500)",
+                "ALTER TABLE users ADD COLUMN IF NOT EXISTS failed_login_attempts INTEGER DEFAULT 0",
+                "ALTER TABLE users ADD COLUMN IF NOT EXISTS account_locked_until TIMESTAMP",
+                "ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified BOOLEAN DEFAULT FALSE",
+                "ALTER TABLE users ADD COLUMN IF NOT EXISTS two_factor_enabled BOOLEAN DEFAULT FALSE",
+                "ALTER TABLE users ADD COLUMN IF NOT EXISTS data_sharing_consent BOOLEAN DEFAULT FALSE",
+                
+                # Poems table
+                "ALTER TABLE poems ADD COLUMN IF NOT EXISTS is_protected BOOLEAN DEFAULT FALSE",
+                "ALTER TABLE poems ADD COLUMN IF NOT EXISTS visibility VARCHAR(20) DEFAULT 'public'",
+                "ALTER TABLE poems ADD COLUMN IF NOT EXISTS content_warning VARCHAR(200)",
+                "ALTER TABLE poems ADD COLUMN IF NOT EXISTS is_flagged BOOLEAN DEFAULT FALSE",
+                "ALTER TABLE poems ADD COLUMN IF NOT EXISTS flag_reason VARCHAR(500)",
+                
+                # Comments table
+                "ALTER TABLE comments ADD COLUMN IF NOT EXISTS is_protected BOOLEAN DEFAULT FALSE",
+                "ALTER TABLE comments ADD COLUMN IF NOT EXISTS is_flagged BOOLEAN DEFAULT FALSE",
+                "ALTER TABLE comments ADD COLUMN IF NOT EXISTS flag_reason VARCHAR(500)"
+            ]
+            
+            results = []
+            for sql in migrations:
+                try:
+                    with db.engine.connect() as connection:
+                        connection.execute(db.text(sql))
+                        connection.commit()
+                    results.append(f"✅ {sql}")
+                except Exception as e:
+                    if "already exists" in str(e).lower():
+                        results.append(f"⚠️  Column already exists: {sql}")
+                    else:
+                        results.append(f"❌ Error: {sql} - {str(e)}")
+            
+            return jsonify({
+                'success': True,
+                'message': 'Migration completed',
+                'results': results
+            })
+            
+        except Exception as e:
+            logger.error(f"Migration error: {str(e)}")
+            return jsonify({'error': f'Migration failed: {str(e)}'}), 500
     @app.route('/fix-database-schema')
     def fix_database_schema():
         """Fix database schema by adding missing columns"""

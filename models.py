@@ -79,39 +79,66 @@ class User(UserMixin, db.Model):
     # Security Methods
     def record_login(self):
         """Record successful login"""
-        self.last_login = datetime.utcnow()
-        self.failed_login_attempts = 0
-        self.account_locked_until = None
-        db.session.commit()
+        try:
+            self.last_login = datetime.utcnow()
+            self.failed_login_attempts = 0
+            self.account_locked_until = None
+            db.session.commit()
+        except Exception:
+            # Handle case where columns don't exist yet
+            db.session.rollback()
     
     def record_failed_login(self):
         """Record failed login attempt"""
-        self.failed_login_attempts += 1
-        if self.failed_login_attempts >= 5:
-            # Lock account for 30 minutes
-            from datetime import timedelta
-            self.account_locked_until = datetime.utcnow() + timedelta(minutes=30)
-        db.session.commit()
+        try:
+            self.failed_login_attempts += 1
+            if self.failed_login_attempts >= 5:
+                # Lock account for 30 minutes
+                from datetime import timedelta
+                self.account_locked_until = datetime.utcnow() + timedelta(minutes=30)
+            db.session.commit()
+        except Exception:
+            # Handle case where columns don't exist yet
+            db.session.rollback()
     
     def is_account_locked(self):
         """Check if account is locked"""
-        if self.is_banned:
-            return True, self.ban_reason or "Account is banned"
-        
-        if self.account_locked_until:
-            if datetime.utcnow() < self.account_locked_until:
-                return True, "Account is temporarily locked due to failed login attempts"
-            else:
-                # Unlock account
-                self.account_locked_until = None
-                self.failed_login_attempts = 0
-                db.session.commit()
+        try:
+            if hasattr(self, 'is_banned') and self.is_banned:
+                return True, getattr(self, 'ban_reason', 'Account is banned')
+            
+            if hasattr(self, 'account_locked_until') and self.account_locked_until:
+                if datetime.utcnow() < self.account_locked_until:
+                    return True, "Account is temporarily locked due to failed login attempts"
+                else:
+                    # Unlock account
+                    self.account_locked_until = None
+                    self.failed_login_attempts = 0
+                    db.session.commit()
+        except Exception:
+            # Handle case where columns don't exist yet
+            pass
         
         return False, None
     
     def get_privacy_settings(self):
         """Get user privacy settings"""
-        if not self.privacy_settings:
+        try:
+            if not hasattr(self, 'privacy_settings') or not self.privacy_settings:
+                return {
+                    'profile_visibility': 'public',
+                    'poem_visibility': 'public',
+                    'activity_visibility': 'friends',
+                    'allow_comments': True,
+                    'allow_follows': True,
+                    'email_notifications': True
+                }
+            
+            from data_protection import data_protection
+            decrypted = data_protection.decrypt_sensitive_data(self.privacy_settings)
+            import json
+            return json.loads(decrypted) if decrypted else {}
+        except:
             return {
                 'profile_visibility': 'public',
                 'poem_visibility': 'public',
@@ -120,18 +147,13 @@ class User(UserMixin, db.Model):
                 'allow_follows': True,
                 'email_notifications': True
             }
-        
-        try:
-            from data_protection import data_protection
-            decrypted = data_protection.decrypt_sensitive_data(self.privacy_settings)
-            import json
-            return json.loads(decrypted) if decrypted else {}
-        except:
-            return {}
     
     def update_privacy_settings(self, settings):
         """Update user privacy settings"""
         try:
+            if not hasattr(self, 'privacy_settings'):
+                return False
+                
             from data_protection import data_protection
             import json
             self.privacy_settings = data_protection.encrypt_sensitive_data(settings)
