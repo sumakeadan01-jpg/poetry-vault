@@ -1481,18 +1481,18 @@ Sitemap: {request.url_root}sitemap.xml"""
                 logger.info("Database initialized with poems")
                 
                 # Create default admin user for deployment
-                admin_user = User.query.filter_by(email='admin@poetryvault.com').first()
+                admin_user = User.query.filter_by(username='admin').first()
                 if not admin_user:
                     admin_user = User(
-                        username='autumn',
+                        username='admin',
                         email='admin@poetryvault.com',
-                        password_hash=generate_password_hash('autumn2024'),
+                        password_hash=generate_password_hash('admin123'),
                         is_admin=True,
-                        subscription_tier='pro'
+                        age=25
                     )
                     db.session.add(admin_user)
                     db.session.commit()
-                    logger.info("Admin user created")
+                    logger.info("Admin user created: username=admin")
         except Exception as e:
             logger.error(f"Error during database initialization: {str(e)}")
             db.session.rollback()
