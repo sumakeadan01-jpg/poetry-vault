@@ -33,7 +33,7 @@ def export_real_users(db_path='instance/poetry_app.db', export_file='real_users_
     """Export real user accounts (excluding poet accounts)"""
     
     if not os.path.exists(db_path):
-        print(f"❌ Database not found: {db_path}")
+        print(f"Database not found: {db_path}")
         return False
     
     conn = sqlite3.connect(db_path)
@@ -75,7 +75,7 @@ def export_real_users(db_path='instance/poetry_app.db', export_file='real_users_
         with open(export_file, 'w', encoding='utf-8') as f:
             json.dump(export_data, f, indent=2, ensure_ascii=False)
         
-        print(f"✅ Exported {len(real_users)} real users to {export_file}")
+        print(f"Exported {len(real_users)} real users to {export_file}")
         
         if real_users:
             print("\nExported users:")
@@ -86,7 +86,7 @@ def export_real_users(db_path='instance/poetry_app.db', export_file='real_users_
         return True
         
     except Exception as e:
-        print(f"❌ Export failed: {e}")
+        print(f"Export failed: {e}")
         return False
     finally:
         conn.close()
@@ -95,11 +95,11 @@ def import_real_users(db_path='instance/poetry_app.db', import_file='real_users_
     """Import real user accounts after deployment"""
     
     if not os.path.exists(import_file):
-        print(f"❌ Backup file not found: {import_file}")
+        print(f"Backup file not found: {import_file}")
         return False
     
     if not os.path.exists(db_path):
-        print(f"❌ Database not found: {db_path}")
+        print(f"Database not found: {db_path}")
         return False
     
     # Load backup data
@@ -125,7 +125,7 @@ def import_real_users(db_path='instance/poetry_app.db', import_file='real_users_
             existing = cursor.fetchone()
             
             if existing:
-                print(f"⚠️  User {user['email']} already exists, skipping")
+                print(f"User {user['email']} already exists, skipping")
                 skipped_count += 1
                 continue
             
@@ -146,14 +146,14 @@ def import_real_users(db_path='instance/poetry_app.db', import_file='real_users_
             
             imported_count += 1
             admin_flag = " (ADMIN)" if user['is_admin'] else ""
-            print(f"✅ Imported: {user['username']} - {user['email']}{admin_flag}")
+            print(f"Imported: {user['username']} - {user['email']}{admin_flag}")
         
         conn.commit()
         print(f"\n🎉 Successfully imported {imported_count} users, skipped {skipped_count}")
         return True
         
     except Exception as e:
-        print(f"❌ Import failed: {e}")
+        print(f"Import failed: {e}")
         conn.rollback()
         return False
     finally:
@@ -163,7 +163,7 @@ def create_deployment_user(username, email, password, is_admin=True, db_path='in
     """Create a specific user account for deployment"""
     
     if not os.path.exists(db_path):
-        print(f"❌ Database not found: {db_path}")
+        print(f"Database not found: {db_path}")
         return False
     
     conn = sqlite3.connect(db_path)
@@ -173,7 +173,7 @@ def create_deployment_user(username, email, password, is_admin=True, db_path='in
         # Check if user exists
         cursor.execute('SELECT id FROM users WHERE email = ?', (email,))
         if cursor.fetchone():
-            print(f"⚠️  User {email} already exists")
+            print(f"User {email} already exists")
             return False
         
         # Create user
@@ -189,11 +189,11 @@ def create_deployment_user(username, email, password, is_admin=True, db_path='in
         
         conn.commit()
         admin_flag = " (ADMIN)" if is_admin else ""
-        print(f"✅ Created user: {username} - {email}{admin_flag}")
+        print(f"Created user: {username} - {email}{admin_flag}")
         return True
         
     except Exception as e:
-        print(f"❌ Failed to create user: {e}")
+        print(f"Failed to create user: {e}")
         return False
     finally:
         conn.close()
@@ -218,4 +218,4 @@ if __name__ == '__main__':
         username, email, password = sys.argv[2], sys.argv[3], sys.argv[4]
         create_deployment_user(username, email, password)
     else:
-        print("❌ Invalid command")
+        print("Invalid command")

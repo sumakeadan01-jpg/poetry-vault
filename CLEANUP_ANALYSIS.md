@@ -99,7 +99,7 @@ Your project has **accumulated 40+ documentation files and 25+ utility scripts**
     - Why important: Debugging tool
     - Safe to delete? ⚠️ KEEP - Useful for debugging
 
-14. **`check_before_restore.py`**
+14. **`check before restart?`**
     - What: Checks database before restore
     - Why important: Safety check
     - Safe to delete? ✅ YES - Rarely needed
@@ -268,8 +268,7 @@ Your project has **accumulated 40+ documentation files and 25+ utility scripts**
     - Why important: Reference
     - Safe to delete? ⚠️ KEEP - Merge into README.md
 
----
-
+---.
 ## 🎯 RECOMMENDED ACTION PLAN
 
 ### Phase 1: Delete Obvious One-Time Files (Safe)

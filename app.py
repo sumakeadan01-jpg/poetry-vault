@@ -245,7 +245,7 @@ def create_app():
             <html>
             <head><title>Database Reset</title></head>
             <body style="font-family: Arial; padding: 50px; text-align: center;">
-                <h1 style="color: green;">✅ Database Reset Successful!</h1>
+                <h1 style="color: green;">Database Reset Successful</h1>
                 <p>The database has been reset with all classic poets and poems.</p>
                 <p><a href="/register" style="color: #d4af37; text-decoration: none; font-size: 18px;">→ Register Your Account</a></p>
             </body>
@@ -256,7 +256,7 @@ def create_app():
             <html>
             <head><title>Reset Failed</title></head>
             <body style="font-family: Arial; padding: 50px; text-align: center;">
-                <h1 style="color: red;">❌ Reset Failed</h1>
+                <h1 style="color: red;">Reset Failed</h1>
                 <p>Error: {str(e)}</p>
                 <p><a href="/" style="color: #d4af37;">← Back to Home</a></p>
             </body>
@@ -280,7 +280,7 @@ def create_app():
                 <html>
                 <head><title>Migration Status</title></head>
                 <body style="font-family: Arial; padding: 50px; text-align: center;">
-                    <h1 style="color: green;">✅ Column Already Exists!</h1>
+                    <h1 style="color: green;">Column Already Exists</h1>
                     <p>The has_seen_tutorial column is already in the database.</p>
                     <p>No changes needed.</p>
                     <p><a href="/" style="color: #d4af37; text-decoration: none; font-size: 18px;">→ Go to Home</a></p>
@@ -319,7 +319,7 @@ def create_app():
             <html>
             <head><title>Migration Successful</title></head>
             <body style="font-family: Arial; padding: 50px; text-align: center;">
-                <h1 style="color: green;">✅ Migration Successful!</h1>
+                <h1 style="color: green;">Migration Successful</h1>
                 <p>Added has_seen_tutorial column to database.</p>
                 <p>Updated {user_count} users - they will all see the tutorial once.</p>
                 <p><a href="/" style="color: #d4af37; text-decoration: none; font-size: 18px;">→ Go to Home</a></p>
@@ -331,7 +331,7 @@ def create_app():
             <html>
             <head><title>Migration Failed</title></head>
             <body style="font-family: Arial; padding: 50px; text-align: center;">
-                <h1 style="color: red;">❌ Migration Failed</h1>
+                <h1 style="color: red;">Migration Failed</h1>
                 <p>Error: {str(e)}</p>
                 <p>The column might already exist, or there's a database issue.</p>
                 <p><a href="/" style="color: #d4af37;">← Back to Home</a></p>
@@ -356,7 +356,7 @@ def create_app():
                 poet = User.query.filter_by(username=poet_name).first()
                 
                 if not poet:
-                    results.append(f"❌ {poet_name}: Poet not found")
+                    results.append(f"Error: {poet_name}: Poet not found")
                     continue
                 
                 added = 0
@@ -384,7 +384,7 @@ def create_app():
                 db.session.commit()
                 added_total += added
                 skipped_total += skipped
-                results.append(f"✅ {poet_name}: Added {added}, Skipped {skipped}")
+                results.append(f"Success: {poet_name}: Added {added}, Skipped {skipped}")
             
             results_html = '<br>'.join(results)
             
@@ -392,7 +392,7 @@ def create_app():
             <html>
             <head><title>Import Successful</title></head>
             <body style="font-family: Arial; padding: 50px; text-align: center;">
-                <h1 style="color: green;">✅ Import Successful!</h1>
+                <h1 style="color: green;">Import Successful</h1>
                 <p>Added {added_total} new poems, Skipped {skipped_total} (already exist)</p>
                 <div style="text-align: left; max-width: 600px; margin: 20px auto; padding: 20px; background: #f5f5f5; border-radius: 8px;">
                     {results_html}
@@ -406,7 +406,7 @@ def create_app():
             <html>
             <head><title>Import Failed</title></head>
             <body style="font-family: Arial; padding: 50px; text-align: center;">
-                <h1 style="color: red;">❌ Import Failed</h1>
+                <h1 style="color: red;">Import Failed</h1>
                 <p>Error: {str(e)}</p>
                 <p><a href="/" style="color: #d4af37;">← Back to Home</a></p>
             </body>
@@ -457,7 +457,7 @@ def create_app():
             <html>
             <head><title>Analytics Tables Added</title></head>
             <body style="font-family: Arial; padding: 50px; text-align: center;">
-                <h1 style="color: green;">✅ Analytics Tables Created!</h1>
+                <h1 style="color: green;">Analytics Tables Created</h1>
                 <p>Successfully added user_activities and visitors tables.</p>
                 <p>Your admin panel now tracks visitor and user activity!</p>
                 <p><a href="/admin" style="color: #d4af37; text-decoration: none; font-size: 18px;">→ Go to Admin Panel</a></p>
@@ -469,7 +469,7 @@ def create_app():
             <html>
             <head><title>Migration Failed</title></head>
             <body style="font-family: Arial; padding: 50px; text-align: center;">
-                <h1 style="color: red;">❌ Migration Failed</h1>
+                <h1 style="color: red;">Migration Failed</h1>
                 <p>Error: {str(e)}</p>
                 <p>Tables might already exist.</p>
                 <p><a href="/" style="color: #d4af37;">← Back to Home</a></p>
@@ -1419,13 +1419,17 @@ Sitemap: {request.url_root}sitemap.xml"""
         try:
             db.create_all()
             
-            # Auto-seed database if empty
+            # Initialize database if empty
             if Poem.query.count() == 0:
-                logger.info("Database is empty. Auto-seeding with classic poems...")
+                logger.info("Database is empty. Loading poems...")
                 from seed_poems import FAMOUS_POEMS
+                from seed_poems_part2 import ADDITIONAL_FAMOUS_POEMS
                 from werkzeug.security import generate_password_hash
                 
-                for poet_name, poems in FAMOUS_POEMS.items():
+                # Merge both poem collections
+                all_poems = {**FAMOUS_POEMS, **ADDITIONAL_FAMOUS_POEMS}
+                
+                for poet_name, poems in all_poems.items():
                     try:
                         poet_user = User.query.filter_by(username=poet_name).first()
                         
@@ -1461,7 +1465,7 @@ Sitemap: {request.url_root}sitemap.xml"""
                         continue
                 
                 db.session.commit()
-                logger.info("✅ Database auto-seeded with classic poems!")
+                logger.info("Database initialized with poems")
                 
                 # Create default admin user for deployment
                 admin_user = User.query.filter_by(email='admin@poetryvault.com').first()
@@ -1475,7 +1479,7 @@ Sitemap: {request.url_root}sitemap.xml"""
                     )
                     db.session.add(admin_user)
                     db.session.commit()
-                    logger.info("✅ Created default admin user: autumn")
+                    logger.info("Admin user created")
         except Exception as e:
             logger.error(f"Error during database initialization: {str(e)}")
             db.session.rollback()
@@ -1498,9 +1502,9 @@ Sitemap: {request.url_root}sitemap.xml"""
             for sql in missing_columns:
                 try:
                     db.session.execute(text(sql))
-                    results.append(f"✅ {sql}")
+                    results.append(f"Success: {sql}")
                 except Exception as e:
-                    results.append(f"⚠️ {sql} - {str(e)}")
+                    results.append(f"Warning: {sql} - {str(e)}")
             
             db.session.commit()
             
@@ -1508,22 +1512,22 @@ Sitemap: {request.url_root}sitemap.xml"""
             user_count = User.query.count()
             
             return f"""<pre>
-🔧 DATABASE SCHEMA FIX COMPLETED
+DATABASE SCHEMA FIX COMPLETED
 
 {chr(10).join(results)}
 
-📊 Database Status:
+Database Status:
 - Total users: {user_count}
-- Schema: ✅ Updated
+- Schema: Updated
 
-🎉 Registration should work now!
+Registration should work now!
 Try registering at: /register
 </pre>"""
             
         except Exception as e:
             import traceback
             db.session.rollback()
-            return f"<pre>❌ Schema Fix Error: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
+            return f"<pre>Schema Fix Error: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
     
     # Update poems while keeping users (recommended)
     @app.route('/update-poems-keep-users')
@@ -1659,7 +1663,7 @@ Try registering now at: /register
         except Exception as e:
             import traceback
             db.session.rollback()
-            return f"<pre>❌ Reset Error: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
+            return f"<pre>Reset Error: {str(e)}\n\nFull traceback:\n{traceback.format_exc()}</pre>"
     
     # Complete user cleanup route (backup method)
     @app.route('/complete-user-cleanup')
@@ -1690,7 +1694,7 @@ Try registering now at: /register
             
             # Show what we found
             user_list = []
-            user_list.append(f"📊 FOUND {len(all_users)} TOTAL USERS:")
+            user_list.append(f"FOUND {len(all_users)} TOTAL USERS:")
             user_list.append("")
             
             if real_users:
