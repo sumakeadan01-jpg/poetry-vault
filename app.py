@@ -37,24 +37,37 @@ def create_app():
     @app.errorhandler(404)
     def not_found_error(error):
         logger.warning(f"404 error: {request.url}")
-        return render_template('404.html'), 404 if app.config.get('DEBUG') else ('Page not found', 404)
+        if app.config.get('DEBUG'):
+            return render_template('404.html'), 404
+        else:
+            return 'Page not found', 404
     
     @app.errorhandler(403)
     def forbidden_error(error):
         logger.warning(f"403 error: {request.url}")
-        return render_template('403.html'), 403 if app.config.get('DEBUG') else ('Access forbidden', 403)
+        if app.config.get('DEBUG'):
+            return render_template('403.html'), 403
+        else:
+            return 'Access forbidden', 403
     
     @app.errorhandler(500)
     def internal_error(error):
         logger.error(f"500 error: {str(error)}\n{traceback.format_exc()}")
         db.session.rollback()
-        return render_template('500.html'), 500 if app.config.get('DEBUG') else ('Internal server error', 500)
+        if app.config.get('DEBUG'):
+            return render_template('500.html'), 500
+        else:
+            return 'Internal server error', 500
     
     @app.errorhandler(Exception)
     def handle_exception(error):
         logger.error(f"Unhandled exception: {str(error)}\n{traceback.format_exc()}")
         db.session.rollback()
         return jsonify({'status': 'error', 'message': 'An unexpected error occurred'}), 500
+    
+    @app.route('/favicon.ico')
+    def favicon():
+        return '', 204  # No content response for favicon
     
     @app.route('/')
     def index():
