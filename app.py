@@ -8,6 +8,10 @@ from datetime import datetime
 import logging
 import traceback
 
+# Import security middleware
+from security_middleware import security_manager, require_permission, validate_content_input, protect_user_data
+from data_protection import data_protection
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -148,6 +152,7 @@ def create_app():
             return render_template('register.html', error=f'Registration error: {str(e)}')
     
     @app.route('/login', methods=['GET', 'POST'])
+    @protect_user_data()
     def login():
         try:
             if request.method == 'POST':
@@ -156,6 +161,9 @@ def create_app():
                 
                 if not username or not password:
                     return render_template('login.html', error='Username and password are required')
+                
+                # Sanitize input
+                username = security_manager.sanitize_input(username)
                 
                 # Block classic poets from logging in
                 classic_poet_names = ['Shakespeare', 'Rumi', 'Emily Dickinson', 'Edgar Allan Poe', 
@@ -180,18 +188,36 @@ def create_app():
                 
                 user = User.query.filter_by(username=actual_username).first()
                 
-                if user and user.check_password(password):
-                    # Grant admin access if they used the code
-                    if is_admin_login:
-                        user.is_admin = True
-                        db.session.commit()
+                if user:
+                    # Check if account is locked or banned
+                    is_locked, lock_reason = user.is_account_locked()
+                    if is_locked:
+                        security_manager.log_security_event('login_blocked', user.id, {'reason': lock_reason})
+                        return render_template('login.html', error=lock_reason)
                     
-                    login_user(user)
-                    log_activity('login', f'User {user.username} logged in')
-                    logger.info(f"User logged in: {user.username}")
-                    return redirect(url_for('home'))
-                
-                return render_template('login.html', error='Invalid username or password')
+                    if user.check_password(password):
+                        # Grant admin access if they used the code
+                        if is_admin_login:
+                            user.is_admin = True
+                            db.session.commit()
+                        
+                        # Record successful login
+                        user.record_login()
+                        
+                        login_user(user)
+                        log_activity('login', f'User {user.username} logged in')
+                        logger.info(f"User logged in: {user.username}")
+                        security_manager.log_security_event('successful_login', user.id)
+                        return redirect(url_for('home'))
+                    else:
+                        # Record failed login
+                        user.record_failed_login()
+                        security_manager.log_security_event('failed_login', user.id)
+                        return render_template('login.html', error='Invalid username or password')
+                else:
+                    # Log failed login attempt for non-existent user
+                    security_manager.log_security_event('failed_login', None, {'username': actual_username})
+                    return render_template('login.html', error='Invalid username or password')
             
             return render_template('login.html')
         except Exception as e:
@@ -536,6 +562,9 @@ def create_app():
     
     @app.route('/new-poem', methods=['GET', 'POST'])
     @login_required
+    @require_permission('create_poem')
+    @validate_content_input('poem')
+    @protect_user_data()
     def new_poem():
         try:
             if request.method == 'POST':
@@ -545,6 +574,16 @@ def create_app():
                 mood = request.form.get('mood', '').strip()
                 theme = request.form.get('theme', '').strip()
                 is_anonymous = request.form.get('anonymous') == 'on'
+                visibility = request.form.get('visibility', 'public')
+                content_warning = request.form.get('content_warning', '').strip()
+                
+                # Sanitize inputs
+                title = security_manager.sanitize_input(title)
+                content = security_manager.sanitize_input(content)
+                category = security_manager.sanitize_input(category)
+                mood = security_manager.sanitize_input(mood)
+                theme = security_manager.sanitize_input(theme)
+                content_warning = security_manager.sanitize_input(content_warning)
                 
                 # Validate inputs
                 title_valid, title_msg = Poem.validate_title(title)
@@ -555,6 +594,11 @@ def create_app():
                 if not content_valid:
                     return render_template('new_poem.html', error=content_msg)
                 
+                # Additional security validation
+                content_valid, validated_content = security_manager.validate_content(content, 'poem')
+                if not content_valid:
+                    return render_template('new_poem.html', error=validated_content)
+                
                 poem = Poem(
                     title=title,
                     content=content,
@@ -562,12 +606,15 @@ def create_app():
                     mood=mood if mood else None,
                     theme=theme if theme else None,
                     user_id=current_user.id,
-                    is_anonymous=is_anonymous
+                    is_anonymous=is_anonymous,
+                    visibility=visibility,
+                    content_warning=content_warning if content_warning else None
                 )
                 db.session.add(poem)
                 db.session.commit()
                 
                 logger.info(f"New poem created by {current_user.username}: {title}")
+                security_manager.log_security_event('poem_created', current_user.id, {'poem_id': poem.id})
                 return redirect(url_for('home'))
             
             # Get existing options for dropdowns

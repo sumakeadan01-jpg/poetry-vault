@@ -20,6 +20,17 @@ class User(UserMixin, db.Model):
     subscription_tier = db.Column(db.String(20), default='free')  # free, plus, pro
     subscription_expires = db.Column(db.DateTime, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login = db.Column(db.DateTime, nullable=True)
+    
+    # Privacy and Security fields
+    privacy_settings = db.Column(db.Text, nullable=True)  # Encrypted JSON
+    is_banned = db.Column(db.Boolean, default=False)
+    ban_reason = db.Column(db.String(500), nullable=True)
+    failed_login_attempts = db.Column(db.Integer, default=0)
+    account_locked_until = db.Column(db.DateTime, nullable=True)
+    email_verified = db.Column(db.Boolean, default=False)
+    two_factor_enabled = db.Column(db.Boolean, default=False)
+    data_sharing_consent = db.Column(db.Boolean, default=False)
     
     poems = db.relationship('Poem', backref='author', lazy=True)
     comments = db.relationship('Comment', backref='author', lazy=True)
@@ -65,6 +76,70 @@ class User(UserMixin, db.Model):
             return False, "Invalid email format"
         return True, "Valid"
     
+    # Security Methods
+    def record_login(self):
+        """Record successful login"""
+        self.last_login = datetime.utcnow()
+        self.failed_login_attempts = 0
+        self.account_locked_until = None
+        db.session.commit()
+    
+    def record_failed_login(self):
+        """Record failed login attempt"""
+        self.failed_login_attempts += 1
+        if self.failed_login_attempts >= 5:
+            # Lock account for 30 minutes
+            from datetime import timedelta
+            self.account_locked_until = datetime.utcnow() + timedelta(minutes=30)
+        db.session.commit()
+    
+    def is_account_locked(self):
+        """Check if account is locked"""
+        if self.is_banned:
+            return True, self.ban_reason or "Account is banned"
+        
+        if self.account_locked_until:
+            if datetime.utcnow() < self.account_locked_until:
+                return True, "Account is temporarily locked due to failed login attempts"
+            else:
+                # Unlock account
+                self.account_locked_until = None
+                self.failed_login_attempts = 0
+                db.session.commit()
+        
+        return False, None
+    
+    def get_privacy_settings(self):
+        """Get user privacy settings"""
+        if not self.privacy_settings:
+            return {
+                'profile_visibility': 'public',
+                'poem_visibility': 'public',
+                'activity_visibility': 'friends',
+                'allow_comments': True,
+                'allow_follows': True,
+                'email_notifications': True
+            }
+        
+        try:
+            from data_protection import data_protection
+            decrypted = data_protection.decrypt_sensitive_data(self.privacy_settings)
+            import json
+            return json.loads(decrypted) if decrypted else {}
+        except:
+            return {}
+    
+    def update_privacy_settings(self, settings):
+        """Update user privacy settings"""
+        try:
+            from data_protection import data_protection
+            import json
+            self.privacy_settings = data_protection.encrypt_sensitive_data(settings)
+            db.session.commit()
+            return True
+        except:
+            return False
+    
     def get_follower_count(self):
         """Get number of followers"""
         return self.followers.count()
@@ -97,6 +172,13 @@ class Poem(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     is_classic = db.Column(db.Boolean, default=False)  # Hide from home feed, show in search only
     is_anonymous = db.Column(db.Boolean, default=False)  # Post anonymously
+    
+    # Protection and Privacy fields
+    is_protected = db.Column(db.Boolean, default=False)  # User-protected content
+    visibility = db.Column(db.String(20), default='public')  # public, friends, private
+    content_warning = db.Column(db.String(200), nullable=True)  # Content warning text
+    is_flagged = db.Column(db.Boolean, default=False)  # Flagged for review
+    flag_reason = db.Column(db.String(500), nullable=True)  # Reason for flagging
     
     comments = db.relationship('Comment', backref='poem', lazy=True, cascade='all, delete-orphan')
     saved_by = db.relationship('SavedPoem', backref='poem', lazy=True, cascade='all, delete-orphan')
@@ -155,6 +237,11 @@ class Comment(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     poem_id = db.Column(db.Integer, db.ForeignKey('poems.id'), nullable=False)
+    
+    # Protection fields
+    is_protected = db.Column(db.Boolean, default=False)  # User-protected content
+    is_flagged = db.Column(db.Boolean, default=False)  # Flagged for review
+    flag_reason = db.Column(db.String(500), nullable=True)  # Reason for flagging
     
     @staticmethod
     def validate_content(content):
