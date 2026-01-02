@@ -1,23 +1,23 @@
-# 📖 Poetry Vault
+# Poetry Vault
 
 A beautiful web application for discovering, sharing, and saving classic poetry. Built with Flask and featuring 228+ classic poems from 15 legendary poets.
 
-## ✨ Features
+## Features
 
-- 📚 Browse 228+ classic poems from 15 legendary poets
-- 🔍 Search poems by title, content, or poet
-- 📂 Filter by 35+ categories (Love, Nature, Spirituality, etc.)
-- 💾 Save your favorite poems
-- 💬 Comment on poems
-- ❤️ Like poems
-- 👥 Follow other poets
-- 👤 User profiles and authentication
-- 🔔 Notifications for interactions
-- 👑 Admin panel with analytics
-- 📊 Instagram visitor tracking
-- 🤖 AI chatbot with classic poets
+- Browse 228+ classic poems from 15 legendary poets
+- Search poems by title, content, or poet
+- Filter by 35+ categories (Love, Nature, Spirituality, etc.)
+- Save your favorite poems
+- Comment on poems
+- Like poems
+- Follow other poets
+- User profiles and authentication
+- Notifications for interactions
+- Admin panel with analytics
+- Instagram visitor tracking
+- AI chatbot with classic poets
 
-## 🎭 Featured Poets
+## Featured Poets
 
 ### English Poets
 - William Shakespeare
@@ -40,7 +40,7 @@ A beautiful web application for discovering, sharing, and saving classic poetry.
 
 ---
 
-## 🚀 Quick Start (Local Development)
+## Quick Start (Local Development)
 
 ### Prerequisites
 - Python 3.8+
@@ -82,7 +82,7 @@ This runs the app on port 5001 with automatic backups every 6 hours.
 
 ---
 
-## 🌐 Deploy to Production
+## Deploy to Production
 
 See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for detailed instructions on deploying to:
 - Render.com (Recommended - Free)
@@ -91,7 +91,7 @@ See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for detailed instructions on depl
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 JJ_PoetryApp0.1/
@@ -110,7 +110,7 @@ JJ_PoetryApp0.1/
 
 ---
 
-## 💾 Database Backup & Recovery
+## Database Backup & Recovery
 
 ### Automatic Backups (Recommended)
 
@@ -204,7 +204,7 @@ Backups are automatically named with timestamps:
 
 ---
 
-## 📱 Instagram Visitor Tracking
+## Instagram Visitor Tracking
 
 ### The Problem
 Instagram doesn't share visitor usernames when they click links (for privacy). So we use URL parameters to track who visits.
@@ -339,7 +339,7 @@ Now you know:
 
 ---
 
-## 🎨 Poem Categories
+## Poem Categories
 
 Poems are organized into **35+ categories**:
 
@@ -398,7 +398,7 @@ Poems are organized into **35+ categories**:
 
 ---
 
-## 🔐 Environment Variables
+## Environment Variables
 
 For production deployment, set these environment variables:
 
@@ -420,7 +420,7 @@ DATABASE_URL=your-database-url (optional, defaults to SQLite)
 
 ---
 
-## 🔧 Utility Scripts
+## Utility Scripts
 
 ### Content Management
 - `add_new_poets.py` - Add new poets without losing data
@@ -447,7 +447,7 @@ DATABASE_URL=your-database-url (optional, defaults to SQLite)
 
 ---
 
-## 📚 Additional Documentation
+## Additional Documentation
 
 - [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) - Detailed deployment instructions
 - [FEATURES.md](FEATURES.md) - Complete feature list
@@ -457,25 +457,25 @@ DATABASE_URL=your-database-url (optional, defaults to SQLite)
 
 ---
 
-## 📝 License
+## License
 
 This project contains public domain poetry. The application code is available for educational purposes.
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Feel free to fork, improve, and submit pull requests!
 
 ---
 
-## 📧 Contact
+## Contact
 
 Created with ❤️ for poetry lovers everywhere.
 
 ---
 
-## 🎉 Project Stats
+## Project Stats
 
 - **Total Poems**: 228+
 - **Poets**: 15 (13 classic + real users)
