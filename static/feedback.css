@@ -1,4 +1,4 @@
-/* Feedback Page Styles */
+/* Feedback Page Styles - Matching Poetry Vault Design */
 * {
     margin: 0;
     padding: 0;
@@ -7,14 +7,47 @@
 
 body {
     font-family: 'Georgia', 'Times New Roman', serif;
-    background: linear-gradient(135deg, #1c2532 0%, #2d3748 100%);
+    background: #1c2532;
     min-height: 100vh;
     color: #e8e8e8;
     line-height: 1.6;
 }
 
+/* Navigation - Exact match to Poetry Vault */
+.navbar {
+    background: rgba(28, 37, 50, 0.95);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.nav-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    color: #d4af37;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-decoration: none;
+}
+
+.nav-title {
+    color: #a0aec0;
+    font-size: 14px;
+}
+
 .container {
-    max-width: 700px;
+    max-width: 600px;
     margin: 0 auto;
     padding: 40px 20px;
 }
@@ -27,43 +60,39 @@ body {
 
 .header-section h1 {
     color: #d4af37;
-    font-size: 2.8rem;
+    font-size: 2.5rem;
     margin-bottom: 15px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     font-weight: normal;
 }
 
 .subtitle {
     color: #a0aec0;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     margin-bottom: 25px;
     font-style: italic;
 }
 
 .intro-text {
-    background: rgba(45, 55, 72, 0.6);
+    background: rgba(28, 37, 50, 0.8);
     border: 1px solid rgba(212, 175, 55, 0.2);
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 25px;
     margin-bottom: 20px;
-    backdrop-filter: blur(10px);
+    text-align: left;
 }
 
 .intro-text p {
     color: #e8e8e8;
-    font-size: 1.05rem;
-    line-height: 1.7;
-    text-align: left;
+    font-size: 1rem;
+    line-height: 1.6;
 }
 
-/* Form Styling */
+/* Form Styling - Matching Poetry Vault */
 .feedback-form {
-    background: rgba(45, 55, 72, 0.9);
-    border-radius: 15px;
-    padding: 40px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    background: rgba(28, 37, 50, 0.8);
+    border-radius: 8px;
+    padding: 30px;
     border: 1px solid rgba(212, 175, 55, 0.2);
-    backdrop-filter: blur(10px);
     margin-bottom: 30px;
 }
 
@@ -87,23 +116,23 @@ label {
     margin-bottom: 8px;
     color: #d4af37;
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: 1rem;
     text-align: left;
 }
 
 .message-help {
     background: rgba(212, 175, 55, 0.1);
-    border-left: 4px solid #d4af37;
+    border-left: 3px solid #d4af37;
     padding: 15px 20px;
     margin-bottom: 15px;
-    border-radius: 0 8px 8px 0;
+    border-radius: 0 4px 4px 0;
 }
 
 .message-help p {
     color: #d4af37;
     font-weight: bold;
     margin-bottom: 10px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 .message-help ul {
@@ -113,9 +142,9 @@ label {
 
 .message-help li {
     color: #a0aec0;
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-    padding-left: 15px;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+    padding-left: 12px;
     position: relative;
 }
 
@@ -130,14 +159,14 @@ input[type="text"],
 input[type="email"],
 textarea {
     width: 100%;
-    padding: 15px;
-    border: 2px solid rgba(212, 175, 55, 0.3);
-    border-radius: 8px;
-    background: rgba(28, 37, 50, 0.8);
+    padding: 12px 15px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 4px;
+    background: rgba(28, 37, 50, 0.9);
     color: #e8e8e8;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-family: inherit;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 input[type="text"]:focus,
@@ -145,14 +174,13 @@ input[type="email"]:focus,
 textarea:focus {
     outline: none;
     border-color: #d4af37;
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-    transform: translateY(-2px);
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
 }
 
 textarea {
     resize: vertical;
-    min-height: 140px;
-    line-height: 1.6;
+    min-height: 120px;
+    line-height: 1.5;
 }
 
 /* Submit Section */
@@ -162,43 +190,35 @@ textarea {
 }
 
 .submit-btn {
-    background: linear-gradient(135deg, #d4af37 0%, #f1c40f 100%);
+    background: #d4af37;
     color: #1c2532;
     border: none;
-    border-radius: 12px;
-    font-size: 1.2rem;
+    border-radius: 4px;
+    font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 18px 40px;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
+    transition: all 0.2s ease;
+    padding: 12px 30px;
     margin-bottom: 15px;
-    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+    font-family: inherit;
 }
 
 .submit-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 25px rgba(212, 175, 55, 0.4);
-    background: linear-gradient(135deg, #f1c40f 0%, #d4af37 100%);
-}
-
-.submit-btn:active {
+    background: #f1c40f;
     transform: translateY(-1px);
 }
 
-.btn-icon {
-    font-size: 1.1rem;
+.submit-btn:active {
+    transform: translateY(0);
 }
 
 .privacy-note {
     color: #8e7a5a;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-style: italic;
     max-width: 400px;
     margin: 0 auto;
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 /* Thank You Section */
@@ -207,69 +227,67 @@ textarea {
 }
 
 .thank-you-card {
-    background: rgba(72, 187, 120, 0.1);
-    border: 1px solid rgba(72, 187, 120, 0.3);
-    border-radius: 12px;
-    padding: 30px;
+    background: rgba(28, 37, 50, 0.8);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 8px;
+    padding: 25px;
     text-align: center;
-    backdrop-filter: blur(10px);
 }
 
 .thank-you-card h3 {
-    color: #68d391;
-    font-size: 1.5rem;
+    color: #d4af37;
+    font-size: 1.3rem;
     margin-bottom: 15px;
     font-weight: normal;
 }
 
 .thank-you-card p {
     color: #a0aec0;
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 25px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
 }
 
 .back-links {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 15px;
     flex-wrap: wrap;
 }
 
 .back-link {
     color: #d4af37;
     text-decoration: none;
-    padding: 10px 20px;
+    padding: 8px 16px;
     border: 1px solid rgba(212, 175, 55, 0.3);
-    border-radius: 6px;
-    transition: all 0.3s ease;
-    font-size: 0.95rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
 }
 
 .back-link:hover {
     background: rgba(212, 175, 55, 0.1);
     border-color: #d4af37;
-    transform: translateY(-2px);
 }
 
 /* Success/Error Messages */
 .success-message {
-    background: rgba(72, 187, 120, 0.2);
-    border: 1px solid #48bb78;
+    background: rgba(72, 187, 120, 0.1);
+    border: 1px solid rgba(72, 187, 120, 0.3);
     color: #68d391;
     padding: 15px;
-    border-radius: 8px;
+    border-radius: 4px;
     margin-bottom: 20px;
     text-align: center;
-    animation: slideIn 0.5s ease-out;
+    animation: slideIn 0.3s ease-out;
 }
 
 .error-message {
-    background: rgba(245, 101, 101, 0.2);
-    border: 1px solid #f56565;
+    background: rgba(245, 101, 101, 0.1);
+    border: 1px solid rgba(245, 101, 101, 0.3);
     color: #fc8181;
     padding: 15px;
-    border-radius: 8px;
+    border-radius: 4px;
     margin-bottom: 20px;
     text-align: center;
 }
@@ -277,7 +295,7 @@ textarea {
 @keyframes slideIn {
     from {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateY(-10px);
     }
     to {
         opacity: 1;
@@ -299,13 +317,13 @@ textarea {
 .loading .submit-btn:after {
     content: "";
     display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     border: 2px solid #fff;
     border-radius: 50%;
     border-top-color: transparent;
     animation: spin 1s linear infinite;
-    margin-left: 10px;
+    margin-left: 8px;
 }
 
 @keyframes spin {
@@ -321,7 +339,7 @@ textarea {
     }
     
     .header-section h1 {
-        font-size: 2.2rem;
+        font-size: 2rem;
     }
     
     .subtitle {
@@ -329,7 +347,7 @@ textarea {
     }
     
     .feedback-form {
-        padding: 25px;
+        padding: 20px;
     }
     
     .form-row {
@@ -340,12 +358,12 @@ textarea {
     input[type="text"],
     input[type="email"],
     textarea {
-        padding: 12px;
+        padding: 10px 12px;
     }
     
     .submit-btn {
-        padding: 15px 30px;
-        font-size: 1.1rem;
+        padding: 10px 25px;
+        font-size: 0.95rem;
     }
     
     .back-links {
@@ -356,7 +374,7 @@ textarea {
 
 @media (max-width: 480px) {
     .header-section h1 {
-        font-size: 1.8rem;
+        font-size: 1.7rem;
     }
     
     .intro-text {
@@ -364,6 +382,6 @@ textarea {
     }
     
     .feedback-form {
-        padding: 20px;
+        padding: 15px;
     }
 }
