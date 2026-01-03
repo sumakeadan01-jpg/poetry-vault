@@ -672,6 +672,48 @@ def create_app():
     def privacy():
         return render_template('privacy.html')
     
+    @app.route('/feedback')
+    def feedback():
+        return render_template('feedback.html')
+    
+    @app.route('/submit_feedback', methods=['POST'])
+    def submit_feedback():
+        try:
+            name = request.form.get('name', '').strip()
+            email = request.form.get('email', '').strip()
+            message = request.form.get('message', '').strip()
+            
+            # Basic validation
+            if not name or not email or not message:
+                return jsonify({'success': False, 'message': 'All fields are required'})
+            
+            if len(name) < 2:
+                return jsonify({'success': False, 'message': 'Name must be at least 2 characters long'})
+            
+            if len(message) < 10:
+                return jsonify({'success': False, 'message': 'Message must be at least 10 characters long'})
+            
+            # Email validation
+            import re
+            email_regex = r'^[^\s@]+@[^\s@]+\.[^\s@]+$'
+            if not re.match(email_regex, email):
+                return jsonify({'success': False, 'message': 'Please enter a valid email address'})
+            
+            # Log the feedback (you can also save to database if needed)
+            logger.info(f"Feedback received from {name} ({email}): {message}")
+            
+            # You can add database storage here if needed:
+            # feedback = Feedback(name=name, email=email, message=message)
+            # db.session.add(feedback)
+            # db.session.commit()
+            
+            return jsonify({'success': True, 'message': 'Thank you for your feedback!'})
+            
+        except Exception as e:
+            logger.error(f"Error submitting feedback: {str(e)}")
+            return jsonify({'success': False, 'message': 'Something went wrong. Please try again.'})
+    
+    
     @app.route('/settings/profile', methods=['POST'])
     @login_required
     def update_profile():

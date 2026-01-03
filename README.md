@@ -56,7 +56,8 @@ Visit `http://localhost:5000`
 
 ## Administration
 
-Create an admin account by registering with the prefix `P0.1` (e.g., `P0.1admin`). Access the admin panel at `/admin` to manage users, content, and view analytics.
+Create an admin account by registering with the prefix `P## (e.g., `P##admin`). Access the admin panel at to manage users, content, and view analytics. 
+p## has a secret number for only one admin.
 
 ## Technology Stack
 
