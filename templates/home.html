@@ -432,6 +432,26 @@
         {% endif %}
     </div>
 
+    <!-- Feedback Footer Section -->
+    <div style="max-width: 600px; margin: 40px auto 20px; padding: 0 20px;">
+        <div style="background: rgba(45, 55, 72, 0.6); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 12px; padding: 25px; text-align: center; backdrop-filter: blur(10px);">
+            <h3 style="color: #d4af37; margin-bottom: 10px; font-size: 18px; font-weight: normal;">💬 Help Us Improve</h3>
+            <p style="color: #a0aec0; margin-bottom: 20px; font-size: 14px; line-height: 1.6;">
+                Share your thoughts, suggestions, or report any issues to help make Poetry Vault better for everyone.
+            </p>
+            <a href="/feedback" style="display: inline-block; background: linear-gradient(135deg, #d4af37 0%, #f1c40f 100%); color: #1c2532; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(212, 175, 55, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(212, 175, 55, 0.2)'">
+                📝 Send Feedback
+            </a>
+            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(212, 175, 55, 0.2);">
+                <p style="color: #8e7a5a; font-size: 12px;">
+                    <a href="/terms" style="color: #d4af37; text-decoration: none; margin: 0 8px;">Terms</a> • 
+                    <a href="/privacy" style="color: #d4af37; text-decoration: none; margin: 0 8px;">Privacy</a> • 
+                    <a href="/settings" style="color: #d4af37; text-decoration: none; margin: 0 8px;">Settings</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Check for unread notifications
         fetch('/notifications/unread-count')
