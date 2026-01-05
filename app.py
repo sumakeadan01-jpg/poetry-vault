@@ -8,6 +8,7 @@ from datetime import datetime
 import logging
 import traceback
 import os
+from urllib.parse import urlparse, urljoin
 
 # Import security middleware
 from security_middleware import security_manager, require_permission, validate_content_input, protect_user_data
@@ -19,6 +20,30 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+def is_safe_url(target):
+    """
+    Check if the target URL is safe for redirects to prevent open redirect attacks
+    """
+    if not target:
+        return False
+    
+    # Parse the target URL
+    parsed = urlparse(target)
+    
+    # Only allow relative URLs or URLs from the same host
+    if parsed.netloc and parsed.netloc != request.host:
+        return False
+    
+    # Don't allow javascript: or data: schemes
+    if parsed.scheme and parsed.scheme not in ('http', 'https', ''):
+        return False
+    
+    # Don't allow URLs that start with //
+    if target.startswith('//'):
+        return False
+    
+    return True
 
 def create_app():
     app = Flask(__name__)
@@ -209,6 +234,11 @@ def create_app():
                         log_activity('login', f'User {user.username} logged in')
                         logger.info(f"User logged in: {user.username}")
                         security_manager.log_security_event('successful_login', user.id)
+                        
+                        # Handle 'next' parameter for redirect
+                        next_page = request.form.get('next') or request.args.get('next')
+                        if next_page and is_safe_url(next_page):
+                            return redirect(next_page)
                         return redirect(url_for('home'))
                     else:
                         # Record failed login
