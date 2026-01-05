@@ -177,6 +177,51 @@ def create_app():
             # Show actual error for debugging
             return render_template('register.html', error=f'Registration error: {str(e)}')
     
+    @app.route('/create-test-user', methods=['POST'])
+    def create_test_user():
+        """Create a test user for API testing - JSON endpoint"""
+        try:
+            if request.is_json:
+                data = request.get_json()
+                username = data.get('username', '').strip()
+                password = data.get('password', '')
+                email = data.get('email', f"{username}@test.com")
+            else:
+                return jsonify({'error': 'JSON request required'}), 400
+            
+            if not username or not password:
+                return jsonify({'error': 'Username and password are required'}), 400
+            
+            # Check if user already exists
+            existing_user = User.query.filter_by(username=username).first()
+            if existing_user:
+                return jsonify({'message': 'User already exists', 'username': username}), 200
+            
+            # Create new test user
+            user = User(
+                username=username,
+                email=email,
+                age=25,
+                favorite_poet='Test Poet',
+                is_admin=False
+            )
+            user.set_password(password)
+            
+            db.session.add(user)
+            db.session.commit()
+            
+            return jsonify({
+                'message': 'Test user created successfully',
+                'user_id': user.id,
+                'username': user.username,
+                'email': user.email
+            }), 201
+            
+        except Exception as e:
+            logger.error(f"Error creating test user: {str(e)}")
+            db.session.rollback()
+            return jsonify({'error': 'Failed to create test user'}), 500
+
     @app.route('/login', methods=['GET', 'POST'])
     @protect_user_data()
     def login():
