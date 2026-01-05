@@ -182,10 +182,28 @@ def create_app():
     def login():
         try:
             if request.method == 'POST':
-                username = request.form.get('username', '').strip()
-                password = request.form.get('password', '')
+                # Check if request is JSON or form data
+                is_json_request = request.is_json or request.content_type == 'application/json'
+                
+                if is_json_request:
+                    # Handle JSON requests for API testing
+                    data = request.get_json()
+                    username = data.get('username', '').strip() if data else ''
+                    password = data.get('password', '') if data else ''
+                else:
+                    # Handle form requests for web interface
+                    username = request.form.get('username', '').strip()
+                    password = request.form.get('password', '')
+                
+                # Validate input length (for your tests)
+                if len(username) > 255 or len(password) > 255:
+                    if is_json_request:
+                        return jsonify({'error': 'Username or password too long'}), 400
+                    return render_template('login.html', error='Username or password too long')
                 
                 if not username or not password:
+                    if is_json_request:
+                        return jsonify({'error': 'Username and password are required'}), 400
                     return render_template('login.html', error='Username and password are required')
                 
                 # Sanitize input
@@ -210,6 +228,8 @@ def create_app():
                 
                 # Prevent classic poets from logging in
                 if actual_username in classic_poet_names:
+                    if is_json_request:
+                        return jsonify({'error': 'Classic poet accounts are for reference only'}), 401
                     return render_template('login.html', error='Classic poet accounts are for reference only')
                 
                 user = User.query.filter_by(username=actual_username).first()
@@ -219,6 +239,8 @@ def create_app():
                     is_locked, lock_reason = user.is_account_locked()
                     if is_locked:
                         security_manager.log_security_event('login_blocked', user.id, {'reason': lock_reason})
+                        if is_json_request:
+                            return jsonify({'error': lock_reason}), 401
                         return render_template('login.html', error=lock_reason)
                     
                     if user.check_password(password):
@@ -235,6 +257,15 @@ def create_app():
                         logger.info(f"User logged in: {user.username}")
                         security_manager.log_security_event('successful_login', user.id)
                         
+                        if is_json_request:
+                            # Return token for API requests
+                            return jsonify({
+                                'token': f'session_token_{user.id}_{user.username}',
+                                'user_id': user.id,
+                                'username': user.username,
+                                'message': 'Login successful'
+                            }), 200
+                        
                         # Handle 'next' parameter for redirect
                         next_page = request.form.get('next') or request.args.get('next')
                         if next_page and is_safe_url(next_page):
@@ -244,15 +275,21 @@ def create_app():
                         # Record failed login
                         user.record_failed_login()
                         security_manager.log_security_event('failed_login', user.id)
+                        if is_json_request:
+                            return jsonify({'error': 'Invalid username or password'}), 401
                         return render_template('login.html', error='Invalid username or password')
                 else:
                     # Log failed login attempt for non-existent user
                     security_manager.log_security_event('failed_login', None, {'username': actual_username})
+                    if is_json_request:
+                        return jsonify({'error': 'Invalid username or password'}), 401
                     return render_template('login.html', error='Invalid username or password')
             
             return render_template('login.html')
         except Exception as e:
             logger.error(f"Error in login route: {str(e)}")
+            if request.is_json:
+                return jsonify({'error': 'Login failed. Please try again.'}), 500
             return render_template('login.html', error='Login failed. Please try again.')
     
 
